@@ -1,5 +1,6 @@
 import json
 import re
+import os
 
 def chunk(text):
     paragraphs = re.split(r'\n\s*\n', text.strip())
@@ -27,7 +28,15 @@ def chunk(text):
     return chunks
 
 def main():
-    with open('verwandlung.txt', 'r', encoding='utf-8') as f:
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
+    
+    input_path = os.path.join(project_root, 'data', 'raw', 'verwandlung.txt')
+    output_path = os.path.join(project_root, 'data', 'processed', 'verwandlung_absaetze.json')
+    
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    
+    with open(input_path, 'r', encoding='utf-8') as f:
         text = f.read()
     
     chunks = chunk(text)
@@ -38,10 +47,10 @@ def main():
         "chunks": chunks
     }
     
-    with open('verwandlung.json', 'w', encoding='utf-8') as f:
+    with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
     
-    print(f"{len(chunks)} Chunks erstellt und in verwandlung.json gespeichert")
+    print(f"{len(chunks)} Chunks erstellt und in {output_path} gespeichert")
 
 if __name__ == "__main__":
     main()
