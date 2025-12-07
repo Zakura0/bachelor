@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# Model downloads
+models/
+sentence-transformers/
+
+# Cached embeddings
+*.npy
+*.npz
+
+# Output files
+*.json
+*.log
+
+# OS-specific
+.DS_Store
+
+# vscode
+.vscode/
+
+# Large data dumps
+data/
