@@ -27,3 +27,4 @@ sentence-transformers/
 
 # Large data dumps
 data/
+*.txt
