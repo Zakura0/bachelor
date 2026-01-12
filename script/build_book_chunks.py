@@ -9,9 +9,9 @@ from src.preprocessing.book_chunker import BookChunker
 
 
 def main():
-    book = "judenbuche"
+    book = "verwandlung"
     input_path = os.path.join(project_root, "data", "raw", f"{book}.txt")
-    output_path = os.path.join(project_root, "data", "processed", f"{book}_chunks_new.json")
+    output_path = os.path.join(project_root, "data", "processed", f"{book}_chunks.json")
 
     with open(input_path, 'r', encoding='utf-8') as f:
         text = f.read()
