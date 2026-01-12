@@ -11,7 +11,7 @@ from src.preprocessing.book_chunker import BookChunker
 def main():
     book = "judenbuche"
     input_path = os.path.join(project_root, "data", "raw", f"{book}.txt")
-    output_path = os.path.join(project_root, "data", "processed", f"{book}_chunks.json")
+    output_path = os.path.join(project_root, "data", "processed", f"{book}_chunks_new.json")
 
     with open(input_path, 'r', encoding='utf-8') as f:
         text = f.read()
@@ -24,7 +24,6 @@ def main():
 
     result = chunker.build_chunks(text)
 
-    # Stelle sicher, dass das Output-Verzeichnis existiert
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     with open(output_path, 'w', encoding='utf-8') as f:

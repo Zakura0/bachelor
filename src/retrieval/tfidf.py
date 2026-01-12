@@ -9,9 +9,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 @dataclass
 class SearchResult:
-    """
-    Repräsentiert einen einzelnen Retrieval-Treffer.
-    """
     index: int          # Index des Textes im ursprünglichen Korpus
     score: float        # Ähnlichkeits-Score (Cosine Similarity)
     text: str           # Gefundener Text (z.B. Chunk-Content)
@@ -19,16 +16,6 @@ class SearchResult:
 
 
 class TfidfRetriever:
-    """
-    Einfacher TF-IDF basierter Retriever.
-
-    Typische Verwendung:
-
-    >>> retriever = TfidfRetriever()
-    >>> retriever.fit(texts, meta=chunks)
-    >>> results = retriever.search("Gregor wacht als Ungeziefer auf", top_k=5)
-    """
-
     def __init__(
         self,
         ngram_range: Tuple[int, int] = (1, 2),
