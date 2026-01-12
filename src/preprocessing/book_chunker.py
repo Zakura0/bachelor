@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, asdict
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 
 
 @dataclass
 class SentenceSpan:
-    """Ein einzelner Satz mit Text und Offsets im Originaltext."""
     index: int
     start: int
     end: int
@@ -16,7 +15,6 @@ class SentenceSpan:
 
 @dataclass
 class Chunk:
-    """Ein Chunk aus einem oder mehreren Sätzen."""
     id: int
     start_index: int
     end_index: int
@@ -27,44 +25,23 @@ class Chunk:
 
 
 class BookChunker:
-    """
-    Allgemeiner Chunker für beliebige Bücher
-    """
-
     def __init__(
         self,
         min_words: int = 30,
         max_words: int = 120,
-        sentence_overlap: int = 1,
-        use_spacy: bool = False,
-        spacy_model: str = "de_core_news_sm",
+        sentence_overlap: int = 1
     ) -> None:
         """
         :param min_words: minimale Wortanzahl pro Chunk
         :param max_words: maximale Wortanzahl pro Chunk
         :param sentence_overlap: Anzahl Sätze, die zwischen Chunks überlappen
-        :param use_spacy: True = versuche spaCy für Satzsegmentierung zu nutzen
-        :param spacy_model: spaCy-Modellname, falls use_spacy=True
         """
         self.min_words = min_words
         self.max_words = max_words
         self.sentence_overlap = max(0, sentence_overlap)
-        self.use_spacy = use_spacy
-        self.spacy_model = spacy_model
-
-        self._nlp = None
-        if self.use_spacy:
-            try:
-                import spacy  # type: ignore
-                self._nlp = spacy.load(self.spacy_model)
-            except Exception:
-                # Fallback: spaCy nicht verfügbar -> wir benutzen Regex
-                self._nlp = None
-                self.use_spacy = False
 
     def build_chunks(self, text: str) -> Dict[str, Any]:
-        """Erstellt eine JSON-ähnliche Struktur mit Chunks, die für beliebige Bücher verwendet werden kann."""
-        sentences = self._split_sentences_with_offsets(text)
+        sentences = self._split_sentences_regex(text)
         chunks = self._build_chunks_from_sentences(text, sentences)
 
         return {
@@ -72,38 +49,6 @@ class BookChunker:
             "total_chunks": len(chunks),
             "chunks": [asdict(c) for c in chunks],
         }
-
-    def _split_sentences_with_offsets(self, text: str) -> List[SentenceSpan]:
-        """
-        Splittet den Text in Sätze und liefert Start/Ende-Offsets.
-
-        Wenn use_spacy=True und Modell ladbar ist, nutzen wir spaCy.
-        Sonst eine heuristische Regex-Lösung.
-        """
-        if self.use_spacy and self._nlp is not None:
-            return self._split_sentences_spacy(text)
-        else:
-            return self._split_sentences_regex(text)
-
-    def _split_sentences_spacy(self, text: str) -> List[SentenceSpan]:
-        """Satzsegmentierung mit spaCy (falls verfügbar)."""
-        doc = self._nlp(text)  # type: ignore
-        sentences: List[SentenceSpan] = []
-        for idx, sent in enumerate(doc.sents):
-            start = int(sent.start_char)
-            end = int(sent.end_char)
-            sent_text = text[start:end]
-            if not sent_text.strip():
-                continue
-            sentences.append(
-                SentenceSpan(
-                    index=idx,
-                    start=start,
-                    end=end,
-                    text=sent_text,
-                )
-            )
-        return sentences
 
     def _split_sentences_regex(self, text: str) -> List[SentenceSpan]:
         """
@@ -184,7 +129,6 @@ class BookChunker:
                 current_word_count += words_in_s
                 current_sent_idx += 1
 
-            # Falls wir gar nichts vernünftig sammeln konnten abbrechen
             if current_sent_idx <= start_sent_idx:
                 break
 

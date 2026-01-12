@@ -20,7 +20,6 @@ def main():
         min_words=10,
         max_words=50,
         sentence_overlap=1,
-        use_spacy=False,
     )
 
     result = chunker.build_chunks(text)
