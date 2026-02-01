@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import pathlib
 
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
@@ -8,12 +9,18 @@ sys.path.insert(0, project_root)
 from src.preprocessing.book_chunker import BookChunker
 
 
-def main():
-    book = "verwandlung"
-    input_path = os.path.join(project_root, "data", "raw", f"{book}.txt")
-    output_path = os.path.join(project_root, "data", "processed", f"{book}_chunks.json")
+def build_chunks(book_path: str, output_path: str = None):
+    """
+    Erstellt Chunks für ein Buch.
+    
+    :param book_path: Pfad zur Textdatei des Buchs
+    :param output_path: Pfad zur Ausgabe der Chunks.
+    """    
+    book_stem = pathlib.Path(book_path).stem
+    if output_path is None:
+        output_path = os.path.join(project_root, "data", "processed", f"{book_stem}_chunks.json")
 
-    with open(input_path, 'r', encoding='utf-8') as f:
+    with open(book_path, 'r', encoding='utf-8') as f:
         text = f.read()
 
     chunker = BookChunker(
@@ -33,6 +40,16 @@ def main():
         f"{result['total_chunks']} Chunks erstellt und in "
         f"{output_path} gespeichert."
     )
+    
+    return output_path
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("Bitte gib den Pfad zum Buch an.")
+        sys.exit(1)
+    input_path = sys.argv[1]
+    build_chunks(input_path)
 
 
 if __name__ == "__main__":

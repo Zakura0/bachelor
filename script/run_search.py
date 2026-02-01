@@ -28,10 +28,7 @@ def rrf_fuse(rank_lists, k=60):
     return scores
 
 
-def main():
-    chunks_path = os.path.join(project_root, "data", "processed", "verwandlung_chunks.json")
-    emb_path = os.path.join(project_root, "data", "processed", "verwandlung.embeddings.npy")
-
+def run_search(chunks_path: str, emb_path: str):
     with open(chunks_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
@@ -110,6 +107,14 @@ def main():
             print(f"{rank}. entail={r.entailment:.3f} ({r.label}) | Chunk-ID={c['id']} | Start={c['start_index']}")
             print(r.text.replace("\n"," ")[:500])
             print("-"*80)
+
+
+def main():
+    if len(sys.argv) < 3:
+        print("Bitte gib Chunks- und Embeddings-Pfad an.")
+        print("Beispiel: python run_search.py data/processed/verwandlung_chunks.json data/processed/verwandlung.embeddings.npy")
+        sys.exit(1)
+    run_search(sys.argv[1], sys.argv[2])
 
 
 if __name__ == "__main__":
