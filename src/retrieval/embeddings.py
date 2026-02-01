@@ -18,9 +18,11 @@ class SearchResult:
 
 class EmbeddingRetriever:
     """
-    Bi-Encoder Retrieval über Sentence-Transformers Embeddings.
-    - fit(): berechnet und speichert Embeddings im RAM
-    - search(): cosine similarity über normalisierte Vektoren (Dot-Product)
+    Oberklasse für den Embedding-basierten Retriever.
+
+    :param model_name: Name des SentenceTransformer Modells
+    :param device: Gerät für die Berechnung ("cpu" oder "cuda")
+    :param normalize: Normalisieren der Embeddings für Cosine Similarity
     """
 
     def __init__(
@@ -51,6 +53,14 @@ class EmbeddingRetriever:
         batch_size: int = 64,
         show_progress_bar: bool = True,
     ) -> None:
+        """
+        Baut den Embedding-Index über den gegebenen Texten auf.
+        
+        :param texts: Beschreibung der Texte
+        :param meta: Beschreibung der Metadaten
+        :param batch_size: Beschreibung der Batch-Größe
+        :param show_progress_bar: Anzeige des Fortschrittsbalkens
+        """
         texts = list(texts)
         self._texts = texts
 
@@ -62,8 +72,7 @@ class EmbeddingRetriever:
         else:
             self._meta = None
 
-        # E5 empfiehlt Prefixe, wir machen das sauber:
-        # Query: "query: ..." | Passage: "passage: ..."
+        # E5 Modell erwartet diesen Prefix
         passages = [f"passage: {t}" for t in texts]
 
         emb = self.model.encode(
@@ -82,14 +91,28 @@ class EmbeddingRetriever:
         texts: List[str],
         meta: Optional[List[Any]] = None,
     ) -> None:
+        """
+        Lädt vorab berechnete Embeddings.
+        
+        :param embeddings: Vorab berechnete Embeddings
+        :param texts: Liste der zugehörigen Texte
+        :param meta: Optionale Metadaten
+        """
         self._emb = embeddings.astype(np.float32, copy=False)
         self._texts = texts
         self._meta = meta
         self._fitted = True
 
     def search(self, query: str, top_k: int = 5) -> List[SearchResult]:
+        """
+        Sucht die top_k ähnlichsten Texte zur Query.
+        
+        :param query: Suchanfrage
+        :param top_k: Anzahl der zurückzugebenden Ergebnisse
+        :return: Liste der Suchergebnisse
+        """
         if not self._fitted or self._emb is None:
-            raise RuntimeError("Retriever nicht fitted/geladen.")
+            raise RuntimeError("Retriever nicht fit.")
 
         q = query.strip()
         if not q:
@@ -102,12 +125,11 @@ class EmbeddingRetriever:
             show_progress_bar=False,
         ).astype(np.float32, copy=False)
 
-        # Wenn normalize=True, dann ist CosineSimilarity == DotProduct
         scores = (self._emb @ q_emb[0]).astype(np.float32)
         top_idx = np.argsort(scores)[::-1][:top_k]
 
-        out: List[SearchResult] = []
+        results: List[SearchResult] = []
         for idx in top_idx:
             meta = self._meta[idx] if self._meta is not None else None
-            out.append(SearchResult(index=int(idx), score=float(scores[idx]), text=self._texts[idx], meta=meta))
-        return out
+            results.append(SearchResult(index=int(idx), score=float(scores[idx]), text=self._texts[idx], meta=meta))
+        return results

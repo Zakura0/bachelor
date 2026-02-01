@@ -23,6 +23,8 @@ class TfidfRetriever:
         stop_words: Optional[str] = None,
     ) -> None:
         """
+        Die Oberklasse für TF-IDF Retrieval.
+        
         :param ngram_range: Auswahl ob einzelne Wörter (1,1) oder auch Phrasen (z.B. (1,2))
         :param max_features: Maximale Anzahl an Features (Wörtern/Phrasen) im Vokabular
         :param stop_words: Liste von Stoppwörtern ("german" für deutsche Stoppwörter) oder None
@@ -49,9 +51,8 @@ class TfidfRetriever:
         """
         Baut den TF-IDF-Index über den gegebenen Texten auf.
 
-        :param texts: Iterable von Strings (z.B. Chunk-Contents)
-        :param meta: Optionale Metadaten, gleiche Länge wie texts
-                     (z.B. komplette Chunk-Dicts aus deiner JSON)
+        :param texts: Input-Texte bzw. Chunks
+        :param meta: Optionale Metadaten
         """
         texts = list(texts)
         self._texts = texts
@@ -85,9 +86,9 @@ class TfidfRetriever:
         """
         Sucht die top_k ähnlichsten Texte zur Query.
 
-        :param query: Suchanfrage (z.B. ein Zusammenfassungssatz)
+        :param query: Suchanfrage
         :param top_k: Anzahl der gewünschten Treffer
-        :param min_score: Untergrenze für Cosine Similarity (0.0–1.0)
+        :param min_score: Untergrenze für Cosine Similarity
         :return: Liste von SearchResult, nach Score absteigend sortiert
         """
         self._ensure_fitted()
