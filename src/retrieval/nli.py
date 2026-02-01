@@ -18,10 +18,11 @@ class NLIResult:
 
 class NLIVerifier:
     """
-    NLI/Entailment Verifier:
-    premise = candidate passage
-    hypothesis = query/summary sentence
-    output = entailment probability
+    Oberklasse für NLI-Verifikation mittels Cross-Encoder.
+    
+    :param model_name: Name des Modells
+    :param device: Gerät für die Berechnung ("cpu" oder "cuda")
+    :param max_length: Maximale Sequenzlänge für das Modell
     """
 
     def __init__(
@@ -37,8 +38,7 @@ class NLIVerifier:
         self.model = AutoModelForSequenceClassification.from_pretrained(model_name).to(self.device)
         self.model.eval()
 
-        # XNLI label mapping ist modellabhängig; bei xlm-roberta-large-xnli ist es i.d.R.
-        # 0=contradiction, 1=neutral, 2=entailment
+        # Modellspezifische Label-IDs
         self.entailment_id = 2
         self.neutral_id = 1
         self.contradiction_id = 0
@@ -52,10 +52,20 @@ class NLIVerifier:
         meta: Optional[Sequence[Any]] = None,
         batch_size: int = 16,
     ) -> List[NLIResult]:
+        """
+        Bewertet die Entailment-Wahrscheinlichkeiten der Prämissen bezüglich der Hypothese.
+        
+        :param hypothesis: Hypothese
+        :param premises: Prämissen
+        :param indices: Indizes
+        :param meta: Metadaten
+        :param batch_size: Batch-Größe
+        :return: Liste der NLI-Ergebnisse
+        """
         if indices is not None and len(indices) != len(premises):
-            raise ValueError("indices length mismatch")
+            raise ValueError("indices muss die gleiche Länge wie premises haben.")
         if meta is not None and len(meta) != len(premises):
-            raise ValueError("meta length mismatch")
+            raise ValueError("meta muss die gleiche Länge wie premises haben.")
 
         results: List[NLIResult] = []
         hyp = hypothesis.strip()
@@ -88,6 +98,5 @@ class NLIVerifier:
 
                 results.append(NLIResult(index=idx, entailment=float(eprob), label=label, text=p_text, meta=m))
 
-        # sort by entailment probability
         results.sort(key=lambda r: r.entailment, reverse=True)
         return results

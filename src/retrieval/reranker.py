@@ -17,11 +17,11 @@ class RerankResult:
 
 class CrossEncoderReranker:
     """
-    Cross-Encoder Reranker:
-    - bekommt (query, passage) Paare
-    - gibt Scores zurück (höher = besser)
+    Oberklasse für Cross-Encoder Reranking.
+    
+    :param model_name: Name des Modells
+    :param device: Gerät für die Berechnung ("cpu" oder "cuda")
     """
-
     def __init__(
         self,
         model_name: str = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
@@ -40,6 +40,17 @@ class CrossEncoderReranker:
         top_k: int = 10,
         batch_size: int = 32,
     ) -> List[RerankResult]:
+        """
+        Führt das Reranking der Kandidaten durch.
+        
+        :param query: Beschreibung der Suchanfrage
+        :param candidate_texts: Liste der Kandidatentexte
+        :param candidate_meta: Metadaten zu den Kandidaten
+        :param candidate_indices: Indizes der Kandidaten
+        :param top_k: Anzahl der Top-Ergebnisse
+        :param batch_size: Größe der Verarbeitungs-Batches
+        :return: Liste der Rerank-Ergebnisse
+        """
         q = query.strip()
         if not q:
             return []
@@ -52,7 +63,6 @@ class CrossEncoderReranker:
         pairs = [(q, t) for t in candidate_texts]
         scores = self.model.predict(pairs, batch_size=batch_size)
 
-        # build results
         results: List[RerankResult] = []
         for i, (text, score) in enumerate(zip(candidate_texts, scores)):
             meta = candidate_meta[i] if candidate_meta is not None else None

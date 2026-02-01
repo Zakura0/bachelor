@@ -17,6 +17,7 @@ from src.retrieval.reranker import CrossEncoderReranker
 def rrf_fuse(rank_lists, k=60):
     """
     Reciprocal Rank Fusion.
+    
     rank_lists: list of lists of indices, ordered best->worst
     returns: dict index -> rrf_score
     """
@@ -44,42 +45,41 @@ def main():
     tfidf = TfidfRetriever(ngram_range=(1, 2))
     tfidf.fit(texts, meta=chunks)
 
-    dense = EmbeddingRetriever(model_name="intfloat/multilingual-e5-base")
-    dense.load_embeddings(embeddings=emb, texts=texts, meta=chunks)
+    embeddings = EmbeddingRetriever(model_name="intfloat/multilingual-e5-base")
+    embeddings.load_embeddings(embeddings=emb, texts=texts, meta=chunks)
 
     reranker = CrossEncoderReranker(model_name="cross-encoder/mmarco-mMiniLMv2-L12-H384-v1")
 
-    K_SPARSE = 200
-    K_DENSE = 200
+    K_TFIDF = 200
+    K_EMBEDDINGS = 200
     TOP_OUT = 10
 
-    print("Hybrid (TF-IDF + Embeddings) -> Cross-Encoder Rerank. 'exit' zum Beenden.\n")
+    print("Programm gestartet. 'exit' zum Beenden.\n")
 
     while True:
         query = input("Query: ").strip()
-        if not query or query.lower() in ("exit", "quit", ":q"):
+        if not query or query.lower() == "exit":
             break
 
-        # 1) Kandidaten aus beiden Retrievern
-        sparse_res = tfidf.search(query, top_k=K_SPARSE)
-        dense_res = dense.search(query, top_k=K_DENSE)
+        tfidf_res = tfidf.search(query, top_k=K_TFIDF)
+        embeddings_res = embeddings.search(query, top_k=K_EMBEDDINGS)
 
-        sparse_ranked = [r.index for r in sparse_res]
-        dense_ranked = [r.index for r in dense_res]
+        tfidf_ranked = [r.index for r in tfidf_res]
+        embeddings_ranked = [r.index for r in embeddings_res]
+        
+        print(f"\n{len(tfidf_ranked)} TF-IDF Ergebnisse, {len(embeddings_ranked)} Embedding Ergebnisse.")
+        print("Führe Reciprocal Rank Fusion durch...")
 
-        # 2) RRF fusion score
-        fused = rrf_fuse([sparse_ranked, dense_ranked], k=60)
-
-        # 3) Candidate-Set: Union, sortiert nach fused score
+        fused = rrf_fuse([tfidf_ranked, embeddings_ranked], k=60)
         candidate_indices = sorted(fused.keys(), key=lambda i: fused[i], reverse=True)
-
-        # Begrenzen, damit Reranking nicht zu teuer wird:
         candidate_indices = candidate_indices[:300]
 
         cand_texts = [texts[i] for i in candidate_indices]
         cand_meta = [chunks[i] for i in candidate_indices]
+        
+        print(f"\n{len(candidate_indices)} Kandidaten für Reranking ausgewählt.")
+        print("Starte Reranking...")
 
-        # 4) Rerank
         reranked = reranker.rerank(
             query=query,
             candidate_texts=cand_texts,
@@ -89,22 +89,22 @@ def main():
             batch_size=32
         )
         
+        print("Reranking abgeschlossen. Starte NLI-Verifikation...\n")
+        
         nli = NLIVerifier(model_name="joeddav/xlm-roberta-large-xnli")
 
-        top_for_nli = reranked[:30]
-        premises = [r.text for r in top_for_nli]
-        meta = [r.meta for r in top_for_nli]
-        idxs = [r.index for r in top_for_nli]
+        texts = [r.text for r in reranked]
+        meta = [r.meta for r in reranked]
+        idxs = [r.index for r in reranked]
 
         nli_ranked = nli.score_entailment(
             hypothesis=query,
-            premises=premises,
+            premises=texts,
             indices=idxs,
             meta=meta,
             batch_size=16
         )
-
-        # Ausgabe Top-10 nach entailment
+        
         for rank, r in enumerate(nli_ranked[:10], start=1):
             c = r.meta
             print(f"{rank}. entail={r.entailment:.3f} ({r.label}) | Chunk-ID={c['id']} | Start={c['start_index']}")
