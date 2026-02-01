@@ -41,7 +41,6 @@ def main():
     if emb.shape[0] != len(texts):
         raise ValueError("Embeddings passen nicht zur Chunk-Anzahl.")
 
-    # --- Retriever initialisieren ---
     tfidf = TfidfRetriever(ngram_range=(1, 2))
     tfidf.fit(texts, meta=chunks)
 
@@ -75,7 +74,7 @@ def main():
         candidate_indices = sorted(fused.keys(), key=lambda i: fused[i], reverse=True)
 
         # Begrenzen, damit Reranking nicht zu teuer wird:
-        candidate_indices = candidate_indices[:300]  # typischerweise 200–500
+        candidate_indices = candidate_indices[:300]
 
         cand_texts = [texts[i] for i in candidate_indices]
         cand_meta = [chunks[i] for i in candidate_indices]

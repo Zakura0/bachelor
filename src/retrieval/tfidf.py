@@ -9,10 +9,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 @dataclass
 class SearchResult:
-    index: int          # Index des Textes im ursprünglichen Korpus
-    score: float        # Ähnlichkeits-Score (Cosine Similarity)
-    text: str           # Gefundener Text (z.B. Chunk-Content)
-    meta: object = None # Zusätzliche Metadaten (z.B. Chunk-Dict)
+    index: int          # Index des Textes im ursprünglichen Text
+    score: float        # Ähnlichkeits-Score
+    text: str           # Gefundener Chunk
+    meta: object = None # Zusätzliche Metadaten
 
 
 class TfidfRetriever:
@@ -23,16 +23,16 @@ class TfidfRetriever:
         stop_words: Optional[str] = None,
     ) -> None:
         """
-        :param ngram_range: z.B. (1, 2) für Unigramme + Bigramme
-        :param max_features: Optional Begrenzung der Anzahl Features
-        :param stop_words: z.B. 'german' (von scikit-learn unterstützt) oder None
+        :param ngram_range: Auswahl ob einzelne Wörter (1,1) oder auch Phrasen (z.B. (1,2))
+        :param max_features: Maximale Anzahl an Features (Wörtern/Phrasen) im Vokabular
+        :param stop_words: Liste von Stoppwörtern ("german" für deutsche Stoppwörter) oder None
         """
         self.vectorizer = TfidfVectorizer(
             ngram_range=ngram_range,
             max_features=max_features,
             stop_words=stop_words,
         )
-        self._X = None  # TF-IDF-Matrix
+        self._X = None  # Matrix der TF-IDF-Vektoren
         self._texts: List[str] = []
         self._meta: Optional[List[Any]] = None
         self._fitted = False
@@ -73,8 +73,7 @@ class TfidfRetriever:
     def _ensure_fitted(self) -> None:
         if not self._fitted or self._X is None:
             raise RuntimeError(
-                "TfidfRetriever ist noch nicht fit(). "
-                "Rufe zuerst retriever.fit(texts, ...) auf."
+                "TfidfRetriever ist noch nicht fit. "
             )
 
     def search(
@@ -99,14 +98,12 @@ class TfidfRetriever:
         q_vec = self.vectorizer.transform([query])
         sims = cosine_similarity(q_vec, self._X)[0]
 
-        # Indizes nach Score sortieren (absteigend)
         sorted_indices = sims.argsort()[::-1]
 
         results: List[SearchResult] = []
         for idx in sorted_indices:
             score = float(sims[idx])
             if score < min_score:
-                # Alles darunter ignorieren
                 continue
 
             text = self._texts[idx]

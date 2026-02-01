@@ -67,7 +67,6 @@ class BookChunker:
             raw_end = match.end()
             raw = text[raw_start:raw_end]
 
-            # führende/trailing Whitespaces entfernen, Offsets anpassen
             leading = len(raw) - len(raw.lstrip())
             trailing = len(raw) - len(raw.rstrip())
             start = raw_start + leading
@@ -115,7 +114,7 @@ class BookChunker:
             while current_sent_idx < n:
                 s = sentences[current_sent_idx]
                 words_in_s = len(s.text.split())
-                # Wenn Chunk noch leer ist, dürfen wir auch einen langen Satz nehmen
+                # Wenn Chunk noch leer ist nehme längeren Satz
                 if current_word_count > 0 and current_word_count + words_in_s > self.max_words:
                     break
                 current_word_count += words_in_s
@@ -150,10 +149,8 @@ class BookChunker:
             chunk_id += 1
 
             # Nächster Chunk startet mit Overlap
-            # Beispiel: sentence_overlap=1
-            # -> nächster Start = current_sent_idx - 1
             i = current_sent_idx - self.sentence_overlap
             if i <= start_sent_idx:
-                i = current_sent_idx  # Schutz vor Endlosschleifen
+                i = current_sent_idx
 
         return chunks
