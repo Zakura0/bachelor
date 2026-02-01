@@ -3,6 +3,9 @@ import sys
 import pathlib
 
 from script.build_book_chunks import build_chunks
+
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
 from script.build_embeddings import build_embeddings
 from script.run_search import run_search
 
@@ -11,12 +14,13 @@ def select_book(raw_dir="data/raw"):
     if not files:
         print("Keine Bücher im raw-Verzeichnis gefunden.")
         return None
-    print("Verfügbare Bücher:")
+    print("Wähle ein Buch:")
     for idx, fname in enumerate(files, 1):
         print(f"{idx}: {fname}")
+    print("\n")
     while True:
         try:
-            choice = int(input("Bitte wähle ein Buch durch Eingabe der Zahl: "))
+            choice = int(input("Auswahl (Zahl): "))
             if 1 <= choice <= len(files):
                 selected = files[choice - 1]
                 print(f"Du hast ausgewählt: {selected}")
@@ -27,10 +31,12 @@ def select_book(raw_dir="data/raw"):
             print("Ungültige Eingabe. Bitte gib eine Zahl ein.")
 
 if __name__ == "__main__":
+    clear_terminal()
     selected_book = select_book()
     if not selected_book:
         exit(0)
 
+    clear_terminal()
     book_stem = pathlib.Path(selected_book).stem
     processed_dir = os.path.join("data", "processed")
     chunks_path = os.path.join(processed_dir, f"{book_stem}_chunks.json")
@@ -47,13 +53,16 @@ if __name__ == "__main__":
             print("Bitte antworte mit 'j' oder 'n'.")
 
     def create_chunks():
+        clear_terminal()
         print("Chunks werden erstellt...")
         build_chunks(selected_book, chunks_path)
+        input("Enter zum Fortfahren...")
 
     def create_embeddings():
+        clear_terminal()
         print("Embeddings werden erstellt...")
         build_embeddings(chunks_path, embeddings_path)
-
+        input("Enter zum Fortfahren...")
     if not file_exists(chunks_path):
         print(f"Es gibt noch keine Chunks für das Buch ({chunks_path}).")
         if ask_yes_no("Chunks jetzt erstellen?"):
@@ -77,6 +86,7 @@ if __name__ == "__main__":
         print("4: Beenden")
         opt = input("Bitte wähle eine Option: ").strip()
         if opt == "1":
+            clear_terminal()
             run_search(chunks_path, embeddings_path)
             break
         elif opt == "2":

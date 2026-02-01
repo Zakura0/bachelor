@@ -13,6 +13,10 @@ from src.retrieval.tfidf import TfidfRetriever
 from src.retrieval.embeddings import EmbeddingRetriever
 from src.retrieval.reranker import CrossEncoderReranker
 
+from transformers import logging as transformers_logging
+
+transformers_logging.set_verbosity_error()
+
 
 def rrf_fuse(rank_lists, k=60):
     """
@@ -46,12 +50,15 @@ def run_search(chunks_path: str, emb_path: str):
     embeddings.load_embeddings(embeddings=emb, texts=texts, meta=chunks)
 
     reranker = CrossEncoderReranker(model_name="cross-encoder/mmarco-mMiniLMv2-L12-H384-v1")
+    
+    nli = NLIVerifier(model_name="joeddav/xlm-roberta-large-xnli")
+    
 
     K_TFIDF = 200
     K_EMBEDDINGS = 200
     TOP_OUT = 10
 
-    print("Programm gestartet. 'exit' zum Beenden.\n")
+    print("Zusammenfassungssuche. 'exit' zum Beenden.\n")
 
     while True:
         query = input("Query: ").strip()
@@ -74,7 +81,7 @@ def run_search(chunks_path: str, emb_path: str):
         cand_texts = [texts[i] for i in candidate_indices]
         cand_meta = [chunks[i] for i in candidate_indices]
         
-        print(f"\n{len(candidate_indices)} Kandidaten für Reranking ausgewählt.")
+        print(f"{len(candidate_indices)} Kandidaten für Reranking ausgewählt.")
         print("Starte Reranking...")
 
         reranked = reranker.rerank(
@@ -86,27 +93,34 @@ def run_search(chunks_path: str, emb_path: str):
             batch_size=32
         )
         
-        print("Reranking abgeschlossen. Starte NLI-Verifikation...\n")
+        top_reranked = reranked[:30]
         
-        nli = NLIVerifier(model_name="joeddav/xlm-roberta-large-xnli")
-
-        texts = [r.text for r in reranked]
-        meta = [r.meta for r in reranked]
-        idxs = [r.index for r in reranked]
+        print("Reranking abgeschlossen. Starte NLI-Verifikation...")
+        
+        nli_texts = [r.text for r in top_reranked]
+        nli_meta = [r.meta for r in top_reranked]
+        nli_idxs = [r.index for r in top_reranked]
 
         nli_ranked = nli.score_entailment(
             hypothesis=query,
-            premises=texts,
-            indices=idxs,
-            meta=meta,
+            premises=nli_texts,
+            indices=nli_idxs,
+            meta=nli_meta,
             batch_size=16
         )
         
+        print("NLI-Verifikation abgeschlossen.\n\n Top-Ergebnisse:\n")
+        
+        COLOR_CYAN = "\033[96m"
+        COLOR_YELLOW = "\033[93m"
+        COLOR_RESET = "\033[0m"
+        
         for rank, r in enumerate(nli_ranked[:10], start=1):
             c = r.meta
-            print(f"{rank}. entail={r.entailment:.3f} ({r.label}) | Chunk-ID={c['id']} | Start={c['start_index']}")
+            color = COLOR_CYAN if rank % 2 == 1 else COLOR_YELLOW
+            print(f"{color}{rank}. Chunk-ID={c['id']} | Start={c['start_index']} | {r.entailment:.3f} ({r.label[0]})")
             print(r.text.replace("\n"," ")[:500])
-            print("-"*80)
+            print("-"*80 + COLOR_RESET)
 
 
 def main():
