@@ -53,9 +53,27 @@ if __name__ == "__main__":
             print("Bitte antworte mit 'j' oder 'n'.")
 
     def create_chunks():
+        print("Wie viele Wörter sollen die Chunks mindestens enthalten? (Standard: 10)")
+        min_words = input("Minimale Wortanzahl: ").strip()
+        if not min_words.isdigit():
+            min_words = 10
+        else:
+            min_words = int(min_words)
+        print("Wie viele Wörter sollen die Chunks maximal enthalten? (Standard: 50)")
+        max_words = input("Maximale Wortanzahl: ").strip()
+        if not max_words.isdigit():
+            max_words = 50
+        else:
+            max_words = int(max_words)
+        print("Wie viele Sätze sollen sich zwischen den Chunks überlappen? (Standard: 1)")
+        sentence_overlap = input("Satzüberlappung: ").strip()
+        if not sentence_overlap.isdigit():
+            sentence_overlap = 1
+        else:
+            sentence_overlap = int(sentence_overlap)
         clear_terminal()
         print("Chunks werden erstellt...")
-        build_chunks(selected_book, chunks_path)
+        build_chunks(selected_book, chunks_path, min_words, max_words, sentence_overlap)
         input("Enter zum Fortfahren...")
 
     def create_embeddings():

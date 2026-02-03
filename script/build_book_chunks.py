@@ -9,7 +9,7 @@ sys.path.insert(0, project_root)
 from src.preprocessing.book_chunker import BookChunker
 
 
-def build_chunks(book_path: str, output_path: str = None):
+def build_chunks(book_path: str, output_path: str = None, min_words: int = 10, max_words: int = 50, sentence_overlap: int = 1) -> str:
     """
     Erstellt Chunks für ein Buch.
     
@@ -24,9 +24,9 @@ def build_chunks(book_path: str, output_path: str = None):
         text = f.read()
 
     chunker = BookChunker(
-        min_words=10,
-        max_words=50,
-        sentence_overlap=1,
+        min_words,
+        max_words,
+        sentence_overlap,
     )
 
     result = chunker.build_chunks(text)
@@ -45,12 +45,14 @@ def build_chunks(book_path: str, output_path: str = None):
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("Bitte gib den Pfad zum Buch an.")
+    if len(sys.argv) < 5:
+        print("Bitte gib den Pfad zum Buch, min_words, max_words und sentence_overlap an.")
         sys.exit(1)
     input_path = sys.argv[1]
-    build_chunks(input_path)
-
+    min_words = int(sys.argv[2])
+    max_words = int(sys.argv[3])
+    sentence_overlap = int(sys.argv[4])
+    build_chunks(input_path, min_words=min_words, max_words=max_words, sentence_overlap=sentence_overlap)
 
 if __name__ == "__main__":
     main()
