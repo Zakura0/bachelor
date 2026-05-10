@@ -11,7 +11,7 @@ from datetime import datetime
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, project_root)
 
-from data.eval.ablation_search import AblationSearchPipeline
+from eval.ablation_search import AblationSearchPipeline
 
 
 def spans_overlap(span1: tuple, span2: tuple) -> bool:

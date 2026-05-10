@@ -7,7 +7,7 @@ from script.build_book_chunks import build_chunks
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 from script.build_embeddings import build_embeddings
-from script.run_search import run_search
+from script.run_search import run_search_interactive
 
 def select_book(raw_dir="data/raw"):
     files = [f for f in os.listdir(raw_dir) if os.path.isfile(os.path.join(raw_dir, f))]
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         opt = input("Bitte wähle eine Option: ").strip()
         if opt == "1":
             clear_terminal()
-            run_search(chunks_path, embeddings_path)
+            run_search_interactive(chunks_path, embeddings_path)
             break
         elif opt == "2":
             create_chunks()
