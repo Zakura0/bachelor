@@ -12,6 +12,7 @@ from src.retrieval.nli import NLIVerifier
 from src.retrieval.tfidf import TfidfRetriever
 from src.retrieval.embeddings import EmbeddingRetriever
 from src.retrieval.reranker import CrossEncoderReranker
+from src.retrieval.llm_reranker import LLMReranker
 
 from transformers import logging as transformers_logging
 
@@ -34,7 +35,7 @@ def rrf_fuse(rank_lists, k=60):
 
 class SearchPipeline:
     """Reusable search pipeline for queries."""    
-    def __init__(self, chunks_path: str, emb_path: str):
+    def __init__(self, chunks_path: str, emb_path: str, use_llm: bool = False):
         with open(chunks_path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
@@ -53,6 +54,7 @@ class SearchPipeline:
 
         self.reranker = CrossEncoderReranker(model_name="cross-encoder/mmarco-mMiniLMv2-L12-H384-v1")
         self.nli = NLIVerifier(model_name="joeddav/xlm-roberta-large-xnli")
+        self.llm = LLMReranker(model="gpt-4o-mini") if use_llm else None
 
     def search(self, query: str, top_k: int = 10, verbose: bool = False):
         """
@@ -112,12 +114,27 @@ class SearchPipeline:
         if verbose:
             print("NLI-Verifikation abgeschlossen.")
 
-        return nli_ranked[:top_k]
+        top_results = nli_ranked[:top_k]
+
+        if self.llm is not None:
+            if verbose:
+                print("Starte LLM-Reranking...")
+            top_results = self.llm.rerank(
+                query=query,
+                candidate_texts=[r.text for r in top_results],
+                candidate_meta=[r.meta for r in top_results],
+                candidate_indices=[r.index for r in top_results],
+                top_k=top_k,
+            )
+            if verbose:
+                print("LLM-Reranking abgeschlossen.")
+
+        return top_results
 
 
-def run_search_interactive(chunks_path: str, emb_path: str):
+def run_search_interactive(chunks_path: str, emb_path: str, use_llm: bool = False):
     """Interactive search loop."""
-    pipeline = SearchPipeline(chunks_path, emb_path)
+    pipeline = SearchPipeline(chunks_path, emb_path, use_llm=use_llm)
 
     print("Zusammenfassungssuche. 'exit' zum Beenden.\n")
 
@@ -146,7 +163,8 @@ def main():
     if len(sys.argv) < 3:
         print("Bitte gib Chunks- und Embeddings-Pfad an.")
         sys.exit(1)
-    run_search_interactive(sys.argv[1], sys.argv[2])
+    use_llm = "--llm" in sys.argv
+    run_search_interactive(sys.argv[1], sys.argv[2], use_llm=use_llm)
 
 
 if __name__ == "__main__":
