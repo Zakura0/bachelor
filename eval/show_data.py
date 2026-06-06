@@ -7,10 +7,12 @@ import json
 import os
 from collections import defaultdict
 
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 SKIP_BOOKS = {"harrypotter"}
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-data_path = os.path.join(script_dir, "data.json")
+data_path = os.path.join(project_root, "data/raw/data.json")
 
 data = json.load(open(data_path, encoding="utf-8"))
 
@@ -52,7 +54,7 @@ for book_name, book_data in data.items():
             "spans": spans
         })
 
-    out_path = os.path.join(script_dir, f"eval_pairs_{book_name}.json")
+    out_path = os.path.join(project_root, "data/processed", f"eval_pairs_{book_name}.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(pairs, f, ensure_ascii=False, indent=2)
 

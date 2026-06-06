@@ -12,16 +12,12 @@ from datetime import datetime
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
+from config import (
+    EVAL_BOOKS as BOOKS,
+    DIR_PROCESSED, DIR_EXPERIMENTS,
+)
 from script.build_book_chunks import build_chunks
 from script.build_embeddings import build_embeddings
-
-# Books to evaluate (excluding harrypotter)
-BOOKS = [
-    "verwandlung",
-    "erdbeben",
-    "judenbuche",
-    "krambambuli",
-]
 
 CHUNK_CONFIGS = [
     {"name": "tiny",               "min_words": 10,  "max_words": 30,  "overlap": 1},
@@ -78,7 +74,7 @@ def evaluate_pipeline(pipeline, eval_pairs):
 
 
 def run_chunk_experiment(output_dir: str = None):
-    eval_dir = os.path.join(project_root, "eval")
+    eval_dir = os.path.join(project_root, "data/processed")
 
     if output_dir is None:
         output_dir = os.path.join(project_root, "data/experiments/chunk_sizes")

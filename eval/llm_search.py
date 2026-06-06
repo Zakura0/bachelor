@@ -7,7 +7,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 client = OpenAI()
 
 book_text = open(os.path.join(project_root, "data/raw/verwandlung.txt"), encoding="utf-8").read()
-eval_pairs = json.load(open(os.path.join(project_root, "eval/eval_pairs_verwandlung.json"), encoding="utf-8"))
+eval_pairs = json.load(open(os.path.join(project_root, "data/processed/eval_pairs_verwandlung.json"), encoding="utf-8"))
 
 hits = 0
 total = 0

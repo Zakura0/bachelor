@@ -11,23 +11,14 @@ from datetime import datetime
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
+from config import (
+    EVAL_BOOKS, RECALL_K, LLM_TOP_K,
+    CHUNK_MIN_WORDS, CHUNK_MAX_WORDS, CHUNK_OVERLAP,
+    DIR_PROCESSED, DIR_EXPERIMENTS,
+)
 from eval.ablation_search import AblationSearchPipeline
 
-# Nur xlarge — beste Chunk-Größe aus dem vorherigen Experiment
-CHUNK_CONFIG = {"name": "xlarge", "min_words": 80, "max_words": 200, "overlap": 3}
-
-BOOKS = [
-    "verwandlung",
-    "erdbeben",
-    "judenbuche",
-    "krambambuli",
-]
-
-# k-Werte für Recall@k Messung
-RECALL_K = [1, 3, 5, 10, 20]
-
-# Kandidatenpool für den LLM-Reranker (aus Recall@k Analyse)
-LLM_TOP_K = 20
+CHUNK_CONFIG = {"name": "xlarge", "min_words": CHUNK_MIN_WORDS, "max_words": CHUNK_MAX_WORDS, "overlap": CHUNK_OVERLAP}
 
 PIPELINE_CONFIGS = [
     {"name": "TF-IDF+Emb",           "tfidf": True, "emb": True, "rerank": False, "nli": False, "llm": False},
@@ -85,8 +76,8 @@ def evaluate_pipeline(pipeline, eval_pairs, use_llm: bool = False):
 
 
 def main():
-    eval_dir = os.path.join(project_root, "eval")
-    chunks_dir = os.path.join(project_root, "data/experiments/chunk_sizes")
+    eval_dir   = DIR_PROCESSED
+    chunks_dir = DIR_EXPERIMENTS
     chunk_name = CHUNK_CONFIG["name"]
 
     print("=" * 80)
@@ -96,7 +87,7 @@ def main():
     print(f"Pipelines: {[p['name'] for p in PIPELINE_CONFIGS]}\n")
 
     eval_pairs_per_book = {}
-    for book in BOOKS:
+    for book in EVAL_BOOKS:
         ep_path = os.path.join(eval_dir, f"eval_pairs_{book}.json")
         if not os.path.exists(ep_path):
             print(f"  WARNING: {ep_path} nicht gefunden, überspringe {book}")
@@ -201,9 +192,7 @@ def main():
     print("=" * 80)
 
     # Ergebnisse speichern
-    output_path = os.path.join(
-        project_root, "data/experiments/chunk_sizes", "llm_experiment_results.json"
-    )
+    output_path = os.path.join(DIR_EXPERIMENTS, "llm_experiment_results.json")
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump({
             "timestamp": datetime.now().isoformat(),

@@ -8,6 +8,11 @@ import numpy as np
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
+from config import (
+    EMBEDDING_MODEL, RERANKER_MODEL, NLI_MODEL, LLM_MODEL,
+    K_RETRIEVAL, K_RRF, K_RERANKER, RRF_K,
+)
+
 from src.retrieval.nli import NLIVerifier
 from src.retrieval.tfidf import TfidfRetriever
 from src.retrieval.embeddings import EmbeddingRetriever
@@ -80,23 +85,23 @@ class AblationSearchPipeline:
             self.tfidf = None
             
         if self.use_embeddings:
-            self.embeddings = EmbeddingRetriever(model_name="intfloat/multilingual-e5-base")
+            self.embeddings = EmbeddingRetriever(model_name=EMBEDDING_MODEL)
             self.embeddings.load_embeddings(embeddings=emb, texts=self.texts, meta=self.chunks)
         else:
             self.embeddings = None
             
         if self.use_reranker:
-            self.reranker = CrossEncoderReranker(model_name="cross-encoder/mmarco-mMiniLMv2-L12-H384-v1")
+            self.reranker = CrossEncoderReranker(model_name=RERANKER_MODEL)
         else:
             self.reranker = None
             
         if self.use_nli:
-            self.nli = NLIVerifier(model_name="joeddav/xlm-roberta-large-xnli")
+            self.nli = NLIVerifier(model_name=NLI_MODEL)
         else:
             self.nli = None
 
         if self.use_llm:
-            self.llm = LLMReranker(model="gpt-4o-mini")
+            self.llm = LLMReranker(model=LLM_MODEL)
         else:
             self.llm = None
 
@@ -119,20 +124,24 @@ class AblationSearchPipeline:
         """
         Run a search query through the configured pipeline.
         Returns list of results with text, index, meta, and score/entailment.
+
+        Pipeline-Stufen (konfigurierbar über Konstanten oben):
+          TF-IDF/Emb → K_RETRIEVAL  candidates each
+          RRF Fusion → K_RRF        candidates
+          Reranker   → K_RERANKER   candidates
+          NLI/LLM    → top_k        results
         """
-        K_INITIAL = 200
-        
         rank_lists = []
         
         if self.use_tfidf:
-            tfidf_res = self.tfidf.search(query, top_k=K_INITIAL)
+            tfidf_res = self.tfidf.search(query, top_k=K_RETRIEVAL)
             tfidf_ranked = [r.index for r in tfidf_res]
             rank_lists.append(tfidf_ranked)
             if verbose:
                 print(f"{len(tfidf_ranked)} TF-IDF Ergebnisse.")
         
         if self.use_embeddings:
-            embeddings_res = self.embeddings.search(query, top_k=K_INITIAL)
+            embeddings_res = self.embeddings.search(query, top_k=K_RETRIEVAL)
             embeddings_ranked = [r.index for r in embeddings_res]
             rank_lists.append(embeddings_ranked)
             if verbose:
@@ -141,12 +150,12 @@ class AblationSearchPipeline:
         if len(rank_lists) > 1:
             if verbose:
                 print("Führe RRF durch...")
-            fused = rrf_fuse(rank_lists, k=60)
+            fused = rrf_fuse(rank_lists, k=RRF_K)
             candidate_indices = sorted(fused.keys(), key=lambda i: fused[i], reverse=True)
         else:
             candidate_indices = rank_lists[0]
         
-        candidate_indices = candidate_indices[:300]
+        candidate_indices = candidate_indices[:K_RRF]
         
         if self.use_reranker:
             cand_texts = [self.texts[i] for i in candidate_indices]
@@ -160,11 +169,11 @@ class AblationSearchPipeline:
                 candidate_texts=cand_texts,
                 candidate_meta=cand_meta,
                 candidate_indices=candidate_indices,
-                top_k=30,
+                top_k=K_RERANKER,
                 batch_size=32
             )
             
-            candidate_indices = [r.index for r in reranked[:30]]
+            candidate_indices = [r.index for r in reranked[:K_RERANKER]]
             
             if verbose:
                 print("Reranking abgeschlossen.")

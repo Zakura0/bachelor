@@ -8,6 +8,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
 from src.retrieval.embeddings import EmbeddingRetriever
+from config import EMBEDDING_MODEL
 
 
 def build_embeddings(chunks_path: str, output_path: str = None):
@@ -30,10 +31,7 @@ def build_embeddings(chunks_path: str, output_path: str = None):
     chunks = data["chunks"]
     texts = [c["content"] for c in chunks]
 
-    retriever = EmbeddingRetriever(
-        model_name="intfloat/multilingual-e5-base",
-        device=None,  # auto: cuda wenn verfügbar
-    )
+    retriever = EmbeddingRetriever(model_name=EMBEDDING_MODEL)
     retriever.fit(texts, meta=chunks, batch_size=64)
 
     # Speichern
