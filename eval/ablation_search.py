@@ -12,6 +12,7 @@ from src.retrieval.nli import NLIVerifier
 from src.retrieval.tfidf import TfidfRetriever
 from src.retrieval.embeddings import EmbeddingRetriever
 from src.retrieval.reranker import CrossEncoderReranker
+from src.retrieval.llm_reranker import LLMReranker
 
 from transformers import logging as transformers_logging
 
@@ -41,7 +42,8 @@ class AblationSearchPipeline:
                  use_tfidf: bool = True,
                  use_embeddings: bool = True, 
                  use_reranker: bool = True,
-                 use_nli: bool = True):
+                 use_nli: bool = True,
+                 use_llm: bool = False):
         """
         Initialize search pipeline with configurable components.
         
@@ -62,6 +64,7 @@ class AblationSearchPipeline:
         self.use_embeddings = use_embeddings
         self.use_reranker = use_reranker
         self.use_nli = use_nli
+        self.use_llm = use_llm
         
         if not use_tfidf and not use_embeddings:
             raise ValueError("At least one of TF-IDF or embeddings must be enabled")
@@ -92,6 +95,11 @@ class AblationSearchPipeline:
         else:
             self.nli = None
 
+        if self.use_llm:
+            self.llm = LLMReranker(model="gpt-4o-mini")
+        else:
+            self.llm = None
+
     def get_config_name(self) -> str:
         """Return a descriptive name for the current configuration."""
         components = []
@@ -103,6 +111,8 @@ class AblationSearchPipeline:
             components.append("RERANK")
         if self.use_nli:
             components.append("NLI")
+        if self.use_llm:
+            components.append("LLM")
         return "+".join(components) if components else "NONE"
 
     def search(self, query: str, top_k: int = 10, verbose: bool = False):
@@ -176,18 +186,32 @@ class AblationSearchPipeline:
             
             if verbose:
                 print("NLI-Verifikation abgeschlossen.")
-            
-            return nli_ranked[:top_k]
+
+            top_results = nli_ranked[:top_k]
         else:
-            results = []
+            top_results = []
             for idx in candidate_indices[:top_k]:
-                results.append(SearchResult(
+                top_results.append(SearchResult(
                     text=self.texts[idx],
                     index=idx,
                     meta=self.chunks[idx],
                     score=1.0
                 ))
-            return results
+
+        if self.use_llm:
+            if verbose:
+                print("Starte LLM-Reranking...")
+            top_results = self.llm.rerank(
+                query=query,
+                candidate_texts=[r.text for r in top_results],
+                candidate_meta=[r.meta for r in top_results],
+                candidate_indices=[r.index for r in top_results],
+                top_k=top_k,
+            )
+            if verbose:
+                print("LLM-Reranking abgeschlossen.")
+
+        return top_results
 
 
 def run_search_interactive(chunks_path: str, emb_path: str, 

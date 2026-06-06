@@ -34,10 +34,12 @@ CHUNK_CONFIGS = [
 ]
 
 PIPELINE_CONFIGS = [
-    {"name": "TF-IDF+Emb",       "tfidf": True,  "emb": True,  "rerank": False, "nli": False},
-    {"name": "Emb Only",          "tfidf": False, "emb": True,  "rerank": False, "nli": False},
-    {"name": "Full Pipeline",     "tfidf": True,  "emb": True,  "rerank": True,  "nli": True},
-    {"name": "TF-IDF+Emb+Rerank", "tfidf": True,  "emb": True,  "rerank": True,  "nli": False},
+    {"name": "TF-IDF+Emb",        "tfidf": True,  "emb": True,  "rerank": False, "nli": False, "llm": False},
+    {"name": "Emb Only",           "tfidf": False, "emb": True,  "rerank": False, "nli": False, "llm": False},
+    {"name": "Full Pipeline",      "tfidf": True,  "emb": True,  "rerank": True,  "nli": True,  "llm": False},
+    {"name": "TF-IDF+Emb+Rerank",  "tfidf": True,  "emb": True,  "rerank": True,  "nli": False, "llm": False},
+    {"name": "TF-IDF+Emb+LLM",     "tfidf": True,  "emb": True,  "rerank": False, "nli": False, "llm": True},
+    {"name": "TF-IDF+Emb+Rerank+LLM","tfidf": True,"emb": True,  "rerank": True,  "nli": False, "llm": True},
 ]
 
 
@@ -188,6 +190,7 @@ def run_chunk_experiment(output_dir: str = None):
                         use_embeddings=pipe_config["emb"],
                         use_reranker=pipe_config["rerank"],
                         use_nli=pipe_config["nli"],
+                        use_llm=pipe_config["llm"],
                     )
 
                     hits, total, avg_rank = evaluate_pipeline(pipeline, ep)

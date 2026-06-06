@@ -9,7 +9,7 @@ from openai import OpenAI
 @dataclass
 class LLMRerankResult:
     index: int
-    score: float  # Rang (1 = bestes), normiert auf [0, 1]
+    score: float
     text: str
     meta: Any = None
 
@@ -79,22 +79,18 @@ Sortierte Reihenfolge (nur Nummern):"""
 
         raw = response.choices[0].message.content.strip()
 
-        # Antwort parsen: "3,1,5,2,4" → [3, 1, 5, 2, 4]
         try:
             order = [int(x.strip()) - 1 for x in raw.split(",") if x.strip().isdigit()]
-            # Unbekannte oder doppelte Indizes herausfiltern
             seen = set()
             clean_order = []
             for idx in order:
                 if 0 <= idx < n and idx not in seen:
                     clean_order.append(idx)
                     seen.add(idx)
-            # Fehlende Indizes ans Ende hängen
             for idx in range(n):
                 if idx not in seen:
                     clean_order.append(idx)
         except Exception:
-            # Fallback: originale Reihenfolge beibehalten
             clean_order = list(range(n))
 
         results = []
