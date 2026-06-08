@@ -1,6 +1,6 @@
 """
 Interaktives Such-Skript.
-Nutzt AblationSearchPipeline — Pipeline-Konfiguration in eval/ablation_search.py.
+Pipeline-Implementierung in src/retrieval/pipeline.py.
 """
 import os
 import sys
@@ -8,7 +8,7 @@ import sys
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
-from eval.ablation_search import AblationSearchPipeline
+from src.retrieval.pipeline import SearchPipeline
 
 
 def run_search_interactive(chunks_path: str, emb_path: str,
@@ -19,7 +19,7 @@ def run_search_interactive(chunks_path: str, emb_path: str,
                            use_llm: bool = False,
                            top_k: int = 10):
     """Interaktive Suche mit konfigurierbarer Pipeline."""
-    pipeline = AblationSearchPipeline(
+    pipeline = SearchPipeline(
         chunks_path, emb_path,
         use_tfidf=use_tfidf,
         use_embeddings=use_embeddings,

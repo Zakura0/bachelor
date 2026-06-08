@@ -16,7 +16,7 @@ from config import (
     CHUNK_MIN_WORDS, CHUNK_MAX_WORDS, CHUNK_OVERLAP,
     DIR_PROCESSED, DIR_EXPERIMENTS,
 )
-from eval.ablation_search import AblationSearchPipeline
+from src.retrieval.pipeline import SearchPipeline as AblationSearchPipeline
 
 CHUNK_CONFIG = {"name": "xlarge", "min_words": CHUNK_MIN_WORDS, "max_words": CHUNK_MAX_WORDS, "overlap": CHUNK_OVERLAP}
 

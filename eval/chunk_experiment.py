@@ -109,7 +109,7 @@ def run_chunk_experiment(output_dir: str = None):
     # results_all: list of dicts with keys chunk_config, pipeline_config, book, metrics
     results_all = []
 
-    from eval.ablation_search import AblationSearchPipeline
+    from src.retrieval.pipeline import SearchPipeline as AblationSearchPipeline
 
     for i, chunk_config in enumerate(CHUNK_CONFIGS, 1):
         chunk_name = chunk_config["name"]
