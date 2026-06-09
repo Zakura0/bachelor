@@ -121,28 +121,21 @@ def run_suche():
 # ---------------------------------------------------------------------------
 
 def run_experimente():
-    # Lazy imports — Modelle werden erst beim tatsächlichen Ausführen geladen
-    from eval.chunk_experiment import main as chunk_main
-    from eval.llm_experiment import main as llm_main
+    from eval.top1_experiment import main as top1_main
 
     while True:
         clear_terminal()
         print("=== EXPERIMENTE ===")
         print()
-        print("  1: Chunk-Größen-Experiment  (7 Chunk-Größen × 6 Pipelines × 4 Bücher)")
-        print("  2: LLM-Reranker-Experiment  (xlarge Chunks, Recall@k mit/ohne LLM)")
-        print("  3: Zurück")
+        print("  1: Experiment starten  (konfigurierbar in eval/top1_experiment.py)")
+        print("  2: Zurück")
         print()
         opt = input("Auswahl: ").strip()
         if opt == "1":
             clear_terminal()
-            chunk_main()
+            top1_main()
             input("\nEnter zum Fortfahren...")
         elif opt == "2":
-            clear_terminal()
-            llm_main()
-            input("\nEnter zum Fortfahren...")
-        elif opt == "3":
             return
         else:
             print("Ungültige Eingabe.")

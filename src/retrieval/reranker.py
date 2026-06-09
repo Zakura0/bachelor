@@ -24,7 +24,7 @@ class CrossEncoderReranker:
     """
     def __init__(
         self,
-        model_name: str = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+        model_name: str,
         device: Optional[str] = None,
     ) -> None:
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")

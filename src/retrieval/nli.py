@@ -27,7 +27,7 @@ class NLIVerifier:
 
     def __init__(
         self,
-        model_name: str = "joeddav/xlm-roberta-large-xnli",
+        model_name: str,
         device: Optional[str] = None,
         max_length: int = 384,
     ) -> None:

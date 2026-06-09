@@ -31,6 +31,25 @@ transformers_logging.set_verbosity_error()
 SearchResult = namedtuple("SearchResult", ["text", "index", "meta", "score"])
 
 
+# Vordefinierte Pipeline-Konfigurationen
+# 1 = TF-IDF only
+# 2 = Embeddings only
+# 3 = TF-IDF + Embeddings (RRF)
+# 4 = TF-IDF + Embeddings + Reranker
+# 5 = TF-IDF + Embeddings + Reranker + NLI
+# 6 = TF-IDF + Embeddings + LLM
+# 7 = TF-IDF + Embeddings + Reranker + LLM
+PIPELINE_PRESETS = {
+    1: dict(name="TFIDF",                use_tfidf=True,  use_embeddings=False, use_reranker=False, use_nli=False, use_llm=False),
+    2: dict(name="EMB",                  use_tfidf=False, use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False),
+    3: dict(name="TFIDF+EMB",            use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False),
+    4: dict(name="TFIDF+EMB+RERANK",     use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False),
+    5: dict(name="TFIDF+EMB+RERANK+NLI", use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=True,  use_llm=False),
+    6: dict(name="TFIDF+EMB+LLM",        use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=True),
+    7: dict(name="TFIDF+EMB+RERANK+LLM", use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True),
+}
+
+
 def rrf_fuse(rank_lists: List[List[int]], k: int = RRF_K) -> dict:
     """
     Reciprocal Rank Fusion.
@@ -53,32 +72,34 @@ class SearchPipeline:
       RRF Fusion           →  K_RRF Kandidaten
       Cross-Encoder        →  K_RERANKER Kandidaten
       NLI / LLM            →  top_k Ergebnisse
+
+    preset: einer der Schlüssel aus PIPELINE_PRESETS, z.B. "tfidf+emb+rerank+llm"
     """
 
-    def __init__(
-        self,
-        chunks_path: str,
-        emb_path: str,
-        use_tfidf: bool = True,
-        use_embeddings: bool = True,
-        use_reranker: bool = True,
-        use_nli: bool = False,
-        use_llm: bool = False,
-    ):
-        if not use_tfidf and not use_embeddings:
-            raise ValueError("Mindestens TF-IDF oder Embeddings muss aktiv sein.")
+    def __init__(self, chunks_path: str, emb_path: str, preset: str):
+        if preset not in PIPELINE_PRESETS:
+            raise ValueError(f"Unbekanntes Preset '{preset}'. Verfügbar: 1–{len(PIPELINE_PRESETS)}")
+
+        flags = PIPELINE_PRESETS[preset]
+        use_tfidf      = flags["use_tfidf"]
+        use_embeddings = flags["use_embeddings"]
+        use_reranker   = flags["use_reranker"]
+        use_nli        = flags["use_nli"]
+        use_llm        = flags["use_llm"]
+
+        self.preset         = preset
+        self.preset_name    = flags["name"]
+        self.use_tfidf      = use_tfidf
+        self.use_embeddings = use_embeddings
+        self.use_reranker   = use_reranker
+        self.use_nli        = use_nli
+        self.use_llm        = use_llm
 
         with open(chunks_path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
         self.chunks = data["chunks"]
         self.texts  = [c["content"] for c in self.chunks]
-
-        self.use_tfidf      = use_tfidf
-        self.use_embeddings = use_embeddings
-        self.use_reranker   = use_reranker
-        self.use_nli        = use_nli
-        self.use_llm        = use_llm
 
         emb = np.load(emb_path)
         if emb.shape[0] != len(self.texts):
@@ -98,13 +119,7 @@ class SearchPipeline:
         self.llm      = LLMReranker(model=LLM_MODEL)                    if use_llm      else None
 
     def get_config_name(self) -> str:
-        parts = []
-        if self.use_tfidf:      parts.append("TFIDF")
-        if self.use_embeddings: parts.append("EMB")
-        if self.use_reranker:   parts.append("RERANK")
-        if self.use_nli:        parts.append("NLI")
-        if self.use_llm:        parts.append("LLM")
-        return "+".join(parts) if parts else "NONE"
+        return self.preset_name
 
     def search(self, query: str, top_k: int = 10, verbose: bool = False):
         """Suche und gib top_k Ergebnisse zurück."""

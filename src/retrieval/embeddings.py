@@ -27,7 +27,7 @@ class EmbeddingRetriever:
 
     def __init__(
         self,
-        model_name: str = "intfloat/multilingual-e5-base",
+        model_name: str,
         device: Optional[str] = None,
         normalize: bool = True,
     ) -> None:

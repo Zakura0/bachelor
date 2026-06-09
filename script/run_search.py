@@ -8,25 +8,15 @@ import sys
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
-from src.retrieval.pipeline import SearchPipeline
+from src.retrieval.pipeline import SearchPipeline, PIPELINE_PRESETS
+from config import SEARCH_PIPELINE
 
 
 def run_search_interactive(chunks_path: str, emb_path: str,
-                           use_tfidf: bool = True,
-                           use_embeddings: bool = True,
-                           use_reranker: bool = True,
-                           use_nli: bool = False,
-                           use_llm: bool = False,
+                           preset: str = SEARCH_PIPELINE,
                            top_k: int = 10):
     """Interaktive Suche mit konfigurierbarer Pipeline."""
-    pipeline = SearchPipeline(
-        chunks_path, emb_path,
-        use_tfidf=use_tfidf,
-        use_embeddings=use_embeddings,
-        use_reranker=use_reranker,
-        use_nli=use_nli,
-        use_llm=use_llm,
-    )
+    pipeline = SearchPipeline(chunks_path, emb_path, preset=preset)
 
     print(f"Pipeline: {pipeline.get_config_name()}")
     print("'exit' zum Beenden.\n")
@@ -55,27 +45,23 @@ def run_search_interactive(chunks_path: str, emb_path: str,
 def main():
     if len(sys.argv) < 3:
         print("Verwendung: python script/run_search.py <chunks> <embeddings> [Optionen]")
-        print("Optionen: --no-tfidf  --no-reranker  --llm  --top-k=N")
+        print(f"Optionen: --preset=NAME  --top-k=N")
+        print(f"Presets:  {', '.join(PIPELINE_PRESETS)}")
         sys.exit(1)
 
     chunks_path = sys.argv[1]
     emb_path    = sys.argv[2]
     args        = sys.argv[3:]
 
-    top_k = 10
+    preset = SEARCH_PIPELINE
+    top_k  = 10
     for a in args:
-        if a.startswith("--top-k="):
+        if a.startswith("--preset="):
+            preset = a.split("=", 1)[1]
+        elif a.startswith("--top-k="):
             top_k = int(a.split("=")[1])
 
-    run_search_interactive(
-        chunks_path, emb_path,
-        use_tfidf=("--no-tfidf"    not in args),
-        use_embeddings=True,
-        use_reranker=("--no-reranker" not in args),
-        use_nli=("--nli"          in args),
-        use_llm=("--llm"          in args),
-        top_k=top_k,
-    )
+    run_search_interactive(chunks_path, emb_path, preset=preset, top_k=top_k)
 
 
 if __name__ == "__main__":

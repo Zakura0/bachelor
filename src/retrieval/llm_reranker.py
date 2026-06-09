@@ -24,7 +24,7 @@ class LLMReranker:
     :param model: OpenAI-Modell, z.B. "gpt-4o" oder "gpt-4o-mini"
     """
 
-    def __init__(self, model: str = "gpt-4o-mini") -> None:
+    def __init__(self, model: str) -> None:
         self.client = OpenAI()
         self.model = model
 
