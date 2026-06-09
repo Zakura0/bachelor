@@ -121,7 +121,7 @@ def run_suche():
 # ---------------------------------------------------------------------------
 
 def run_experimente():
-    from eval.top1_experiment import main as top1_main
+    from eval.experiment import main as exp_main
 
     while True:
         clear_terminal()
@@ -133,7 +133,7 @@ def run_experimente():
         opt = input("Auswahl: ").strip()
         if opt == "1":
             clear_terminal()
-            top1_main()
+            exp_main()
             input("\nEnter zum Fortfahren...")
         elif opt == "2":
             return

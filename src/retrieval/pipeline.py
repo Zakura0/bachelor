@@ -40,13 +40,13 @@ SearchResult = namedtuple("SearchResult", ["text", "index", "meta", "score"])
 # 6 = TF-IDF + Embeddings + LLM
 # 7 = TF-IDF + Embeddings + Reranker + LLM
 PIPELINE_PRESETS = {
-    1: dict(name="TFIDF",                use_tfidf=True,  use_embeddings=False, use_reranker=False, use_nli=False, use_llm=False),
-    2: dict(name="EMB",                  use_tfidf=False, use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False),
-    3: dict(name="TFIDF+EMB",            use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False),
-    4: dict(name="TFIDF+EMB+RERANK",     use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False),
-    5: dict(name="TFIDF+EMB+RERANK+NLI", use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=True,  use_llm=False),
-    6: dict(name="TFIDF+EMB+LLM",        use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=True),
-    7: dict(name="TFIDF+EMB+RERANK+LLM", use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True),
+    1: dict(use_tfidf=True,  use_embeddings=False, use_reranker=False, use_nli=False, use_llm=False),
+    2: dict(use_tfidf=False, use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False),
+    3: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False),
+    4: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False),
+    5: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=True,  use_llm=False),
+    6: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=True),
+    7: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True),
 }
 
 
@@ -88,7 +88,6 @@ class SearchPipeline:
         use_llm        = flags["use_llm"]
 
         self.preset         = preset
-        self.preset_name    = flags["name"]
         self.use_tfidf      = use_tfidf
         self.use_embeddings = use_embeddings
         self.use_reranker   = use_reranker
@@ -119,7 +118,13 @@ class SearchPipeline:
         self.llm      = LLMReranker(model=LLM_MODEL)                    if use_llm      else None
 
     def get_config_name(self) -> str:
-        return self.preset_name
+        parts = []
+        if self.use_tfidf:      parts.append("TFIDF")
+        if self.use_embeddings: parts.append("EMB")
+        if self.use_reranker:   parts.append("RERANK")
+        if self.use_nli:        parts.append("NLI")
+        if self.use_llm:        parts.append("LLM")
+        return "+".join(parts)
 
     def search(self, query: str, top_k: int = 10, verbose: bool = False):
         """Suche und gib top_k Ergebnisse zurück."""

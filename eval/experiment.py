@@ -1,9 +1,10 @@
 """
-Top-1 LLM Experiment
-====================
-Ziel: Recall@1 maximieren mit der vollen Pipeline (TF-IDF + Emb + Reranker + LLM).
+Evaluation-Experiment
+=====================
+Konfigurierbares Experiment zur Auswertung der Retrieval-Pipeline.
+Misst Recall@k über alle Eval-Bücher.
 
-Konfiguration: alle Parameter in config.py unter dem Abschnitt "Experiment".
+Konfiguration: config.py, Abschnitt "Experiment".
 """
 import json
 import os
@@ -17,38 +18,29 @@ sys.path.insert(0, project_root)
 from config import (
     EVAL_BOOKS, RECALL_K,
     DIR_PROCESSED, DIR_EXPERIMENTS,
-    EXP_CHUNK_MIN_WORDS as CHUNK_MIN_WORDS,
-    EXP_CHUNK_MAX_WORDS as CHUNK_MAX_WORDS,
-    EXP_CHUNK_OVERLAP   as CHUNK_OVERLAP,
-    EXP_CHUNK_NAME      as CHUNK_NAME,
-    EXP_PIPELINE        as PIPELINE_PRESET,
-    EXP_LLM_TOP_K       as LLM_TOP_K,
-    EXP_K_RETRIEVAL     as K_RETRIEVAL,
-    EXP_K_RRF           as K_RRF,
-    EXP_K_RERANKER      as K_RERANKER,
-    EXP_REUSE_EXISTING  as REUSE_EXISTING,
+    EXP_CHUNK        as CHUNK_PRESET,
+    EXP_PIPELINE     as PIPELINE_PRESET,
+    EXP_LLM_TOP_K    as LLM_TOP_K,
 )
-from script.build_book_chunks import build_chunks
-from script.build_embeddings import build_embeddings
+from src.preprocessing.chunk_presets import CHUNK_PRESETS
 from src.retrieval.pipeline import SearchPipeline
+
+CHUNK_CFG  = CHUNK_PRESETS[CHUNK_PRESET]
+CHUNK_NAME = CHUNK_CFG["name"]
 
 
 RESULTS_DIR = os.path.join(project_root, "eval", "results")
 
 
 def prepare_book(book: str, output_dir: str):
-    """Chunks + Embeddings für ein Buch bereitstellen. Gibt (chunks_path, emb_path) zurück."""
-    book_path   = os.path.join(project_root, "data/raw", f"{book}.txt")
+    """Pfade zu Chunks und Embeddings zurückgeben. Bricht ab wenn Dateien fehlen."""
     chunks_path = os.path.join(output_dir, f"chunks_{book}_{CHUNK_NAME}.json")
     emb_path    = os.path.join(output_dir, f"embeddings_{book}_{CHUNK_NAME}.npy")
 
-    if not os.path.exists(chunks_path) or not REUSE_EXISTING:
-        print(f"  [{book}] Baue Chunks …")
-        build_chunks(book_path, chunks_path, CHUNK_MIN_WORDS, CHUNK_MAX_WORDS, CHUNK_OVERLAP)
-
-    if not os.path.exists(emb_path) or not REUSE_EXISTING:
-        print(f"  [{book}] Baue Embeddings …")
-        build_embeddings(chunks_path, emb_path)
+    if not os.path.exists(chunks_path):
+        raise FileNotFoundError(f"Chunks nicht gefunden: {chunks_path}")
+    if not os.path.exists(emb_path):
+        raise FileNotFoundError(f"Embeddings nicht gefunden: {emb_path}")
 
     return chunks_path, emb_path
 
@@ -201,7 +193,7 @@ def main():
 
     print("\n" + "\n".join(summary_lines))
 
-    txt_path = os.path.join(RESULTS_DIR, "top1_experiment_summary.txt")
+    txt_path = os.path.join(RESULTS_DIR, "experiment_summary.txt")
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write("\n".join(summary_lines) + "\n")
     print(f"\nZusammenfassung: {txt_path}")
@@ -233,7 +225,7 @@ def main():
             for book, bm in per_book_results.items()
         ],
     }
-    details_path = os.path.join(RESULTS_DIR, "top1_experiment_details.json")
+    details_path = os.path.join(RESULTS_DIR, "experiment_details.json")
     with open(details_path, "w", encoding="utf-8") as f:
         json.dump(details, f, ensure_ascii=False, indent=2)
     print(f"Details:         {details_path}")
