@@ -55,6 +55,3 @@ EXP_CHUNK    = 5
 
 # Pipeline-Preset (siehe Kommentar bei SEARCH_PIPELINE)
 EXP_PIPELINE = 7
-
-# Wie viele Ergebnisse gibt die Pipeline zurück? (= Kandidaten für den LLM)
-EXP_LLM_TOP_K = 20

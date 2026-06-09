@@ -18,9 +18,9 @@ sys.path.insert(0, project_root)
 from config import (
     EVAL_BOOKS, RECALL_K,
     DIR_PROCESSED, DIR_EXPERIMENTS,
+    K_RERANKER,
     EXP_CHUNK        as CHUNK_PRESET,
     EXP_PIPELINE     as PIPELINE_PRESET,
-    EXP_LLM_TOP_K    as LLM_TOP_K,
 )
 from src.preprocessing.chunk_presets import CHUNK_PRESETS
 from src.retrieval.pipeline import SearchPipeline
@@ -52,7 +52,7 @@ def run_trial(pipeline: SearchPipeline, pair: dict):
     expected_text  = pair.get("text", "")
 
     t0 = time.perf_counter()
-    results = pipeline.search(query, top_k=LLM_TOP_K, verbose=False)
+    results = pipeline.search(query, top_k=K_RERANKER, verbose=False)
     elapsed = time.perf_counter() - t0
 
     first_hit_rank = None
@@ -102,7 +102,7 @@ def main():
     print("=" * 80)
     print(f"Pipeline:    {PIPELINE_PRESET}")
     print(f"Chunks:      {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})")
-    print(f"LLM Top-K:   {LLM_TOP_K}")
+    print(f"Top-K:       {K_RERANKER}")
     print(f"Bücher:      {', '.join(EVAL_BOOKS)}")
     print()
 
@@ -170,7 +170,7 @@ def main():
         f"Datum:     {ts[:19]}",
         f"Pipeline:  {PIPELINE_PRESET}",
         f"Chunks:    {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})",
-        f"LLM Top-K: {LLM_TOP_K}",
+        f"Top-K:     {K_RERANKER}",
         "=" * 80,
         f"{'Buch':<20}  " + "  ".join(f"R@{k:>2}" for k in RECALL_K) + f"  {'AvgRank':>7}  {'s/query':>7}",
         "-" * 80,
@@ -208,7 +208,7 @@ def main():
             "max_words": CHUNK_MAX_WORDS,
             "overlap":   CHUNK_OVERLAP,
         },
-        "llm_top_k": LLM_TOP_K,
+        "top_k": K_RERANKER,
         "aggregate": {
             "total":    agg_total,
             "avg_rank": round(agg_avg_rank, 3),
