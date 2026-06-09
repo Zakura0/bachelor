@@ -2,9 +2,6 @@
 Evaluation-Experiment
 =====================
 Konfigurierbares Experiment zur Auswertung der Retrieval-Pipeline.
-Misst Recall@k über alle Eval-Bücher.
-
-Konfiguration: config.py, Abschnitt "Experiment".
 """
 import json
 import os
@@ -169,7 +166,7 @@ def main():
     # --- Summary-Tabelle (Konsole + TXT) ---
     summary_lines = [
         "=" * 80,
-        "TOP-1 LLM EXPERIMENT — ZUSAMMENFASSUNG",
+        "EXPERIMENT — ZUSAMMENFASSUNG",
         f"Datum:     {ts[:19]}",
         f"Pipeline:  {PIPELINE_PRESET}",
         f"Chunks:    {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})",
