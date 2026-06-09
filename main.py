@@ -127,7 +127,7 @@ def run_experimente():
         clear_terminal()
         print("=== EXPERIMENTE ===")
         print()
-        print("  1: Experiment starten  (konfigurierbar in eval/top1_experiment.py)")
+        print("  1: Experiment starten  (konfigurierbar in eval/experiment.py)")
         print("  2: Zurück")
         print()
         opt = input("Auswahl: ").strip()

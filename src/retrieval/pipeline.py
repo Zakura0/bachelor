@@ -76,7 +76,7 @@ class SearchPipeline:
     preset: einer der Schlüssel aus PIPELINE_PRESETS, z.B. "tfidf+emb+rerank+llm"
     """
 
-    def __init__(self, chunks_path: str, emb_path: str, preset: str):
+    def __init__(self, chunks_path: str, emb_path: str, preset: int):
         if preset not in PIPELINE_PRESETS:
             raise ValueError(f"Unbekanntes Preset '{preset}'. Verfügbar: 1–{len(PIPELINE_PRESETS)}")
 

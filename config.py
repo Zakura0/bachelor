@@ -10,7 +10,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # ---------------------------------------------------------------------------
 
 DIR_PROCESSED  = os.path.join(PROJECT_ROOT, "data/processed")
-DIR_EXPERIMENTS = os.path.join(PROJECT_ROOT, "data/experiments")
+DIR_EXPERIMENTS = os.path.join(PROJECT_ROOT, "data/experiments/chunk_sizes")
 
 # ---------------------------------------------------------------------------
 # Modelle
@@ -46,7 +46,7 @@ SEARCH_PIPELINE = 4
 # ---------------------------------------------------------------------------
 
 EVAL_BOOKS = ["verwandlung", "erdbeben", "judenbuche", "krambambuli"]
-RECALL_K   = [1, 3, 5, 10, 20]
+RECALL_K   = [1, 30]
 
 # Chunk-Preset → src/preprocessing/chunk_presets.py :: CHUNK_PRESETS
 # 1 = tiny (10–30)    3 = medium (30–100)    5 = xlarge (80–200)

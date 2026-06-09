@@ -25,8 +25,11 @@ from config import (
 from src.preprocessing.chunk_presets import CHUNK_PRESETS
 from src.retrieval.pipeline import SearchPipeline
 
-CHUNK_CFG  = CHUNK_PRESETS[CHUNK_PRESET]
-CHUNK_NAME = CHUNK_CFG["name"]
+CHUNK_CFG       = CHUNK_PRESETS[CHUNK_PRESET]
+CHUNK_NAME      = CHUNK_CFG["name"]
+CHUNK_MIN_WORDS = CHUNK_CFG["min_words"]
+CHUNK_MAX_WORDS = CHUNK_CFG["max_words"]
+CHUNK_OVERLAP   = CHUNK_CFG["overlap"]
 
 
 RESULTS_DIR = os.path.join(project_root, "eval", "results")
@@ -55,13 +58,13 @@ def run_trial(pipeline: SearchPipeline, pair: dict):
     results = pipeline.search(query, top_k=K_RERANKER, verbose=False)
     elapsed = time.perf_counter() - t0
 
-    first_hit_rank = None
+    hit_rank = None
     for rank, r in enumerate(results, start=1):
         for exp_start, exp_end in expected_spans:
             if r.meta["start_index"] < exp_end and exp_start < r.meta["end_index"]:
-                first_hit_rank = rank
+                hit_rank = rank
                 break
-        if first_hit_rank is not None:
+        if hit_rank is not None:
             break
 
     top1 = results[0] if results else None
@@ -69,8 +72,8 @@ def run_trial(pipeline: SearchPipeline, pair: dict):
         "query":          query,
         "expected_text":  expected_text,
         "expected_spans": [list(s) for s in expected_spans],
-        "hit":            first_hit_rank is not None,
-        "first_hit_rank": first_hit_rank,
+        "hit":            hit_rank is not None,
+        "first_hit_rank": hit_rank,
         "top1_text":      top1.text if top1 else None,
         "top1_span":      [top1.meta["start_index"], top1.meta["end_index"]] if top1 else None,
         "time_s":         round(elapsed, 3),
@@ -98,7 +101,7 @@ def main():
     os.makedirs(DIR_EXPERIMENTS, exist_ok=True)
 
     print("=" * 80)
-    print("TOP-1 LLM EXPERIMENT")
+    print("START EXPERIMENT")
     print("=" * 80)
     print(f"Pipeline:    {PIPELINE_PRESET}")
     print(f"Chunks:      {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})")
