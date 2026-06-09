@@ -3,11 +3,27 @@ import sys
 import pathlib
 
 from script.build_book_chunks import build_chunks
+from script.build_embeddings import build_embeddings
+from script.run_search import run_search_interactive
+
 
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
-from script.build_embeddings import build_embeddings
-from script.run_search import run_search_interactive
+
+
+def ask_yes_no(prompt):
+    while True:
+        ans = input(prompt + " (j/n): ").strip().lower()
+        if ans in ("j", "ja"):
+            return True
+        if ans in ("n", "nein"):
+            return False
+        print("Bitte antworte mit 'j' oder 'n'.")
+
+
+# ---------------------------------------------------------------------------
+# Suche
+# ---------------------------------------------------------------------------
 
 def select_book(raw_dir="data/raw"):
     files = [f for f in os.listdir(raw_dir) if os.path.isfile(os.path.join(raw_dir, f))]
@@ -16,64 +32,42 @@ def select_book(raw_dir="data/raw"):
         return None
     print("Wähle ein Buch:")
     for idx, fname in enumerate(files, 1):
-        print(f"{idx}: {fname}")
-    print("\n")
+        print(f"  {idx}: {fname}")
+    print()
     while True:
         try:
-            choice = int(input("Auswahl (Zahl): "))
+            choice = int(input("Auswahl: "))
             if 1 <= choice <= len(files):
-                selected = files[choice - 1]
-                print(f"Du hast ausgewählt: {selected}")
-                return os.path.join(raw_dir, selected)
-            else:
-                print(f"Bitte gib eine Zahl zwischen 1 und {len(files)} ein.")
+                return os.path.join(raw_dir, files[choice - 1])
+            print(f"Bitte gib eine Zahl zwischen 1 und {len(files)} ein.")
         except ValueError:
-            print("Ungültige Eingabe. Bitte gib eine Zahl ein.")
+            print("Ungültige Eingabe.")
 
-if __name__ == "__main__":
+
+def run_suche():
     clear_terminal()
     selected_book = select_book()
     if not selected_book:
-        exit(0)
+        return
 
-    clear_terminal()
     book_stem = pathlib.Path(selected_book).stem
     processed_dir = os.path.join("data", "processed")
     chunks_path = os.path.join(processed_dir, f"{book_stem}_chunks.json")
     embeddings_path = os.path.join(processed_dir, f"{book_stem}.embeddings.npy")
 
-    def file_exists(path):
-        return os.path.isfile(path)
-
-    def ask_yes_no(prompt):
-        while True:
-            ans = input(prompt + " (j/n): ").strip().lower()
-            if ans in ("j", "ja"): return True
-            if ans in ("n", "nein"): return False
-            print("Bitte antworte mit 'j' oder 'n'.")
-
     def create_chunks():
-        print("Wie viele Wörter sollen die Chunks mindestens enthalten? (Standard: 10)")
-        min_words = input("Minimale Wortanzahl: ").strip()
-        if not min_words.isdigit():
-            min_words = 10
-        else:
-            min_words = int(min_words)
-        print("Wie viele Wörter sollen die Chunks maximal enthalten? (Standard: 50)")
-        max_words = input("Maximale Wortanzahl: ").strip()
-        if not max_words.isdigit():
-            max_words = 50
-        else:
-            max_words = int(max_words)
-        print("Wie viele Sätze sollen sich zwischen den Chunks überlappen? (Standard: 1)")
-        sentence_overlap = input("Satzüberlappung: ").strip()
-        if not sentence_overlap.isdigit():
-            sentence_overlap = 1
-        else:
-            sentence_overlap = int(sentence_overlap)
+        print("Minimale Wortanzahl pro Chunk? (Standard: 10)")
+        min_w = input("Minimum: ").strip()
+        min_w = int(min_w) if min_w.isdigit() else 10
+        print("Maximale Wortanzahl pro Chunk? (Standard: 50)")
+        max_w = input("Maximum: ").strip()
+        max_w = int(max_w) if max_w.isdigit() else 50
+        print("Satzüberlappung zwischen Chunks? (Standard: 1)")
+        overlap = input("Überlappung: ").strip()
+        overlap = int(overlap) if overlap.isdigit() else 1
         clear_terminal()
         print("Chunks werden erstellt...")
-        build_chunks(selected_book, chunks_path, min_words, max_words, sentence_overlap)
+        build_chunks(selected_book, chunks_path, min_w, max_w, overlap)
         input("Enter zum Fortfahren...")
 
     def create_embeddings():
@@ -81,38 +75,99 @@ if __name__ == "__main__":
         print("Embeddings werden erstellt...")
         build_embeddings(chunks_path, embeddings_path)
         input("Enter zum Fortfahren...")
-    if not file_exists(chunks_path):
-        print(f"Es gibt noch keine Chunks für das Buch ({chunks_path}).")
+
+    if not os.path.isfile(chunks_path):
+        print(f"Noch keine Chunks vorhanden ({chunks_path}).")
         if ask_yes_no("Chunks jetzt erstellen?"):
             create_chunks()
         else:
             print("Ohne Chunks kann nicht fortgefahren werden.")
-            sys.exit(0)
+            return
 
-    if not file_exists(embeddings_path):
-        print(f"Es gibt noch keine Embeddings für das Buch ({embeddings_path}).")
+    if not os.path.isfile(embeddings_path):
+        print(f"Noch keine Embeddings vorhanden ({embeddings_path}).")
         if ask_yes_no("Embeddings jetzt erstellen?"):
             create_embeddings()
         else:
             print("Ohne Embeddings kann nicht fortgefahren werden.")
-            sys.exit(0)
+            return
 
     while True:
-        print("1: Zusammenfassungssuche durchführen")
-        print("2: Chunks neu erstellen")
-        print("3: Embeddings neu erstellen")
-        print("4: Beenden")
-        opt = input("Bitte wähle eine Option: ").strip()
+        clear_terminal()
+        print("=== SUCHE ===")
+        print(f"Buch: {book_stem}")
+        print()
+        print("  1: Suche starten")
+        print("  2: Chunks neu erstellen")
+        print("  3: Embeddings neu erstellen")
+        print("  4: Zurück")
+        print()
+        opt = input("Auswahl: ").strip()
         if opt == "1":
             clear_terminal()
             run_search_interactive(chunks_path, embeddings_path)
-            break
         elif opt == "2":
             create_chunks()
         elif opt == "3":
             create_embeddings()
         elif opt == "4":
-            print("Beende das Programm.")
+            return
+        else:
+            print("Ungültige Eingabe.")
+
+
+# ---------------------------------------------------------------------------
+# Experimente
+# ---------------------------------------------------------------------------
+
+def run_experimente():
+    # Lazy imports — Modelle werden erst beim tatsächlichen Ausführen geladen
+    from eval.chunk_experiment import main as chunk_main
+    from eval.llm_experiment import main as llm_main
+
+    while True:
+        clear_terminal()
+        print("=== EXPERIMENTE ===")
+        print()
+        print("  1: Chunk-Größen-Experiment  (7 Chunk-Größen × 6 Pipelines × 4 Bücher)")
+        print("  2: LLM-Reranker-Experiment  (xlarge Chunks, Recall@k mit/ohne LLM)")
+        print("  3: Zurück")
+        print()
+        opt = input("Auswahl: ").strip()
+        if opt == "1":
+            clear_terminal()
+            chunk_main()
+            input("\nEnter zum Fortfahren...")
+        elif opt == "2":
+            clear_terminal()
+            llm_main()
+            input("\nEnter zum Fortfahren...")
+        elif opt == "3":
+            return
+        else:
+            print("Ungültige Eingabe.")
+
+
+# ---------------------------------------------------------------------------
+# Hauptmenü
+# ---------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    while True:
+        clear_terminal()
+        print("=== LITERATUR-RETRIEVAL ===")
+        print()
+        print("  1: Suche")
+        print("  2: Experimente")
+        print("  3: Beenden")
+        print()
+        opt = input("Auswahl: ").strip()
+        if opt == "1":
+            run_suche()
+        elif opt == "2":
+            run_experimente()
+        elif opt == "3":
+            print("Auf Wiedersehen.")
             sys.exit(0)
         else:
-            print("Ungültige Eingabe. Bitte wähle 1, 2, 3 oder 4.")
+            print("Ungültige Eingabe.")

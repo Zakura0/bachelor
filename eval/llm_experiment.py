@@ -37,15 +37,18 @@ def evaluate_pipeline(pipeline, eval_pairs, use_llm: bool = False):
     hits_at_k = {k: 0 for k in RECALL_K}
     first_hit_ranks = []
     query_times = []
+    trials = []
 
     for pair in eval_pairs:
         query = pair["summary"]
         expected_spans = [tuple(s) for s in pair["spans"]]
+        expected_text = pair.get("text", "")
 
         try:
             t0 = time.perf_counter()
             results = pipeline.search(query, top_k=top_k, verbose=False)
-            query_times.append(time.perf_counter() - t0)
+            elapsed = time.perf_counter() - t0
+            query_times.append(elapsed)
 
             first_hit_rank = None
             for rank, r in enumerate(results, start=1):
@@ -64,15 +67,37 @@ def evaluate_pipeline(pipeline, eval_pairs, use_llm: bool = False):
                     if first_hit_rank <= k:
                         hits_at_k[k] += 1
 
+            top1 = results[0] if results else None
+            trials.append({
+                "query": query,
+                "expected_text": expected_text,
+                "expected_spans": [list(s) for s in expected_spans],
+                "hit": first_hit_rank is not None,
+                "first_hit_rank": first_hit_rank,
+                "top1_text": top1.text if top1 else None,
+                "top1_span": [top1.meta["start_index"], top1.meta["end_index"]] if top1 else None,
+                "time_s": round(elapsed, 3),
+            })
+
         except Exception as e:
             print(f"      Fehler bei Query: {e}")
+            trials.append({
+                "query": query,
+                "expected_text": expected_text,
+                "expected_spans": [list(s) for s in expected_spans],
+                "hit": False,
+                "first_hit_rank": None,
+                "top1_text": None,
+                "top1_span": None,
+                "error": str(e),
+            })
 
     total = len(eval_pairs)
     recall_at_k = {k: hits_at_k[k] / total if total > 0 else 0.0 for k in RECALL_K}
     avg_rank = sum(first_hit_ranks) / len(first_hit_ranks) if first_hit_ranks else 0.0
     total_time = sum(query_times)
     avg_time = total_time / len(query_times) if query_times else 0.0
-    return hits_at_k, total, avg_rank, recall_at_k, total_time, avg_time
+    return hits_at_k, total, avg_rank, recall_at_k, total_time, avg_time, trials
 
 
 def main():
@@ -131,7 +156,7 @@ def main():
                     use_llm=pipe_config["llm"],
                 )
 
-                hits_at_k, total, avg_rank, recall_at_k, total_time, avg_time = evaluate_pipeline(
+                hits_at_k, total, avg_rank, recall_at_k, total_time, avg_time, trials = evaluate_pipeline(
                     pipeline, pairs, use_llm=pipe_config["llm"]
                 )
 
@@ -142,6 +167,7 @@ def main():
                     "hits_at_k": {str(k): hits_at_k[k] for k in RECALL_K},
                     "total_time_s": round(total_time, 2),
                     "avg_time_per_query_s": round(avg_time, 3),
+                    "trials": trials,
                 }
 
                 for k in RECALL_K:
@@ -178,28 +204,79 @@ def main():
             "per_book": per_book_metrics,
         })
 
-    # Zusammenfassung
-    print("\n" + "=" * 80)
-    print("ZUSAMMENFASSUNG  — Recall@k (aggregiert über alle Bücher)")
-    print("=" * 80)
+    ts = datetime.now().isoformat()
+
+    # Zusammenfassung (Konsole + TXT)
+    summary_lines = [
+        "=" * 80,
+        "LLM RERANKER EXPERIMENT — ZUSAMMENFASSUNG",
+        f"Datum:       {ts[:19]}",
+        f"Chunk-Größe: {CHUNK_CONFIG['name']}  "
+        f"(min={CHUNK_CONFIG['min_words']}, max={CHUNK_CONFIG['max_words']}, overlap={CHUNK_CONFIG['overlap']})",
+        "=" * 80,
+    ]
     k_header = "  ".join(f"R@{k:>2}" for k in RECALL_K)
-    print(f"{'Pipeline':<28}  {k_header}  {'AvgRank':>7}  {'s/query':>8}  {'Total':>8}")
-    print("-" * 80)
+    summary_lines.append(f"{'Pipeline':<28}  {k_header}  {'AvgRank':>7}  {'s/query':>8}  {'Total':>8}")
+    summary_lines.append("-" * 80)
     for r in results_all:
         agg = r["aggregate"]
         k_vals = "  ".join(f"{agg['recall_at_k'][str(k)]:>5.1%}" for k in RECALL_K)
-        print(f"{r['pipeline_config']['name']:<28}  {k_vals}  {agg['avg_rank']:>7.2f}  {agg['avg_time_per_query_s']:>7.2f}s  {agg['total_time_s']:>6.0f}s")
-    print("=" * 80)
+        summary_lines.append(
+            f"{r['pipeline_config']['name']:<28}  {k_vals}"
+            f"  {agg['avg_rank']:>7.2f}  {agg['avg_time_per_query_s']:>7.2f}s  {agg['total_time_s']:>6.0f}s"
+        )
+    summary_lines.append("=" * 80)
 
-    # Ergebnisse speichern
+    print("\n" + "\n".join(summary_lines))
+
+    RESULTS_DIR = os.path.join(project_root, "eval", "results")
+    os.makedirs(RESULTS_DIR, exist_ok=True)
+
+    # --- 1. Zusammenfassung als TXT ---
+    txt_path = os.path.join(RESULTS_DIR, "llm_experiment_summary.txt")
+    with open(txt_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(summary_lines) + "\n")
+    print(f"Zusammenfassung gespeichert: {txt_path}")
+
+    # --- 2. Details-JSON (je Versuch) ---
+    details = {
+        "timestamp": ts,
+        "chunk_config": CHUNK_CONFIG,
+        "pipelines": [
+            {
+                "name": r["pipeline_config"]["name"],
+                "config": r["pipeline_config"],
+                "aggregate": r["aggregate"],
+                "books": [
+                    {
+                        "book": book,
+                        "metrics": {k: v for k, v in bm.items() if k != "trials"},
+                        "trials": bm.get("trials", []),
+                    }
+                    for book, bm in r["per_book"].items()
+                ],
+            }
+            for r in results_all
+        ],
+    }
+    details_path = os.path.join(RESULTS_DIR, "llm_experiment_details.json")
+    with open(details_path, "w", encoding="utf-8") as f:
+        json.dump(details, f, ensure_ascii=False, indent=2)
+    print(f"Details gespeichert:         {details_path}")
+
+    # --- 3. Aggregate-JSON (wie bisher) ---
+    aggregate_results = [
+        {k: v for k, v in r.items() if k != "per_book"}
+        | {"per_book": {book: {m: val for m, val in bm.items() if m != "trials"}
+                        for book, bm in r["per_book"].items()}}
+        for r in results_all
+    ]
     output_path = os.path.join(DIR_EXPERIMENTS, "llm_experiment_results.json")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
-        json.dump({
-            "timestamp": datetime.now().isoformat(),
-            "chunk_config": CHUNK_CONFIG,
-            "results": results_all,
-        }, f, ensure_ascii=False, indent=2)
-    print(f"\nErgebnisse gespeichert: {output_path}")
+        json.dump({"timestamp": ts, "chunk_config": CHUNK_CONFIG, "results": aggregate_results},
+                  f, ensure_ascii=False, indent=2)
+    print(f"Aggregate gespeichert:       {output_path}")
 
 
 if __name__ == "__main__":

@@ -324,6 +324,50 @@ def run_chunk_experiment(output_dir: str = None):
         )
     print(f"\nDetailed results saved to: {output_path}")
 
+    # Summary TXT
+    RESULTS_DIR = os.path.join(project_root, "eval", "results")
+    os.makedirs(RESULTS_DIR, exist_ok=True)
+
+    summary_lines = [
+        "=" * 80,
+        "CHUNK SIZE EXPERIMENT — ZUSAMMENFASSUNG",
+        f"Datum: {datetime.now().isoformat()[:19]}",
+        f"Bücher: {', '.join(BOOKS)}",
+        "=" * 80,
+        f"{'Chunk Size':<25} {'Pipeline':<22} {'Avg Chunks':>10} {'Hit Rate':>10} {'Avg Rank':>9} {'Hits':>10}",
+        "-" * 80,
+    ]
+    for r in results_sorted:
+        cname = r["chunk_config"]["name"]
+        pname = r["pipeline_config"]["name"]
+        agg   = r["aggregate"]
+        summary_lines.append(
+            f"{cname:<25} {pname:<22} {agg['avg_chunks_per_book']:>10}"
+            f" {agg['hit_rate']:>9.1%} {agg['avg_rank']:>9.2f}"
+            f" {agg['hits']:>5}/{agg['total']:<4}"
+        )
+    summary_lines.append("=" * 80)
+    summary_lines.append("")
+    summary_lines.append("BESTE PIPELINE JE CHUNK-GRÖSSE")
+    summary_lines.append("-" * 80)
+    summary_lines.append(f"{'Chunk Size':<25} {'Best Pipeline':<22} {'Hit Rate':>10} {'Avg Rank':>9}")
+    summary_lines.append("-" * 80)
+    for cc in CHUNK_CONFIGS:
+        cname = cc["name"]
+        if cname in best_per_chunk:
+            r = best_per_chunk[cname]
+            agg = r["aggregate"]
+            summary_lines.append(
+                f"{cname:<25} {r['pipeline_config']['name']:<22}"
+                f" {agg['hit_rate']:>9.1%} {agg['avg_rank']:>9.2f}"
+            )
+    summary_lines.append("=" * 80)
+
+    txt_path = os.path.join(RESULTS_DIR, "chunk_experiment_summary.txt")
+    with open(txt_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(summary_lines) + "\n")
+    print(f"Zusammenfassung gespeichert: {txt_path}")
+
 
 def main():
     output_dir = None
