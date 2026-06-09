@@ -18,6 +18,7 @@ from config import (
     EMBEDDING_MODEL, RERANKER_MODEL, NLI_MODEL, LLM_MODEL,
     K_RETRIEVAL, K_RRF, K_RERANKER, RRF_K,
 )
+from src.retrieval.llm_reranker import PROMPT_RANK_ALL as _DEFAULT_LLM_PROMPT
 from src.retrieval.tfidf import TfidfRetriever
 from src.retrieval.embeddings import EmbeddingRetriever
 from src.retrieval.reranker import CrossEncoderReranker
@@ -76,7 +77,7 @@ class SearchPipeline:
     preset: einer der Schlüssel aus PIPELINE_PRESETS, z.B. "tfidf+emb+rerank+llm"
     """
 
-    def __init__(self, chunks_path: str, emb_path: str, preset: int):
+    def __init__(self, chunks_path: str, emb_path: str, preset: int, llm_prompt: str = _DEFAULT_LLM_PROMPT):
         if preset not in PIPELINE_PRESETS:
             raise ValueError(f"Unbekanntes Preset '{preset}'. Verfügbar: 1–{len(PIPELINE_PRESETS)}")
 
@@ -115,7 +116,7 @@ class SearchPipeline:
 
         self.reranker = CrossEncoderReranker(model_name=RERANKER_MODEL) if use_reranker else None
         self.nli      = NLIVerifier(model_name=NLI_MODEL)               if use_nli      else None
-        self.llm      = LLMReranker(model=LLM_MODEL)                    if use_llm      else None
+        self.llm      = LLMReranker(model=LLM_MODEL, prompt_template=llm_prompt) if use_llm      else None
 
     def get_config_name(self) -> str:
         parts = []

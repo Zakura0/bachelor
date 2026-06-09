@@ -1,7 +1,8 @@
 """
-Evaluation-Experiment
-=====================
-Konfigurierbares Experiment zur Auswertung der Retrieval-Pipeline.
+LLM-Pick-Experiment
+===================
+Das LLM wählt aus den Reranker-Kandidaten genau EINE Textstelle.
+Gemessen wird nur Accuracy (trifft die gewählte Stelle oder nicht).
 """
 import json
 import os
@@ -13,15 +14,15 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
 from config import (
-    EVAL_BOOKS, RECALL_K,
+    EVAL_BOOKS,
     DIR_PROCESSED, DIR_EXPERIMENTS,
     K_RERANKER,
-    EXP_CHUNK        as CHUNK_PRESET,
-    EXP_PIPELINE     as PIPELINE_PRESET,
+    EXP_CHUNK          as CHUNK_PRESET,
+    EXP_LLM_PIPELINE   as PIPELINE_PRESET,
 )
 from src.preprocessing.chunk_presets import CHUNK_PRESETS
 from src.retrieval.pipeline import SearchPipeline
-from src.retrieval.llm_reranker import PROMPT_RANK_ALL
+from src.retrieval.llm_reranker import PROMPT_PICK_ONE
 
 CHUNK_CFG       = CHUNK_PRESETS[CHUNK_PRESET]
 CHUNK_NAME      = CHUNK_CFG["name"]
@@ -29,83 +30,61 @@ CHUNK_MIN_WORDS = CHUNK_CFG["min_words"]
 CHUNK_MAX_WORDS = CHUNK_CFG["max_words"]
 CHUNK_OVERLAP   = CHUNK_CFG["overlap"]
 
-
 RESULTS_DIR = os.path.join(project_root, "eval", "results")
 
 
 def prepare_book(book: str, output_dir: str):
-    """Pfade zu Chunks und Embeddings zurückgeben. Bricht ab wenn Dateien fehlen."""
     chunks_path = os.path.join(output_dir, f"chunks_{book}_{CHUNK_NAME}.json")
     emb_path    = os.path.join(output_dir, f"embeddings_{book}_{CHUNK_NAME}.npy")
-
     if not os.path.exists(chunks_path):
         raise FileNotFoundError(f"Chunks nicht gefunden: {chunks_path}")
     if not os.path.exists(emb_path):
         raise FileNotFoundError(f"Embeddings nicht gefunden: {emb_path}")
-
     return chunks_path, emb_path
 
 
 def run_trial(pipeline: SearchPipeline, pair: dict):
-    """Einen Eval-Pair auswerten. Gibt Trial-Dict zurück."""
+    """LLM-Pick-Trial: Pipeline gibt genau 1 Ergebnis zurück."""
     query          = pair["summary"]
     expected_spans = [tuple(s) for s in pair["spans"]]
     expected_text  = pair.get("text", "")
 
     t0 = time.perf_counter()
-    results = pipeline.search(query, top_k=K_RERANKER, verbose=False)
+    results = pipeline.search(query, top_k=1, verbose=False)
     elapsed = time.perf_counter() - t0
 
-    hit_rank = None
-    for rank, r in enumerate(results, start=1):
+    pick = results[0] if results else None
+    hit = False
+    if pick:
         for exp_start, exp_end in expected_spans:
-            if r.meta["start_index"] < exp_end and exp_start < r.meta["end_index"]:
-                hit_rank = rank
+            if pick.meta["start_index"] < exp_end and exp_start < pick.meta["end_index"]:
+                hit = True
                 break
-        if hit_rank is not None:
-            break
 
-    top1 = results[0] if results else None
     return {
         "query":          query,
         "expected_text":  expected_text,
         "expected_spans": [list(s) for s in expected_spans],
-        "hit":            hit_rank is not None,
-        "first_hit_rank": hit_rank,
-        "top1_text":      top1.text if top1 else None,
-        "top1_span":      [top1.meta["start_index"], top1.meta["end_index"]] if top1 else None,
+        "hit":            hit,
+        "pick_text":      pick.text if pick else None,
+        "pick_span":      [pick.meta["start_index"], pick.meta["end_index"]] if pick else None,
         "time_s":         round(elapsed, 3),
     }
-
-
-def compute_recall(trials: list):
-    total = len(trials)
-    hits_at_k = {k: 0 for k in RECALL_K}
-    ranks = []
-    for t in trials:
-        if t["first_hit_rank"] is not None:
-            ranks.append(t["first_hit_rank"])
-            for k in RECALL_K:
-                if t["first_hit_rank"] <= k:
-                    hits_at_k[k] += 1
-    recall = {k: hits_at_k[k] / total if total else 0.0 for k in RECALL_K}
-    avg_rank = sum(ranks) / len(ranks) if ranks else 0.0
-    return recall, avg_rank, hits_at_k
 
 
 def main():
     now = datetime.now()
     ts = now.isoformat()
     ts_file = now.strftime("%Y%m%d_%H%M%S")
+
     os.makedirs(RESULTS_DIR, exist_ok=True)
     os.makedirs(DIR_EXPERIMENTS, exist_ok=True)
 
     print("=" * 80)
-    print("START EXPERIMENT")
+    print("LLM-PICK-EXPERIMENT")
     print("=" * 80)
-    print(f"Pipeline:    {PIPELINE_PRESET}")
+    print(f"Pipeline:    {PIPELINE_PRESET}  (LLM wählt genau 1 Treffer)")
     print(f"Chunks:      {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})")
-    print(f"Top-K:       {K_RERANKER}")
     print(f"Bücher:      {', '.join(EVAL_BOOKS)}")
     print()
 
@@ -129,12 +108,7 @@ def main():
         print(f"Buch: {book}")
         chunks_path, emb_path = prepare_book(book, DIR_EXPERIMENTS)
 
-        pipeline = SearchPipeline(
-            chunks_path, emb_path,
-            preset=PIPELINE_PRESET,
-            llm_prompt=PROMPT_RANK_ALL,
-        )
-
+        pipeline = SearchPipeline(chunks_path, emb_path, preset=PIPELINE_PRESET, llm_prompt=PROMPT_PICK_ONE)
         pairs  = eval_pairs_per_book[book]
         trials = []
 
@@ -142,20 +116,19 @@ def main():
             trial = run_trial(pipeline, pair)
             trials.append(trial)
             status = "✓" if trial["hit"] else "✗"
-            rank   = trial["first_hit_rank"] or "-"
-            print(f"  {i:>3}/{len(pairs)}  {status}  Rank={rank:<4}  {trial['query'][:60]}")
+            print(f"  {i:>3}/{len(pairs)}  {status}  {trial['query'][:60]}")
 
-        recall, avg_rank, hits_at_k = compute_recall(trials)
-        recall_str = "  ".join(f"R@{k}={recall[k]:.1%}" for k in RECALL_K)
-        avg_t = sum(t["time_s"] for t in trials) / len(trials) if trials else 0
-        print(f"\n  {recall_str}  avg_rank={avg_rank:.2f}  {avg_t:.2f}s/query\n")
+        hits  = sum(1 for t in trials if t["hit"])
+        total = len(trials)
+        acc   = hits / total if total else 0.0
+        avg_t = sum(t["time_s"] for t in trials) / total if trials else 0
+        print(f"\n  Accuracy={acc:.1%}  ({hits}/{total})  {avg_t:.2f}s/query\n")
 
         per_book_results[book] = {
             "metrics": {
-                "total":    len(trials),
-                "avg_rank": round(avg_rank, 3),
-                "recall_at_k": {str(k): round(recall[k], 4) for k in RECALL_K},
-                "hits_at_k":   {str(k): hits_at_k[k] for k in RECALL_K},
+                "total":    total,
+                "hits":     hits,
+                "accuracy": round(acc, 4),
                 "avg_time_per_query_s": round(avg_t, 3),
             },
             "trials": trials,
@@ -163,61 +136,56 @@ def main():
 
     # --- Aggregation ---
     all_trials = [t for bm in per_book_results.values() for t in bm["trials"]]
-    agg_recall, agg_avg_rank, agg_hits = compute_recall(all_trials)
-    agg_total = len(all_trials)
-    agg_avg_t = sum(t["time_s"] for t in all_trials) / agg_total if agg_total else 0
+    agg_total  = len(all_trials)
+    agg_hits   = sum(1 for t in all_trials if t["hit"])
+    agg_acc    = agg_hits / agg_total if agg_total else 0.0
+    agg_avg_t  = sum(t["time_s"] for t in all_trials) / agg_total if agg_total else 0
 
-    # --- Summary-Tabelle (Konsole + TXT) ---
+    # --- Summary ---
     summary_lines = [
         "=" * 80,
-        "EXPERIMENT — ZUSAMMENFASSUNG",
+        "LLM-PICK-EXPERIMENT — ZUSAMMENFASSUNG",
         f"Datum:     {ts[:19]}",
-        f"Pipeline:  {PIPELINE_PRESET}",
+        f"Pipeline:  {PIPELINE_PRESET}  (LLM wählt genau 1 Treffer)",
         f"Chunks:    {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})",
-        f"Top-K:     {K_RERANKER}",
         "=" * 80,
-        f"{'Buch':<20}  " + "  ".join(f"R@{k:>2}" for k in RECALL_K) + f"  {'AvgRank':>7}  {'s/query':>7}",
+        f"{'Buch':<20}  {'Accuracy':>8}  {'Hits':>6}  {'Total':>6}  {'s/query':>7}",
         "-" * 80,
     ]
 
     for book, bm in per_book_results.items():
         m = bm["metrics"]
-        k_vals = "  ".join(f"{m['recall_at_k'][str(k)]:>5.1%}" for k in RECALL_K)
         summary_lines.append(
-            f"{book:<20}  {k_vals}  {m['avg_rank']:>7.2f}  {m['avg_time_per_query_s']:>6.2f}s"
+            f"{book:<20}  {m['accuracy']:>8.1%}  {m['hits']:>6}  {m['total']:>6}  {m['avg_time_per_query_s']:>6.2f}s"
         )
 
     summary_lines.append("-" * 80)
-    k_vals = "  ".join(f"{agg_recall[k]:>5.1%}" for k in RECALL_K)
     summary_lines.append(
-        f"{'GESAMT':<20}  {k_vals}  {agg_avg_rank:>7.2f}  {agg_avg_t:>6.2f}s"
-        f"  ({agg_hits[1]}/{agg_total} @1)"
+        f"{'GESAMT':<20}  {agg_acc:>8.1%}  {agg_hits:>6}  {agg_total:>6}  {agg_avg_t:>6.2f}s"
     )
     summary_lines.append("=" * 80)
 
     print("\n" + "\n".join(summary_lines))
 
-    txt_path = os.path.join(RESULTS_DIR, f"experiment_summary_{ts_file}.txt")
+    txt_path = os.path.join(RESULTS_DIR, f"llm_pick_summary_{ts_file}.txt")
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write("\n".join(summary_lines) + "\n")
     print(f"\nZusammenfassung: {txt_path}")
 
-    # --- Detail-JSON ---
     details = {
         "timestamp":    ts,
+        "experiment":   "llm_pick",
         "pipeline":     PIPELINE_PRESET,
         "chunk_config": {
-            "name": CHUNK_NAME,
+            "name":      CHUNK_NAME,
             "min_words": CHUNK_MIN_WORDS,
             "max_words": CHUNK_MAX_WORDS,
             "overlap":   CHUNK_OVERLAP,
         },
-        "top_k": K_RERANKER,
         "aggregate": {
             "total":    agg_total,
-            "avg_rank": round(agg_avg_rank, 3),
-            "recall_at_k": {str(k): round(agg_recall[k], 4) for k in RECALL_K},
-            "hits_at_k":   {str(k): agg_hits[k] for k in RECALL_K},
+            "hits":     agg_hits,
+            "accuracy": round(agg_acc, 4),
             "avg_time_per_query_s": round(agg_avg_t, 3),
         },
         "books": [
@@ -229,7 +197,7 @@ def main():
             for book, bm in per_book_results.items()
         ],
     }
-    details_path = os.path.join(RESULTS_DIR, f"experiment_details_{ts_file}.json")
+    details_path = os.path.join(RESULTS_DIR, f"llm_pick_details_{ts_file}.json")
     with open(details_path, "w", encoding="utf-8") as f:
         json.dump(details, f, ensure_ascii=False, indent=2)
     print(f"Details:         {details_path}")

@@ -1,9 +1,44 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Any, List, Optional, Sequence
 
 from openai import OpenAI
+
+# ---------------------------------------------------------------------------
+# Prompt-Templates
+# ---------------------------------------------------------------------------
+
+# Fragt das LLM, die relevanteste Textstelle zu wählen (eine Zahl).
+PROMPT_PICK_ONE = """\
+Du bekommst eine Zusammenfassung und {n} Textstellen aus einem Buch.
+Wähle die EINE Textstelle, die am besten zur Zusammenfassung passt.
+Antworte NUR mit der Nummer der Textstelle.
+Beispiel: 3
+
+Zusammenfassung:
+"{query}"
+
+Textstellen:
+{candidates_block}
+
+Nummer der relevantesten Textstelle:"""
+
+# Fragt das LLM, alle Textstellen nach Relevanz zu sortieren.
+PROMPT_RANK_ALL = """\
+Du bekommst eine Zusammenfassung und {n} Textstellen aus einem Buch.
+Sortiere die Textstellen nach ihrer inhaltlichen Relevanz zur Zusammenfassung.
+Antworte NUR mit den Nummern in sortierter Reihenfolge, getrennt durch Kommas.
+Beispiel: 3,1,5,2,4
+
+Zusammenfassung:
+"{query}"
+
+Textstellen:
+{candidates_block}
+
+Sortierte Reihenfolge (nur Nummern):"""
 
 
 @dataclass
@@ -22,11 +57,14 @@ class LLMReranker:
     Der OPENAI_API_KEY wird automatisch aus der Umgebungsvariable gelesen.
 
     :param model: OpenAI-Modell, z.B. "gpt-4o" oder "gpt-4o-mini"
+    :param prompt_template: Template-String mit den Platzhaltern {n}, {query}
+        und {candidates_block}. Standard: PROMPT_PICK_ONE.
     """
 
-    def __init__(self, model: str) -> None:
+    def __init__(self, model: str, prompt_template: str = PROMPT_PICK_ONE) -> None:
         self.client = OpenAI()
         self.model = model
+        self.prompt_template = prompt_template
 
     def rerank(
         self,
@@ -37,7 +75,7 @@ class LLMReranker:
         top_k: int = 10,
     ) -> List[LLMRerankResult]:
         """
-        Lässt das LLM die Kandidaten nach Relevanz zur Query sortieren.
+        Lässt das LLM die Kandidaten nach Relevanz zur Query bewerten.
 
         :param query: Die Suchanfrage (z.B. Summary-Text)
         :param candidate_texts: Liste der Kandidatentexte (top-k aus der Pipeline)
@@ -53,23 +91,15 @@ class LLMReranker:
         indices = list(candidate_indices) if candidate_indices is not None else list(range(n))
         meta = list(candidate_meta) if candidate_meta is not None else [None] * n
 
-        # Kandidaten nummeriert auflisten
         candidates_block = "\n\n".join(
             f"[{i + 1}] {text}" for i, text in enumerate(candidate_texts)
         )
 
-        prompt = f"""Du bekommst eine Zusammenfassung und {n} Textstellen aus einem Buch.
-Sortiere die Textstellen nach ihrer inhaltlichen Relevanz zur Zusammenfassung.
-Antworte NUR mit den Nummern in sortierter Reihenfolge, getrennt durch Kommas.
-Beispiel: 3,1,5,2,4
-
-Zusammenfassung:
-\"{query}\"
-
-Textstellen:
-{candidates_block}
-
-Sortierte Reihenfolge (nur Nummern):"""
+        prompt = self.prompt_template.format(
+            n=n,
+            query=query,
+            candidates_block=candidates_block,
+        )
 
         response = self.client.chat.completions.create(
             model=self.model,
@@ -79,25 +109,24 @@ Sortierte Reihenfolge (nur Nummern):"""
 
         raw = response.choices[0].message.content.strip()
 
-        try:
-            order = [int(x.strip()) - 1 for x in raw.split(",") if x.strip().isdigit()]
-            seen = set()
-            clean_order = []
-            for idx in order:
-                if 0 <= idx < n and idx not in seen:
-                    clean_order.append(idx)
-                    seen.add(idx)
-            for idx in range(n):
-                if idx not in seen:
-                    clean_order.append(idx)
-        except Exception:
-            clean_order = list(range(n))
+        # Alle Zahlen aus der Antwort extrahieren (robust gegenüber beliebigen Formaten)
+        parsed = [int(x) - 1 for x in re.findall(r"\b\d+\b", raw)]
+        seen = set()
+        clean_order = []
+        for idx in parsed:
+            if 0 <= idx < n and idx not in seen:
+                clean_order.append(idx)
+                seen.add(idx)
+        # Nicht genannte Kandidaten ans Ende hängen
+        for idx in range(n):
+            if idx not in seen:
+                clean_order.append(idx)
 
         results = []
         for rank, idx in enumerate(clean_order[:top_k], start=1):
             results.append(LLMRerankResult(
                 index=indices[idx],
-                score=1.0 - (rank - 1) / n,  # normiert: 1.0 = bestes
+                score=1.0 - (rank - 1) / n,
                 text=candidate_texts[idx],
                 meta=meta[idx],
             ))
