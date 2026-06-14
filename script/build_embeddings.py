@@ -23,7 +23,7 @@ def build_embeddings(chunks_path: str, output_path: str = None):
     
     book_stem = pathlib.Path(chunks_path).stem.replace("_chunks", "")
     if output_path is None:
-        output_path = os.path.join(project_root, "data", "processed", f"{book_stem}.embeddings.npy")
+        output_path = os.path.join(project_root, "data", "embeddings", f"{book_stem}.embeddings.npy")
 
     with open(chunks_path, "r", encoding="utf-8") as f:
         data = json.load(f)

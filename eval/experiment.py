@@ -2,6 +2,9 @@
 Evaluation-Experiment
 =====================
 Konfigurierbares Experiment zur Auswertung der Retrieval-Pipeline.
+Misst Recall@k über alle Eval-Bücher.
+
+Konfiguration: config.py, Abschnitt "Experiment".
 """
 import json
 import os
@@ -14,29 +17,26 @@ sys.path.insert(0, project_root)
 
 from config import (
     EVAL_BOOKS, RECALL_K,
-    DIR_PROCESSED, DIR_EXPERIMENTS,
-    K_RERANKER,
+    DIR_PROCESSED, DIR_CHUNKS, DIR_EMBEDDINGS,
+    K_RETRIEVAL, K_RRF, K_RERANKER, RRF_K,
     EXP_CHUNK        as CHUNK_PRESET,
     EXP_PIPELINE     as PIPELINE_PRESET,
 )
 from src.preprocessing.chunk_presets import CHUNK_PRESETS
 from src.retrieval.pipeline import SearchPipeline
-from src.retrieval.llm_reranker import PROMPT_RANK_ALL
+from eval.eval_utils import make_run_dir, build_misses, save_misses
 
-CHUNK_CFG       = CHUNK_PRESETS[CHUNK_PRESET]
-CHUNK_NAME      = CHUNK_CFG["name"]
-CHUNK_MIN_WORDS = CHUNK_CFG["min_words"]
-CHUNK_MAX_WORDS = CHUNK_CFG["max_words"]
-CHUNK_OVERLAP   = CHUNK_CFG["overlap"]
+CHUNK_CFG  = CHUNK_PRESETS[CHUNK_PRESET]
+CHUNK_NAME = CHUNK_CFG["name"]
 
 
-RESULTS_DIR = os.path.join(project_root, "eval", "results")
+BASE_RESULTS_DIR = os.path.join(project_root, "eval", "results")
 
 
-def prepare_book(book: str, output_dir: str):
+def prepare_book(book: str):
     """Pfade zu Chunks und Embeddings zurückgeben. Bricht ab wenn Dateien fehlen."""
-    chunks_path = os.path.join(output_dir, f"chunks_{book}_{CHUNK_NAME}.json")
-    emb_path    = os.path.join(output_dir, f"embeddings_{book}_{CHUNK_NAME}.npy")
+    chunks_path = os.path.join(DIR_CHUNKS,     f"chunks_{book}_{CHUNK_NAME}.json")
+    emb_path    = os.path.join(DIR_EMBEDDINGS, f"embeddings_{book}_{CHUNK_NAME}.npy")
 
     if not os.path.exists(chunks_path):
         raise FileNotFoundError(f"Chunks nicht gefunden: {chunks_path}")
@@ -56,13 +56,13 @@ def run_trial(pipeline: SearchPipeline, pair: dict):
     results = pipeline.search(query, top_k=K_RERANKER, verbose=False)
     elapsed = time.perf_counter() - t0
 
-    hit_rank = None
+    first_hit_rank = None
     for rank, r in enumerate(results, start=1):
         for exp_start, exp_end in expected_spans:
             if r.meta["start_index"] < exp_end and exp_start < r.meta["end_index"]:
-                hit_rank = rank
+                first_hit_rank = rank
                 break
-        if hit_rank is not None:
+        if first_hit_rank is not None:
             break
 
     top1 = results[0] if results else None
@@ -70,8 +70,8 @@ def run_trial(pipeline: SearchPipeline, pair: dict):
         "query":          query,
         "expected_text":  expected_text,
         "expected_spans": [list(s) for s in expected_spans],
-        "hit":            hit_rank is not None,
-        "first_hit_rank": hit_rank,
+        "hit":            first_hit_rank is not None,
+        "first_hit_rank": first_hit_rank,
         "top1_text":      top1.text if top1 else None,
         "top1_span":      [top1.meta["start_index"], top1.meta["end_index"]] if top1 else None,
         "time_s":         round(elapsed, 3),
@@ -94,14 +94,13 @@ def compute_recall(trials: list):
 
 
 def main():
-    now = datetime.now()
-    ts = now.isoformat()
-    ts_file = now.strftime("%Y%m%d_%H%M%S")
-    os.makedirs(RESULTS_DIR, exist_ok=True)
-    os.makedirs(DIR_EXPERIMENTS, exist_ok=True)
+    ts      = datetime.now().isoformat()
+    run_dir = make_run_dir(BASE_RESULTS_DIR, "experiment")
+    os.makedirs(DIR_CHUNKS, exist_ok=True)
+    os.makedirs(DIR_EMBEDDINGS, exist_ok=True)
 
     print("=" * 80)
-    print("START EXPERIMENT")
+    print("TOP-1 LLM EXPERIMENT")
     print("=" * 80)
     print(f"Pipeline:    {PIPELINE_PRESET}")
     print(f"Chunks:      {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})")
@@ -127,12 +126,11 @@ def main():
     for book in eval_pairs_per_book:
         print(f"{'='*80}")
         print(f"Buch: {book}")
-        chunks_path, emb_path = prepare_book(book, DIR_EXPERIMENTS)
+        chunks_path, emb_path = prepare_book(book)
 
         pipeline = SearchPipeline(
             chunks_path, emb_path,
             preset=PIPELINE_PRESET,
-            llm_prompt=PROMPT_RANK_ALL,
         )
 
         pairs  = eval_pairs_per_book[book]
@@ -170,7 +168,7 @@ def main():
     # --- Summary-Tabelle (Konsole + TXT) ---
     summary_lines = [
         "=" * 80,
-        "EXPERIMENT — ZUSAMMENFASSUNG",
+        "TOP-1 LLM EXPERIMENT — ZUSAMMENFASSUNG",
         f"Datum:     {ts[:19]}",
         f"Pipeline:  {PIPELINE_PRESET}",
         f"Chunks:    {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})",
@@ -197,7 +195,7 @@ def main():
 
     print("\n" + "\n".join(summary_lines))
 
-    txt_path = os.path.join(RESULTS_DIR, f"experiment_summary_{ts_file}.txt")
+    txt_path = os.path.join(run_dir, "summary.txt")
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write("\n".join(summary_lines) + "\n")
     print(f"\nZusammenfassung: {txt_path}")
@@ -207,12 +205,17 @@ def main():
         "timestamp":    ts,
         "pipeline":     PIPELINE_PRESET,
         "chunk_config": {
-            "name": CHUNK_NAME,
+            "name":      CHUNK_NAME,
             "min_words": CHUNK_MIN_WORDS,
             "max_words": CHUNK_MAX_WORDS,
             "overlap":   CHUNK_OVERLAP,
         },
-        "top_k": K_RERANKER,
+        "pipeline_params": {
+            "K_RETRIEVAL": K_RETRIEVAL,
+            "K_RRF":       K_RRF,
+            "K_RERANKER":  K_RERANKER,
+            "RRF_K":       RRF_K,
+        },
         "aggregate": {
             "total":    agg_total,
             "avg_rank": round(agg_avg_rank, 3),
@@ -229,10 +232,14 @@ def main():
             for book, bm in per_book_results.items()
         ],
     }
-    details_path = os.path.join(RESULTS_DIR, f"experiment_details_{ts_file}.json")
+    details_path = os.path.join(run_dir, "results.json")
     with open(details_path, "w", encoding="utf-8") as f:
         json.dump(details, f, ensure_ascii=False, indent=2)
-    print(f"Details:         {details_path}")
+    print(f"Ergebnisse:      {details_path}")
+
+    misses = build_misses(per_book_results, got_key="top1_text")
+    misses_path = save_misses(misses, run_dir)
+    print(f"Misses:          {misses_path}  ({len(misses)} Einträge)")
 
 
 if __name__ == "__main__":

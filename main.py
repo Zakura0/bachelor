@@ -21,9 +21,7 @@ def ask_yes_no(prompt):
         print("Bitte antworte mit 'j' oder 'n'.")
 
 
-# ---------------------------------------------------------------------------
 # Suche
-# ---------------------------------------------------------------------------
 
 def select_book(raw_dir="data/raw"):
     files = [f for f in os.listdir(raw_dir) if os.path.isfile(os.path.join(raw_dir, f))]
@@ -51,9 +49,8 @@ def run_suche():
         return
 
     book_stem = pathlib.Path(selected_book).stem
-    processed_dir = os.path.join("data", "processed")
-    chunks_path = os.path.join(processed_dir, f"{book_stem}_chunks.json")
-    embeddings_path = os.path.join(processed_dir, f"{book_stem}.embeddings.npy")
+    chunks_path     = os.path.join("data", "chunks",     f"{book_stem}_chunks.json")
+    embeddings_path = os.path.join("data", "embeddings", f"{book_stem}.embeddings.npy")
 
     def create_chunks():
         print("Minimale Wortanzahl pro Chunk? (Standard: 10)")
@@ -65,6 +62,9 @@ def run_suche():
         print("Satzüberlappung zwischen Chunks? (Standard: 1)")
         overlap = input("Überlappung: ").strip()
         overlap = int(overlap) if overlap.isdigit() else 1
+        print("Wie soll diese Einstellung heißen? (z.B. min10_max50_ov1)")
+        setting_name = input("Name: ").strip()
+        chunks_path = os.path.join("data", "chunks", f"{book_stem}_{setting_name}_chunks.json")
         clear_terminal()
         print("Chunks werden erstellt...")
         build_chunks(selected_book, chunks_path, min_w, max_w, overlap)
@@ -94,7 +94,7 @@ def run_suche():
 
     while True:
         clear_terminal()
-        print("=== SUCHE ===")
+        print("-Suche-")
         print(f"Buch: {book_stem}")
         print()
         print("  1: Suche starten")
@@ -116,19 +116,21 @@ def run_suche():
             print("Ungültige Eingabe.")
 
 
-# ---------------------------------------------------------------------------
 # Experimente
-# ---------------------------------------------------------------------------
 
 def run_experimente():
     from eval.experiment import main as exp_main
+    from eval.experiment_llm_pick import main as llm_pick_main
+    from eval.llm_fulltext_experiment import main as llm_fulltext_main
 
     while True:
         clear_terminal()
-        print("=== EXPERIMENTE ===")
+        print("-Experimente-")
         print()
-        print("  1: Experiment starten  (konfigurierbar in eval/experiment.py)")
-        print("  2: Zurück")
+        print("  1: Recall-Experiment")
+        print("  2: LLM-Pick-Experiment")
+        print("  3: LLM-Fulltext-Experiment  (LLM sucht direkt im Buchtext)")
+        print("  4: Zurück")
         print()
         opt = input("Auswahl: ").strip()
         if opt == "1":
@@ -136,20 +138,24 @@ def run_experimente():
             exp_main()
             input("\nEnter zum Fortfahren...")
         elif opt == "2":
+            clear_terminal()
+            llm_pick_main()
+            input("\nEnter zum Fortfahren...")
+        elif opt == "3":
+            clear_terminal()
+            llm_fulltext_main()
+            input("\nEnter zum Fortfahren...")
+        elif opt == "4":
             return
         else:
             print("Ungültige Eingabe.")
 
 
-# ---------------------------------------------------------------------------
 # Hauptmenü
-# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
     while True:
         clear_terminal()
-        print("=== LITERATUR-RETRIEVAL ===")
-        print()
         print("  1: Suche")
         print("  2: Experimente")
         print("  3: Beenden")
@@ -160,7 +166,6 @@ if __name__ == "__main__":
         elif opt == "2":
             run_experimente()
         elif opt == "3":
-            print("Auf Wiedersehen.")
             sys.exit(0)
         else:
             print("Ungültige Eingabe.")

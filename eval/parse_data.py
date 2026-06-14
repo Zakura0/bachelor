@@ -1,7 +1,6 @@
 """
-Parse data.json and create eval_pairs_{book}.json for each book (except harrypotter).
-Each pair: { "summary": ..., "spans": [(start, end), ...], "text": ... }
-Covers all summaries for each book (not just the first one).
+Daten-Parser für die Evaluationsdaten.
+Liest die Rohdaten aus data/raw/data.json und extrahiert die relevanten Textstellen
 """
 import json
 import os
@@ -26,8 +25,6 @@ for book_name, book_data in data.items():
 
     book_text = book_data["text"]
     summaries = book_data["summaries"]
-
-    # Collect all annotations across all summaries
     summary_to_entries = defaultdict(list)
 
     for summary in summaries:

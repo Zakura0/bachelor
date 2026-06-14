@@ -1,6 +1,5 @@
 """
 Interaktives Such-Skript.
-Pipeline-Implementierung in src/retrieval/pipeline.py.
 """
 import os
 import sys

@@ -6,10 +6,7 @@ from typing import Any, List, Optional, Sequence
 
 from openai import OpenAI
 
-# ---------------------------------------------------------------------------
 # Prompt-Templates
-# ---------------------------------------------------------------------------
-
 # Fragt das LLM, die relevanteste Textstelle zu wählen (eine Zahl).
 PROMPT_PICK_ONE = """\
 Du bekommst eine Zusammenfassung und {n} Textstellen aus einem Buch.

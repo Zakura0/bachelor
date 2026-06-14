@@ -18,7 +18,7 @@ def build_chunks(book_path: str, output_path: str = None, min_words: int = 10, m
     """    
     book_stem = pathlib.Path(book_path).stem
     if output_path is None:
-        output_path = os.path.join(project_root, "data", "processed", f"{book_stem}_chunks.json")
+        output_path = os.path.join(project_root, "data", "chunks", f"{book_stem}_chunks.json")
 
     with open(book_path, 'r', encoding='utf-8') as f:
         text = f.read()

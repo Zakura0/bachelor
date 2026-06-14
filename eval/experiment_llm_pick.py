@@ -15,7 +15,7 @@ sys.path.insert(0, project_root)
 
 from config import (
     EVAL_BOOKS,
-    DIR_PROCESSED, DIR_EXPERIMENTS,
+    DIR_PROCESSED, DIR_CHUNKS, DIR_EMBEDDINGS,
     K_RERANKER,
     EXP_CHUNK          as CHUNK_PRESET,
     EXP_LLM_PIPELINE   as PIPELINE_PRESET,
@@ -33,9 +33,9 @@ CHUNK_OVERLAP   = CHUNK_CFG["overlap"]
 RESULTS_DIR = os.path.join(project_root, "eval", "results")
 
 
-def prepare_book(book: str, output_dir: str):
-    chunks_path = os.path.join(output_dir, f"chunks_{book}_{CHUNK_NAME}.json")
-    emb_path    = os.path.join(output_dir, f"embeddings_{book}_{CHUNK_NAME}.npy")
+def prepare_book(book: str):
+    chunks_path = os.path.join(DIR_CHUNKS,     f"chunks_{book}_{CHUNK_NAME}.json")
+    emb_path    = os.path.join(DIR_EMBEDDINGS, f"embeddings_{book}_{CHUNK_NAME}.npy")
     if not os.path.exists(chunks_path):
         raise FileNotFoundError(f"Chunks nicht gefunden: {chunks_path}")
     if not os.path.exists(emb_path):
@@ -106,7 +106,7 @@ def main():
     for book in eval_pairs_per_book:
         print(f"{'='*80}")
         print(f"Buch: {book}")
-        chunks_path, emb_path = prepare_book(book, DIR_EXPERIMENTS)
+        chunks_path, emb_path = prepare_book(book)
 
         pipeline = SearchPipeline(chunks_path, emb_path, preset=PIPELINE_PRESET, llm_prompt=PROMPT_PICK_ONE)
         pairs  = eval_pairs_per_book[book]
@@ -116,7 +116,7 @@ def main():
             trial = run_trial(pipeline, pair)
             trials.append(trial)
             status = "✓" if trial["hit"] else "✗"
-            print(f"  {i:>3}/{len(pairs)}  {status}  {trial['query'][:60]}")
+            print(f"  {i:>3}/{len(pairs)}  {status}")
 
         hits  = sum(1 for t in trials if t["hit"])
         total = len(trials)

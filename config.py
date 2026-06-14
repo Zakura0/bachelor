@@ -5,63 +5,51 @@ import os
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-# ---------------------------------------------------------------------------
 # Verzeichnisse
-# ---------------------------------------------------------------------------
 
 DIR_PROCESSED  = os.path.join(PROJECT_ROOT, "data/processed")
-DIR_EXPERIMENTS = os.path.join(PROJECT_ROOT, "data/experiments/chunk_sizes")
+DIR_CHUNKS     = os.path.join(PROJECT_ROOT, "data/chunks")
+DIR_EMBEDDINGS = os.path.join(PROJECT_ROOT, "data/embeddings")
 
-# ---------------------------------------------------------------------------
 # Modelle
-# ---------------------------------------------------------------------------
 
 EMBEDDING_MODEL = "intfloat/multilingual-e5-base"
 RERANKER_MODEL  = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
-NLI_MODEL       = "joeddav/xlm-roberta-large-xnli"   # deaktiviert — schadet bei großen Chunks
+NLI_MODEL       = "joeddav/xlm-roberta-large-xnli"
 LLM_MODEL       = "gpt-4o-mini"
 
-# Prompt-Templates sind fest in den Experiment-Skripten definiert:
-# experiment.py          → PROMPT_RANK_ALL
-# experiment_llm_pick.py → PROMPT_PICK_ONE
-# (definiert in src/retrieval/llm_reranker.py)
-
-# ---------------------------------------------------------------------------
-# Pipeline-Parameter  (genutzt von src/retrieval/pipeline.py)
-# ---------------------------------------------------------------------------
+# Pipeline-Parameter  (src/retrieval/pipeline.py)
 
 K_RETRIEVAL = 200   # Kandidaten je Retrieval-Stufe (TF-IDF / Embeddings)
 K_RRF       = 300   # Kandidaten nach RRF-Fusion
-K_RERANKER  = 50     # Kandidaten nach Cross-Encoder
-RRF_K       = 60    # RRF-Hyperparameter (höher = weniger Einfluss der Ränge)
+K_RERANKER  = 150   # Kandidaten nach Cross-Encoder
+RRF_K       = 60    # RRF-Hyperparameter
 
-# ---------------------------------------------------------------------------
-# Suche  (main.py → script/run_search.py)
-# ---------------------------------------------------------------------------
+# Suche  (script/run_search.py)
 
-# Verfügbare Presets → src/retrieval/pipeline.py :: PIPELINE_PRESETS
-# 1 = TF-IDF only                    5 = TF-IDF + Emb + Reranker + NLI
-# 2 = Embeddings only                6 = TF-IDF + Emb + LLM
-# 3 = TF-IDF + Embeddings (RRF)      7 = TF-IDF + Emb + Reranker + LLM
+# Verfügbare Presets
+# 1 = TF-IDF only                    
+# 2 = Embeddings only                
+# 3 = TF-IDF + Embeddings (RRF)
 # 4 = TF-IDF + Embeddings + Reranker
+# 5 = TF-IDF + Emb + Reranker + NLI
+# 6 = TF-IDF + Emb + LLM
+# 7 = TF-IDF + Emb + Reranker + LLM
 SEARCH_PIPELINE = 4
 
-# ---------------------------------------------------------------------------
-# Evaluation  (eval/experiment.py)
-# ---------------------------------------------------------------------------
 
+# Experimente  (eval/experiment.py)
 # EVAL_BOOKS = ["verwandlung", "erdbeben", "judenbuche", "krambambuli"]
 EVAL_BOOKS = ["verwandlung"]
-RECALL_K   = [1, 30]
+RECALL_K   = [1, 100]
 
-# Chunk-Preset → src/preprocessing/chunk_presets.py :: CHUNK_PRESETS
+# Chunk-Preset 
 # 1 = tiny (10–30)    3 = medium (30–100)    5 = xlarge (80–200)
 # 2 = small (10–50)   4 = large (50–150)     6 = medium_high_overlap   7 = large_high_overlap
 EXP_CHUNK    = 4
 
-# Pipeline-Preset (siehe Kommentar bei SEARCH_PIPELINE)
-EXP_PIPELINE = 7
+# Pipeline-Preset
+EXP_PIPELINE = 4
 
-# Pipeline-Preset für LLM-Pick-Experiment (eval/experiment_llm_pick.py)
-# Muss ein Preset mit use_llm=True sein (6 oder 7)
+# Pipeline-Preset für LLM-Pick-Experiment
 EXP_LLM_PIPELINE = 7

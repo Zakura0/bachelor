@@ -1,7 +1,5 @@
 """
 Konfigurierbare Such-Pipeline.
-Kombiniert TF-IDF, Embeddings, RRF, Cross-Encoder Reranker, NLI und LLM-Reranker.
-Alle Parameter werden aus config.py gelesen.
 """
 import json
 import os
