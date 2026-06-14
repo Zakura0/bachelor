@@ -1,5 +1,6 @@
 import json
 import os
+import pathlib
 import sys
 
 import numpy as np
@@ -14,13 +15,11 @@ from config import EMBEDDING_MODEL
 def build_embeddings(chunks_path: str, output_path: str = None):
     """
     Erstellt Embeddings für Chunks.
-    
+
     :param chunks_path: Pfad zur Chunks-JSON-Datei
     :param output_path: Pfad zur Ausgabe der Embeddings.npy-Datei
     :return: Pfad zur gespeicherten Embeddings-Datei
     """
-    import pathlib
-    
     book_stem = pathlib.Path(chunks_path).stem.replace("_chunks", "")
     if output_path is None:
         output_path = os.path.join(project_root, "data", "embeddings", f"{book_stem}.embeddings.npy")
@@ -46,7 +45,7 @@ def build_embeddings(chunks_path: str, output_path: str = None):
 def main():
     if len(sys.argv) < 2:
         print("Bitte gib den Pfad zur Chunks-JSON an.")
-        print("Beispiel: python build_embeddings.py data/processed/verwandlung_chunks.json")
+        print("Beispiel: python build_embeddings.py data/chunks/verwandlung_chunks.json")
         sys.exit(1)
     chunks_path = sys.argv[1]
     build_embeddings(chunks_path)

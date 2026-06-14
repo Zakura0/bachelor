@@ -129,7 +129,7 @@ def run_experimente():
         print()
         print("  1: Recall-Experiment")
         print("  2: LLM-Pick-Experiment")
-        print("  3: LLM-Fulltext-Experiment  (LLM sucht direkt im Buchtext)")
+        print("  3: LLM-Fulltext-Experiment")
         print("  4: Zurück")
         print()
         opt = input("Auswahl: ").strip()

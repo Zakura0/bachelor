@@ -17,12 +17,13 @@ from config import (
     EVAL_BOOKS,
     DIR_PROCESSED, DIR_CHUNKS, DIR_EMBEDDINGS,
     K_RERANKER,
-    EXP_CHUNK          as CHUNK_PRESET,
-    EXP_LLM_PIPELINE   as PIPELINE_PRESET,
+    EXP_CHUNK        as CHUNK_PRESET,
+    EXP_LLM_PIPELINE as PIPELINE_PRESET,
 )
 from src.preprocessing.chunk_presets import CHUNK_PRESETS
 from src.retrieval.pipeline import SearchPipeline
 from src.retrieval.llm_reranker import PROMPT_PICK_ONE
+from eval.eval_utils import make_run_dir, build_misses, save_misses
 
 CHUNK_CFG       = CHUNK_PRESETS[CHUNK_PRESET]
 CHUNK_NAME      = CHUNK_CFG["name"]
@@ -30,10 +31,11 @@ CHUNK_MIN_WORDS = CHUNK_CFG["min_words"]
 CHUNK_MAX_WORDS = CHUNK_CFG["max_words"]
 CHUNK_OVERLAP   = CHUNK_CFG["overlap"]
 
-RESULTS_DIR = os.path.join(project_root, "eval", "results")
+BASE_RESULTS_DIR = os.path.join(project_root, "eval", "results")
 
 
 def prepare_book(book: str):
+    """Pfade zu Chunks und Embeddings zurückgeben. Bricht ab wenn Dateien fehlen."""
     chunks_path = os.path.join(DIR_CHUNKS,     f"chunks_{book}_{CHUNK_NAME}.json")
     emb_path    = os.path.join(DIR_EMBEDDINGS, f"embeddings_{book}_{CHUNK_NAME}.npy")
     if not os.path.exists(chunks_path):
@@ -73,12 +75,8 @@ def run_trial(pipeline: SearchPipeline, pair: dict):
 
 
 def main():
-    now = datetime.now()
-    ts = now.isoformat()
-    ts_file = now.strftime("%Y%m%d_%H%M%S")
-
-    os.makedirs(RESULTS_DIR, exist_ok=True)
-    os.makedirs(DIR_EXPERIMENTS, exist_ok=True)
+    ts      = datetime.now().isoformat()
+    run_dir = make_run_dir(BASE_RESULTS_DIR, "experiment_llm_pick")
 
     print("=" * 80)
     print("LLM-PICK-EXPERIMENT")
@@ -88,7 +86,6 @@ def main():
     print(f"Bücher:      {', '.join(EVAL_BOOKS)}")
     print()
 
-    # --- Eval-Pairs laden ---
     eval_pairs_per_book = {}
     for book in EVAL_BOOKS:
         ep_path = os.path.join(DIR_PROCESSED, f"eval_pairs_{book}.json")
@@ -100,11 +97,10 @@ def main():
         print(f"  {book}: {len(eval_pairs_per_book[book])} Pairs geladen")
     print()
 
-    # --- Je Buch auswerten ---
     per_book_results = {}
 
     for book in eval_pairs_per_book:
-        print(f"{'='*80}")
+        print("=" * 80)
         print(f"Buch: {book}")
         chunks_path, emb_path = prepare_book(book)
 
@@ -116,7 +112,7 @@ def main():
             trial = run_trial(pipeline, pair)
             trials.append(trial)
             status = "✓" if trial["hit"] else "✗"
-            print(f"  {i:>3}/{len(pairs)}  {status}")
+            print(f"  {i:>3}/{len(pairs)}  {status}  {trial['query'][:60]}")
 
         hits  = sum(1 for t in trials if t["hit"])
         total = len(trials)
@@ -134,14 +130,12 @@ def main():
             "trials": trials,
         }
 
-    # --- Aggregation ---
     all_trials = [t for bm in per_book_results.values() for t in bm["trials"]]
     agg_total  = len(all_trials)
     agg_hits   = sum(1 for t in all_trials if t["hit"])
     agg_acc    = agg_hits / agg_total if agg_total else 0.0
     agg_avg_t  = sum(t["time_s"] for t in all_trials) / agg_total if agg_total else 0
 
-    # --- Summary ---
     summary_lines = [
         "=" * 80,
         "LLM-PICK-EXPERIMENT — ZUSAMMENFASSUNG",
@@ -152,13 +146,11 @@ def main():
         f"{'Buch':<20}  {'Accuracy':>8}  {'Hits':>6}  {'Total':>6}  {'s/query':>7}",
         "-" * 80,
     ]
-
     for book, bm in per_book_results.items():
         m = bm["metrics"]
         summary_lines.append(
             f"{book:<20}  {m['accuracy']:>8.1%}  {m['hits']:>6}  {m['total']:>6}  {m['avg_time_per_query_s']:>6.2f}s"
         )
-
     summary_lines.append("-" * 80)
     summary_lines.append(
         f"{'GESAMT':<20}  {agg_acc:>8.1%}  {agg_hits:>6}  {agg_total:>6}  {agg_avg_t:>6.2f}s"
@@ -167,7 +159,7 @@ def main():
 
     print("\n" + "\n".join(summary_lines))
 
-    txt_path = os.path.join(RESULTS_DIR, f"llm_pick_summary_{ts_file}.txt")
+    txt_path = os.path.join(run_dir, "summary.txt")
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write("\n".join(summary_lines) + "\n")
     print(f"\nZusammenfassung: {txt_path}")
@@ -189,18 +181,18 @@ def main():
             "avg_time_per_query_s": round(agg_avg_t, 3),
         },
         "books": [
-            {
-                "book":    book,
-                "metrics": bm["metrics"],
-                "trials":  bm["trials"],
-            }
+            {"book": book, "metrics": bm["metrics"], "trials": bm["trials"]}
             for book, bm in per_book_results.items()
         ],
     }
-    details_path = os.path.join(RESULTS_DIR, f"llm_pick_details_{ts_file}.json")
+    details_path = os.path.join(run_dir, "results.json")
     with open(details_path, "w", encoding="utf-8") as f:
         json.dump(details, f, ensure_ascii=False, indent=2)
     print(f"Details:         {details_path}")
+
+    misses = build_misses(per_book_results, got_key="pick_text")
+    misses_path = save_misses(misses, run_dir)
+    print(f"Misses:          {misses_path}")
 
 
 if __name__ == "__main__":

@@ -45,7 +45,7 @@ def main():
     if len(sys.argv) < 3:
         print("Verwendung: python script/run_search.py <chunks> <embeddings> [Optionen]")
         print(f"Optionen: --preset=NAME  --top-k=N")
-        print(f"Presets:  {', '.join(PIPELINE_PRESETS)}")
+        print(f"Presets:  {', '.join(str(k) for k in PIPELINE_PRESETS)}")
         sys.exit(1)
 
     chunks_path = sys.argv[1]
@@ -56,7 +56,7 @@ def main():
     top_k  = 10
     for a in args:
         if a.startswith("--preset="):
-            preset = a.split("=", 1)[1]
+            preset = int(a.split("=", 1)[1])
         elif a.startswith("--top-k="):
             top_k = int(a.split("=")[1])
 

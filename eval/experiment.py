@@ -26,8 +26,11 @@ from src.preprocessing.chunk_presets import CHUNK_PRESETS
 from src.retrieval.pipeline import SearchPipeline
 from eval.eval_utils import make_run_dir, build_misses, save_misses
 
-CHUNK_CFG  = CHUNK_PRESETS[CHUNK_PRESET]
-CHUNK_NAME = CHUNK_CFG["name"]
+CHUNK_CFG       = CHUNK_PRESETS[CHUNK_PRESET]
+CHUNK_NAME      = CHUNK_CFG["name"]
+CHUNK_MIN_WORDS = CHUNK_CFG["min_words"]
+CHUNK_MAX_WORDS = CHUNK_CFG["max_words"]
+CHUNK_OVERLAP   = CHUNK_CFG["overlap"]
 
 
 BASE_RESULTS_DIR = os.path.join(project_root, "eval", "results")
@@ -96,11 +99,10 @@ def compute_recall(trials: list):
 def main():
     ts      = datetime.now().isoformat()
     run_dir = make_run_dir(BASE_RESULTS_DIR, "experiment")
-    os.makedirs(DIR_CHUNKS, exist_ok=True)
-    os.makedirs(DIR_EMBEDDINGS, exist_ok=True)
+
 
     print("=" * 80)
-    print("TOP-1 LLM EXPERIMENT")
+    print("RECALL-EXPERIMENT")
     print("=" * 80)
     print(f"Pipeline:    {PIPELINE_PRESET}")
     print(f"Chunks:      {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})")
@@ -168,7 +170,7 @@ def main():
     # --- Summary-Tabelle (Konsole + TXT) ---
     summary_lines = [
         "=" * 80,
-        "TOP-1 LLM EXPERIMENT — ZUSAMMENFASSUNG",
+        "RECALL-EXPERIMENT — ZUSAMMENFASSUNG",
         f"Datum:     {ts[:19]}",
         f"Pipeline:  {PIPELINE_PRESET}",
         f"Chunks:    {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})",
