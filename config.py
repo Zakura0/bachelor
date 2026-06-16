@@ -35,21 +35,21 @@ RRF_K       = 60    # RRF-Hyperparameter
 # 5 = TF-IDF + Emb + Reranker + NLI
 # 6 = TF-IDF + Emb + LLM
 # 7 = TF-IDF + Emb + Reranker + LLM
-SEARCH_PIPELINE = 4
+SEARCH_PIPELINE = 7
 
 
 # Experimente  (eval/experiment.py)
 # EVAL_BOOKS = ["verwandlung", "erdbeben", "judenbuche", "krambambuli"]
 EVAL_BOOKS = ["verwandlung"]
-RECALL_K   = [1, 100]
+RECALL_K   = [1, 5, 10, 150]
 
 # Chunk-Preset 
 # 1 = tiny (10–30)    3 = medium (30–100)    5 = xlarge (80–200)
 # 2 = small (10–50)   4 = large (50–150)     6 = medium_high_overlap   7 = large_high_overlap
-EXP_CHUNK    = 4
+EXP_CHUNK    = 3
 
 # Pipeline-Preset
-EXP_PIPELINE = 4
+EXP_PIPELINE = 7
 
 # Pipeline-Preset für LLM-Pick-Experiment
 EXP_LLM_PIPELINE = 7

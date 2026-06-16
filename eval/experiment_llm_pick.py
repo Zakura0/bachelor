@@ -190,7 +190,7 @@ def main():
         json.dump(details, f, ensure_ascii=False, indent=2)
     print(f"Details:         {details_path}")
 
-    misses = build_misses(per_book_results, got_key="pick_text")
+    misses = build_misses(per_book_results, got_key="pick_text", span_key="pick_span")
     misses_path = save_misses(misses, run_dir)
     print(f"Misses:          {misses_path}")
 

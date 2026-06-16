@@ -15,11 +15,13 @@ def make_run_dir(base_dir: str, experiment_name: str) -> str:
     return path
 
 
-def build_misses(per_book_results: dict, got_key: str = "top1_text") -> list:
+def build_misses(per_book_results: dict, got_key: str = "top1_text", span_key: str = "top1_span") -> list:
     """
     Gibt eine Liste von Dicts zurück — einen je Miss.
-    got_key: Schlüssel im Trial-Dict der die System-Antwort enthält
-             ("top1_text" für pipeline-Experimente, "answer" für llm_fulltext).
+    got_key:  Schlüssel im Trial-Dict der die System-Antwort enthält
+              ("top1_text" für pipeline-Experimente, "answer" für llm_fulltext, "pick_text" für llm_pick).
+    span_key: Schlüssel für den Span der System-Antwort
+              ("top1_span" für pipeline-Experimente, "pick_span" für llm_pick).
     Texte werden NICHT abgeschnitten.
     """
     misses = []
@@ -32,7 +34,7 @@ def build_misses(per_book_results: dict, got_key: str = "top1_text") -> list:
                     "expected_text": trial.get("expected_text", ""),
                     "expected_spans": trial.get("expected_spans", []),
                     "got":           trial.get(got_key) or "",
-                    "got_span":      trial.get("top1_span") or trial.get("found_at"),
+                    "got_span":      trial.get(span_key) or trial.get("found_at"),
                 })
     return misses
 
