@@ -9,7 +9,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
 from src.retrieval.embeddings import EmbeddingRetriever
-from config import EMBEDDING_MODEL
+from config import EMBEDDING_MODEL, DIR_EMBEDDINGS
 
 
 def build_embeddings(chunks_path: str, output_path: str = None):
@@ -20,9 +20,11 @@ def build_embeddings(chunks_path: str, output_path: str = None):
     :param output_path: Pfad zur Ausgabe der Embeddings.npy-Datei
     :return: Pfad zur gespeicherten Embeddings-Datei
     """
-    book_stem = pathlib.Path(chunks_path).stem.replace("_chunks", "")
+    stem = pathlib.Path(chunks_path).stem  # z.B. "chunks_verwandlung_medium"
+    # chunks_X_Y → embeddings_X_Y
+    emb_stem = stem.replace("chunks_", "embeddings_", 1) if stem.startswith("chunks_") else stem
     if output_path is None:
-        output_path = os.path.join(project_root, "data", "embeddings", f"{book_stem}.embeddings.npy")
+        output_path = os.path.join(DIR_EMBEDDINGS, f"{emb_stem}.npy")
 
     with open(chunks_path, "r", encoding="utf-8") as f:
         data = json.load(f)

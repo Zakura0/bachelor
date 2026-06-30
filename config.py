@@ -9,12 +9,12 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 DIR_PROCESSED  = os.path.join(PROJECT_ROOT, "data/processed")
 DIR_CHUNKS     = os.path.join(PROJECT_ROOT, "data/chunks")
-DIR_EMBEDDINGS = os.path.join(PROJECT_ROOT, "data/embeddings")
+DIR_EMBEDDINGS = os.path.join(PROJECT_ROOT, "data/embeddings/e5-large")
 
 # Modelle
 
-EMBEDDING_MODEL = "intfloat/multilingual-e5-base"
-RERANKER_MODEL  = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
+EMBEDDING_MODEL = "intfloat/multilingual-e5-large"
+RERANKER_MODEL  = "BAAI/bge-reranker-v2-m3"
 NLI_MODEL       = "joeddav/xlm-roberta-large-xnli"
 LLM_MODEL       = "gpt-4o-mini"
 
@@ -22,7 +22,7 @@ LLM_MODEL       = "gpt-4o-mini"
 
 K_RETRIEVAL = 200   # Kandidaten je Retrieval-Stufe (TF-IDF / Embeddings)
 K_RRF       = 300   # Kandidaten nach RRF-Fusion
-K_RERANKER  = 150   # Kandidaten nach Cross-Encoder
+K_RERANKER  = 30   # Kandidaten nach Cross-Encoder
 RRF_K       = 60    # RRF-Hyperparameter
 
 # Suche  (script/run_search.py)
@@ -35,13 +35,13 @@ RRF_K       = 60    # RRF-Hyperparameter
 # 5 = TF-IDF + Emb + Reranker + NLI
 # 6 = TF-IDF + Emb + LLM
 # 7 = TF-IDF + Emb + Reranker + LLM
-SEARCH_PIPELINE = 7
+SEARCH_PIPELINE = 4
 
 
 # Experimente  (eval/experiment.py)
 # EVAL_BOOKS = ["verwandlung", "erdbeben", "judenbuche", "krambambuli"]
 EVAL_BOOKS = ["verwandlung"]
-RECALL_K   = [1, 5, 10, 150]
+RECALL_K   = [1, 5, 10, 20, 30]
 
 # Chunk-Preset 
 # 1 = tiny (10–30)    3 = medium (30–100)    5 = xlarge (80–200)
@@ -49,7 +49,7 @@ RECALL_K   = [1, 5, 10, 150]
 EXP_CHUNK    = 3
 
 # Pipeline-Preset
-EXP_PIPELINE = 7
+EXP_PIPELINE = 4
 
 # Pipeline-Preset für LLM-Pick-Experiment
 EXP_LLM_PIPELINE = 7
