@@ -10,6 +10,28 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SKIP_BOOKS = {"harrypotter"}
 
+MERGE_TOLERANCE = 100  # Zeichen-Lücke, bis zu der benachbarte Spans zusammengeführt werden
+
+
+def merge_spans(entries, book_text, tolerance=MERGE_TOLERANCE):
+    """Sortiert Entries nach Position und mergt Spans, deren Lücke ≤ tolerance ist."""
+    sorted_entries = sorted(entries, key=lambda e: e["start"])
+
+    merged_spans = []
+    cur_start = sorted_entries[0]["start"]
+    cur_end   = sorted_entries[0]["end"]
+
+    for e in sorted_entries[1:]:
+        if e["start"] - cur_end <= tolerance:
+            cur_end = max(cur_end, e["end"])
+        else:
+            merged_spans.append((cur_start, cur_end))
+            cur_start, cur_end = e["start"], e["end"]
+    merged_spans.append((cur_start, cur_end))
+
+    combined_text = " [...] ".join(book_text[s:e] for s, e in merged_spans)
+    return merged_spans, combined_text
+
 script_dir = os.path.dirname(os.path.abspath(__file__))
 data_path = os.path.join(project_root, "data/raw/data.json")
 
@@ -42,8 +64,7 @@ for book_name, book_data in data.items():
 
     pairs = []
     for summary_text, entries in summary_to_entries.items():
-        combined_text = " [...] ".join([e["text"] for e in entries])
-        spans = [(e["start"], e["end"]) for e in entries]
+        spans, combined_text = merge_spans(entries, book_text)
         pairs.append({
             "book": book_name,
             "text": combined_text,
