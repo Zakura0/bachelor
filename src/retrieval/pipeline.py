@@ -22,6 +22,7 @@ from src.retrieval.embeddings import EmbeddingRetriever
 from src.retrieval.reranker import CrossEncoderReranker
 from src.retrieval.nli import NLIVerifier
 from src.retrieval.llm_reranker import LLMReranker
+from src.retrieval.hyde import HyDEGenerator
 
 from transformers import logging as transformers_logging
 transformers_logging.set_verbosity_error()
@@ -38,14 +39,18 @@ SearchResult = namedtuple("SearchResult", ["text", "index", "meta", "score"])
 # 5 = TF-IDF + Embeddings + Reranker + NLI
 # 6 = TF-IDF + Embeddings + LLM
 # 7 = TF-IDF + Embeddings + Reranker + LLM
+# 8 = TF-IDF + Embeddings(HyDE) + Reranker + LLM
+# 9 = TF-IDF + Embeddings(HyDE) + Reranker
 PIPELINE_PRESETS = {
-    1: dict(use_tfidf=True,  use_embeddings=False, use_reranker=False, use_nli=False, use_llm=False),
-    2: dict(use_tfidf=False, use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False),
-    3: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False),
-    4: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False),
-    5: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=True,  use_llm=False),
-    6: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=True),
-    7: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True),
+    1: dict(use_tfidf=True,  use_embeddings=False, use_reranker=False, use_nli=False, use_llm=False, use_hyde=False),
+    2: dict(use_tfidf=False, use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False, use_hyde=False),
+    3: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False, use_hyde=False),
+    4: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False, use_hyde=False),
+    5: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=True,  use_llm=False, use_hyde=False),
+    6: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=True,  use_hyde=False),
+    7: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=False),
+    8: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=True),
+    9: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False, use_hyde=True),
 }
 
 
@@ -86,12 +91,15 @@ class SearchPipeline:
         use_nli        = flags["use_nli"]
         use_llm        = flags["use_llm"]
 
+        use_hyde       = flags["use_hyde"]
+
         self.preset         = preset
         self.use_tfidf      = use_tfidf
         self.use_embeddings = use_embeddings
         self.use_reranker   = use_reranker
         self.use_nli        = use_nli
         self.use_llm        = use_llm
+        self.use_hyde       = use_hyde
 
         with open(chunks_path, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -115,11 +123,12 @@ class SearchPipeline:
         self.reranker = CrossEncoderReranker(model_name=RERANKER_MODEL) if use_reranker else None
         self.nli      = NLIVerifier(model_name=NLI_MODEL)               if use_nli      else None
         self.llm      = LLMReranker(model=LLM_MODEL, prompt_template=llm_prompt) if use_llm      else None
+        self.hyde     = HyDEGenerator(model=LLM_MODEL)                  if use_hyde     else None
 
     def get_config_name(self) -> str:
         parts = []
         if self.use_tfidf:      parts.append("TFIDF")
-        if self.use_embeddings: parts.append("EMB")
+        if self.use_embeddings: parts.append("EMB+HyDE" if self.use_hyde else "EMB")
         if self.use_reranker:   parts.append("RERANK")
         if self.use_nli:        parts.append("NLI")
         if self.use_llm:        parts.append("LLM")
@@ -136,7 +145,12 @@ class SearchPipeline:
                 print(f"{len(rank_lists[-1])} TF-IDF Ergebnisse.")
 
         if self.use_embeddings:
-            res = self.embeddings.search(query, top_k=K_RETRIEVAL)
+            emb_query = query
+            if self.use_hyde:
+                emb_query = self.hyde.generate(query)
+                if verbose:
+                    print(f"HyDE-Passage: {emb_query[:80]}...")
+            res = self.embeddings.search(emb_query, top_k=K_RETRIEVAL)
             rank_lists.append([r.index for r in res])
             if verbose:
                 print(f"{len(rank_lists[-1])} Embedding Ergebnisse.")

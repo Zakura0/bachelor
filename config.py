@@ -39,8 +39,7 @@ SEARCH_PIPELINE = 4
 
 
 # Experimente  (eval/experiment.py)
-# EVAL_BOOKS = ["verwandlung", "erdbeben", "judenbuche", "krambambuli"]
-EVAL_BOOKS = ["verwandlung"]
+EVAL_BOOKS = ["verwandlung", "erdbeben", "judenbuche", "krambambuli"]
 RECALL_K   = [1, 5, 10, 20, 30]
 
 # Chunk-Preset 
@@ -49,7 +48,7 @@ RECALL_K   = [1, 5, 10, 20, 30]
 EXP_CHUNK    = 3
 
 # Pipeline-Preset
-EXP_PIPELINE = 4
+EXP_PIPELINE = 9
 
 # Pipeline-Preset für LLM-Pick-Experiment
 EXP_LLM_PIPELINE = 7
