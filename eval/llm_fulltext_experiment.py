@@ -1,10 +1,8 @@
 """
 LLM Fulltext Experiment
-=======================
+
 Das LLM erhält den vollständigen Buchtext und eine Zusammenfassung und soll
 die passende Textstelle wortwörtlich zurückgeben.
-
-Konfiguration: config.py, Abschnitt "Experimente".
 """
 import json
 import os

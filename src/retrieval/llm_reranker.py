@@ -24,8 +24,16 @@ Nummer der relevantesten Textstelle:"""
 
 # Fragt das LLM, alle Textstellen nach Relevanz zu sortieren.
 PROMPT_RANK_ALL = """\
-Du bekommst eine Zusammenfassung und {n} Textstellen aus einem Buch.
-Sortiere die Textstellen nach ihrer inhaltlichen Relevanz zur Zusammenfassung.
+Du bist ein Experte für deutschsprachige Literatur des frühen 20. Jahrhunderts.
+
+Aufgabe: Du bekommst eine abstrakte Zusammenfassung einer Handlungsszene und {n} \
+Textstellen aus einem Originaltext. Finde die Textstellen, die genau diese Szene \
+beschreiben – auch wenn die Formulierungen sehr unterschiedlich sind (die \
+Zusammenfassung ist abstrakt, der Originaltext literarisch-konkret).
+
+Sortiere alle Textstellen nach ihrer inhaltlichen Übereinstimmung mit der Szene \
+in der Zusammenfassung. Platz 1 = beste Übereinstimmung.
+
 Antworte NUR mit den Nummern in sortierter Reihenfolge, getrennt durch Kommas.
 Beispiel: 3,1,5,2,4
 

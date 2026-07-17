@@ -1,10 +1,8 @@
 """
 Evaluation-Experiment
-=====================
+
 Konfigurierbares Experiment zur Auswertung der Retrieval-Pipeline.
 Misst Recall@k über alle Eval-Bücher.
-
-Konfiguration: config.py, Abschnitt "Experiment".
 """
 import json
 import os

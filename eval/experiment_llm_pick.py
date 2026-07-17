@@ -1,6 +1,6 @@
 """
 LLM-Pick-Experiment
-===================
+
 Das LLM wählt aus den Reranker-Kandidaten genau EINE Textstelle.
 Gemessen wird nur Accuracy (trifft die gewählte Stelle oder nicht).
 """

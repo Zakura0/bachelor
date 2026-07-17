@@ -16,16 +16,17 @@ DIR_EMBEDDINGS = os.path.join(PROJECT_ROOT, "data/embeddings/e5-large")
 EMBEDDING_MODEL = "intfloat/multilingual-e5-large"
 RERANKER_MODEL  = "BAAI/bge-reranker-v2-m3"
 NLI_MODEL       = "joeddav/xlm-roberta-large-xnli"
-LLM_MODEL       = "gpt-4o-mini"
+LLM_MODEL       = "gpt-4o"
 
-# Pipeline-Parameter  (src/retrieval/pipeline.py)
+# Pipeline-Parameter
 
 K_RETRIEVAL = 200   # Kandidaten je Retrieval-Stufe (TF-IDF / Embeddings)
 K_RRF       = 300   # Kandidaten nach RRF-Fusion
-K_RERANKER  = 30   # Kandidaten nach Cross-Encoder
+K_RERANKER  = 15    # Kandidaten nach Cross-Encoder
+
 RRF_K       = 60    # RRF-Hyperparameter
 
-# Suche  (script/run_search.py)
+# Suche
 
 # Verfügbare Presets
 # 1 = TF-IDF only                    
@@ -38,9 +39,9 @@ RRF_K       = 60    # RRF-Hyperparameter
 SEARCH_PIPELINE = 4
 
 
-# Experimente  (eval/experiment.py)
+# Experimente
 EVAL_BOOKS = ["verwandlung", "erdbeben", "judenbuche", "krambambuli"]
-RECALL_K   = [1, 5, 10, 20, 30]
+RECALL_K   = [1, 5, 10, 15]
 
 # Chunk-Preset 
 # 1 = tiny (10–30)    3 = medium (30–100)    5 = xlarge (80–200)
@@ -48,7 +49,7 @@ RECALL_K   = [1, 5, 10, 20, 30]
 EXP_CHUNK    = 3
 
 # Pipeline-Preset
-EXP_PIPELINE = 9
+EXP_PIPELINE = 7
 
 # Pipeline-Preset für LLM-Pick-Experiment
 EXP_LLM_PIPELINE = 7
