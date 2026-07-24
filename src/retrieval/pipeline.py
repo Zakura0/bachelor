@@ -15,9 +15,11 @@ sys.path.insert(0, project_root)
 from config import (
     EMBEDDING_MODEL, RERANKER_MODEL, NLI_MODEL, LLM_MODEL,
     K_RETRIEVAL, K_RRF, K_RERANKER, RRF_K,
+    USE_BM25,
 )
 from src.retrieval.llm_reranker import PROMPT_RANK_ALL as _DEFAULT_LLM_PROMPT
 from src.retrieval.tfidf import TfidfRetriever
+from src.retrieval.bm25 import BM25Retriever
 from src.retrieval.embeddings import EmbeddingRetriever
 from src.retrieval.reranker import CrossEncoderReranker
 from src.retrieval.nli import NLIVerifier
@@ -111,8 +113,12 @@ class SearchPipeline:
         if emb.shape[0] != len(self.texts):
             raise ValueError("Embeddings passen nicht zur Chunk-Anzahl.")
 
-        self.tfidf = TfidfRetriever(ngram_range=(1, 2)) if use_tfidf else None
-        if self.tfidf:
+        self.tfidf = None
+        if use_tfidf:
+            if USE_BM25:
+                self.tfidf = BM25Retriever()
+            else:
+                self.tfidf = TfidfRetriever(ngram_range=(1, 2))
             self.tfidf.fit(self.texts, meta=self.chunks)
 
         self.embeddings = None
@@ -127,7 +133,7 @@ class SearchPipeline:
 
     def get_config_name(self) -> str:
         parts = []
-        if self.use_tfidf:      parts.append("TFIDF")
+        if self.use_tfidf:      parts.append("BM25" if USE_BM25 else "TFIDF")
         if self.use_embeddings: parts.append("EMB+HyDE" if self.use_hyde else "EMB")
         if self.use_reranker:   parts.append("RERANK")
         if self.use_nli:        parts.append("NLI")

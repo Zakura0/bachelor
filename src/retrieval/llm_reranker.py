@@ -28,7 +28,7 @@ Du bist ein Experte für deutschsprachige Literatur des frühen 20. Jahrhunderts
 
 Aufgabe: Du bekommst eine abstrakte Zusammenfassung einer Handlungsszene und {n} \
 Textstellen aus einem Originaltext. Finde die Textstellen, die genau diese Szene \
-beschreiben – auch wenn die Formulierungen sehr unterschiedlich sind (die \
+beschreiben - auch wenn die Formulierungen sehr unterschiedlich sind (die \
 Zusammenfassung ist abstrakt, der Originaltext literarisch-konkret).
 
 Sortiere alle Textstellen nach ihrer inhaltlichen Übereinstimmung mit der Szene \

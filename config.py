@@ -22,7 +22,9 @@ LLM_MODEL       = "gpt-4o"
 
 K_RETRIEVAL = 200   # Kandidaten je Retrieval-Stufe (TF-IDF / Embeddings)
 K_RRF       = 300   # Kandidaten nach RRF-Fusion
-K_RERANKER  = 15    # Kandidaten nach Cross-Encoder
+K_RERANKER  = 30    # Kandidaten nach Cross-Encoder
+
+USE_BM25 = True    # True = BM25 statt TF-IDF als erstes Retrieval-Stage
 
 RRF_K       = 60    # RRF-Hyperparameter
 
@@ -41,7 +43,7 @@ SEARCH_PIPELINE = 4
 
 # Experimente
 EVAL_BOOKS = ["verwandlung", "erdbeben", "judenbuche", "krambambuli"]
-RECALL_K   = [1, 5, 10, 15]
+RECALL_K   = [1, 5, 10, 20, 30]
 
 # Chunk-Preset 
 # 1 = tiny (10–30)    3 = medium (30–100)    5 = xlarge (80–200)
