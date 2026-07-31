@@ -5,6 +5,7 @@ import pathlib
 from script.build_book_chunks import build_chunks
 from script.build_embeddings import build_embeddings
 from script.run_search import run_search_interactive
+from config import DIR_CHUNKS, DIR_EMBEDDINGS
 
 
 def clear_terminal():
@@ -24,7 +25,7 @@ def ask_yes_no(prompt):
 # Suche
 
 def select_book(raw_dir="data/raw"):
-    files = [f for f in os.listdir(raw_dir) if os.path.isfile(os.path.join(raw_dir, f))]
+    files = [f for f in os.listdir(raw_dir) if os.path.isfile(os.path.join(raw_dir, f)) and f.endswith(".txt")]
     if not files:
         print("Keine Bücher im raw-Verzeichnis gefunden.")
         return None
@@ -49,40 +50,83 @@ def run_suche():
         return
 
     book_stem = pathlib.Path(selected_book).stem
-    chunks_path     = os.path.join("data", "chunks",     f"{book_stem}_chunks.json")
-    embeddings_path = os.path.join("data", "embeddings", f"{book_stem}.embeddings.npy")
+
+    # Vorhandene Chunk-Dateien für dieses Buch suchen
+    existing_chunks = sorted([
+        f for f in os.listdir(DIR_CHUNKS)
+        if f.startswith(f"chunks_{book_stem}_") and f.endswith(".json")
+    ]) if os.path.isdir(DIR_CHUNKS) else []
+
+    chunks_path = None
 
     def create_chunks():
-        print("Minimale Wortanzahl pro Chunk? (Standard: 10)")
+        nonlocal chunks_path
+        print("Minimale Wortanzahl pro Chunk? (Standard: 30)")
         min_w = input("Minimum: ").strip()
-        min_w = int(min_w) if min_w.isdigit() else 10
-        print("Maximale Wortanzahl pro Chunk? (Standard: 50)")
+        min_w = int(min_w) if min_w.isdigit() else 30
+        print("Maximale Wortanzahl pro Chunk? (Standard: 100)")
         max_w = input("Maximum: ").strip()
-        max_w = int(max_w) if max_w.isdigit() else 50
-        print("Satzüberlappung zwischen Chunks? (Standard: 1)")
+        max_w = int(max_w) if max_w.isdigit() else 100
+        print("Satzüberlappung zwischen Chunks? (Standard: 2)")
         overlap = input("Überlappung: ").strip()
-        overlap = int(overlap) if overlap.isdigit() else 1
-        print("Wie soll diese Einstellung heißen? (z.B. min10_max50_ov1)")
-        setting_name = input("Name: ").strip()
-        chunks_path = os.path.join("data", "chunks", f"{book_stem}_{setting_name}_chunks.json")
+        overlap = int(overlap) if overlap.isdigit() else 2
+        print("Name für diese Einstellung? (z.B. medium)")
+        setting_name = input("Name: ").strip() or "custom"
+        chunks_path = os.path.join(DIR_CHUNKS, f"chunks_{book_stem}_{setting_name}.json")
         clear_terminal()
         print("Chunks werden erstellt...")
         build_chunks(selected_book, chunks_path, min_w, max_w, overlap)
         input("Enter zum Fortfahren...")
 
+    def get_embeddings_path():
+        # chunks_{book}_{name}.json  →  embeddings_{book}_{name}.npy
+        emb_stem = pathlib.Path(chunks_path).stem.replace("chunks_", "embeddings_", 1)
+        return os.path.join(DIR_EMBEDDINGS, f"{emb_stem}.npy")
+
+    def select_chunks():
+        nonlocal chunks_path
+        current = sorted([
+            f for f in os.listdir(DIR_CHUNKS)
+            if f.startswith(f"chunks_{book_stem}_") and f.endswith(".json")
+        ]) if os.path.isdir(DIR_CHUNKS) else []
+        if current:
+            print(f"Vorhandene Chunks für '{book_stem}':")
+            for idx, f in enumerate(current, 1):
+                print(f"  {idx}: {f}")
+            print(f"  {len(current)+1}: Neue Chunks erstellen")
+            print()
+            while True:
+                try:
+                    choice = int(input("Auswahl: "))
+                    if 1 <= choice <= len(current):
+                        chunks_path = os.path.join(DIR_CHUNKS, current[choice - 1])
+                        return True
+                    elif choice == len(current) + 1:
+                        create_chunks()
+                        return chunks_path is not None
+                except ValueError:
+                    print("Ungültige Eingabe.")
+        else:
+            print(f"Noch keine Chunks für '{book_stem}' vorhanden.")
+            if ask_yes_no("Chunks jetzt erstellen?"):
+                create_chunks()
+                return chunks_path is not None
+            return False
+
+    # Erstmalige Chunk-Auswahl
+    if not select_chunks():
+        print("Ohne Chunks kann nicht fortgefahren werden.")
+        return
+
+    embeddings_path = get_embeddings_path()
+
     def create_embeddings():
+        nonlocal embeddings_path
         clear_terminal()
         print("Embeddings werden erstellt...")
         build_embeddings(chunks_path, embeddings_path)
+        embeddings_path = get_embeddings_path()
         input("Enter zum Fortfahren...")
-
-    if not os.path.isfile(chunks_path):
-        print(f"Noch keine Chunks vorhanden ({chunks_path}).")
-        if ask_yes_no("Chunks jetzt erstellen?"):
-            create_chunks()
-        else:
-            print("Ohne Chunks kann nicht fortgefahren werden.")
-            return
 
     if not os.path.isfile(embeddings_path):
         print(f"Noch keine Embeddings vorhanden ({embeddings_path}).")
@@ -95,10 +139,11 @@ def run_suche():
     while True:
         clear_terminal()
         print("-Suche-")
-        print(f"Buch: {book_stem}")
+        print(f"Buch:   {book_stem}")
+        print(f"Chunks: {os.path.basename(chunks_path)}")
         print()
         print("  1: Suche starten")
-        print("  2: Chunks neu erstellen")
+        print("  2: Chunks ändern")
         print("  3: Embeddings neu erstellen")
         print("  4: Zurück")
         print()
@@ -107,7 +152,9 @@ def run_suche():
             clear_terminal()
             run_search_interactive(chunks_path, embeddings_path)
         elif opt == "2":
-            create_chunks()
+            clear_terminal()
+            select_chunks()
+            embeddings_path = get_embeddings_path()
         elif opt == "3":
             create_embeddings()
         elif opt == "4":

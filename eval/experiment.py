@@ -17,11 +17,12 @@ from config import (
     EVAL_BOOKS, RECALL_K,
     DIR_PROCESSED, DIR_CHUNKS, DIR_EMBEDDINGS,
     K_RETRIEVAL, K_RRF, K_RERANKER, RRF_K,
+    EMBEDDING_MODEL, LLM_MODEL, USE_BM25,
     EXP_CHUNK        as CHUNK_PRESET,
     EXP_PIPELINE     as PIPELINE_PRESET,
 )
 from src.preprocessing.chunk_presets import CHUNK_PRESETS
-from src.retrieval.pipeline import SearchPipeline
+from src.retrieval.pipeline import SearchPipeline, PIPELINE_PRESETS
 from eval.eval_utils import make_run_dir, build_misses, save_misses
 
 CHUNK_CFG       = CHUNK_PRESETS[CHUNK_PRESET]
@@ -34,7 +35,18 @@ CHUNK_OVERLAP   = CHUNK_CFG["overlap"]
 BASE_RESULTS_DIR = os.path.join(project_root, "eval", "results")
 
 
-def prepare_book(book: str):
+def _pipeline_label(preset: int) -> str:
+    """Komponenten-String für einen Pipeline-Preset ohne Instanziierung."""
+    flags = PIPELINE_PRESETS[preset]
+    parts = []
+    if flags["use_tfidf"]:      parts.append("BM25" if USE_BM25 else "TFIDF")
+    if flags["use_embeddings"]: parts.append("EMB+MQ" if flags.get("use_multi_query") else ("EMB+HyDE" if flags.get("use_hyde") else "EMB"))
+    if flags["use_reranker"]:   parts.append("RERANK")
+    if flags["use_nli"]:        parts.append("NLI")
+    if flags["use_llm"]:        parts.append("LLM")
+    return "+".join(parts)
+
+
     """Pfade zu Chunks und Embeddings zurückgeben. Bricht ab wenn Dateien fehlen."""
     chunks_path = os.path.join(DIR_CHUNKS,     f"chunks_{book}_{CHUNK_NAME}.json")
     emb_path    = os.path.join(DIR_EMBEDDINGS, f"embeddings_{book}_{CHUNK_NAME}.npy")
@@ -169,10 +181,13 @@ def main():
     summary_lines = [
         "=" * 80,
         "RECALL-EXPERIMENT — ZUSAMMENFASSUNG",
-        f"Datum:     {ts[:19]}",
-        f"Pipeline:  {PIPELINE_PRESET}",
-        f"Chunks:    {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})",
-        f"Top-K:     {K_RERANKER}",
+        f"Datum:      {ts[:19]}",
+        f"Pipeline:   {PIPELINE_PRESET}  [{_pipeline_label(PIPELINE_PRESET)}]",
+        f"Chunks:     {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})",
+        f"Top-K:      {K_RERANKER}",
+        f"Embedding:  {EMBEDDING_MODEL}",
+        f"LLM:        {LLM_MODEL}",
+        f"BM25:       {'ja' if USE_BM25 else 'nein'}",
         "=" * 80,
         f"{'Buch':<20}  " + "  ".join(f"R@{k:>2}" for k in RECALL_K) + f"  {'AvgRank':>7}  {'s/query':>7}",
         "-" * 80,

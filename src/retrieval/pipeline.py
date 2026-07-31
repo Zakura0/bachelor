@@ -15,7 +15,7 @@ sys.path.insert(0, project_root)
 from config import (
     EMBEDDING_MODEL, RERANKER_MODEL, NLI_MODEL, LLM_MODEL,
     K_RETRIEVAL, K_RRF, K_RERANKER, RRF_K,
-    USE_BM25,
+    USE_BM25, MULTI_QUERY_N,
 )
 from src.retrieval.llm_reranker import PROMPT_RANK_ALL as _DEFAULT_LLM_PROMPT
 from src.retrieval.tfidf import TfidfRetriever
@@ -25,6 +25,7 @@ from src.retrieval.reranker import CrossEncoderReranker
 from src.retrieval.nli import NLIVerifier
 from src.retrieval.llm_reranker import LLMReranker
 from src.retrieval.hyde import HyDEGenerator
+from src.retrieval.multi_query import MultiQueryGenerator
 
 from transformers import logging as transformers_logging
 transformers_logging.set_verbosity_error()
@@ -43,16 +44,18 @@ SearchResult = namedtuple("SearchResult", ["text", "index", "meta", "score"])
 # 7 = TF-IDF + Embeddings + Reranker + LLM
 # 8 = TF-IDF + Embeddings(HyDE) + Reranker + LLM
 # 9 = TF-IDF + Embeddings(HyDE) + Reranker
+# 10 = TF-IDF + Embeddings(Multi-Query) + Reranker + LLM
 PIPELINE_PRESETS = {
-    1: dict(use_tfidf=True,  use_embeddings=False, use_reranker=False, use_nli=False, use_llm=False, use_hyde=False),
-    2: dict(use_tfidf=False, use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False, use_hyde=False),
-    3: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False, use_hyde=False),
-    4: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False, use_hyde=False),
-    5: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=True,  use_llm=False, use_hyde=False),
-    6: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=True,  use_hyde=False),
-    7: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=False),
-    8: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=True),
-    9: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False, use_hyde=True),
+    1: dict(use_tfidf=True,  use_embeddings=False, use_reranker=False, use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False),
+    2: dict(use_tfidf=False, use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False),
+    3: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False),
+    4: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False),
+    5: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=True,  use_llm=False, use_hyde=False, use_multi_query=False),
+    6: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=True,  use_hyde=False, use_multi_query=False),
+    7: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=False, use_multi_query=False),
+    8: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=True,  use_multi_query=False),
+    9: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False, use_hyde=True,  use_multi_query=False),
+   10: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=False, use_multi_query=True),
 }
 
 
@@ -93,15 +96,17 @@ class SearchPipeline:
         use_nli        = flags["use_nli"]
         use_llm        = flags["use_llm"]
 
-        use_hyde       = flags["use_hyde"]
+        use_hyde         = flags["use_hyde"]
+        use_multi_query  = flags["use_multi_query"]
 
-        self.preset         = preset
-        self.use_tfidf      = use_tfidf
-        self.use_embeddings = use_embeddings
-        self.use_reranker   = use_reranker
-        self.use_nli        = use_nli
-        self.use_llm        = use_llm
-        self.use_hyde       = use_hyde
+        self.preset           = preset
+        self.use_tfidf        = use_tfidf
+        self.use_embeddings   = use_embeddings
+        self.use_reranker     = use_reranker
+        self.use_nli          = use_nli
+        self.use_llm          = use_llm
+        self.use_hyde         = use_hyde
+        self.use_multi_query  = use_multi_query
 
         with open(chunks_path, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -129,12 +134,13 @@ class SearchPipeline:
         self.reranker = CrossEncoderReranker(model_name=RERANKER_MODEL) if use_reranker else None
         self.nli      = NLIVerifier(model_name=NLI_MODEL)               if use_nli      else None
         self.llm      = LLMReranker(model=LLM_MODEL, prompt_template=llm_prompt) if use_llm      else None
-        self.hyde     = HyDEGenerator(model=LLM_MODEL)                  if use_hyde     else None
+        self.hyde        = HyDEGenerator(model=LLM_MODEL)                  if use_hyde        else None
+        self.multi_query = MultiQueryGenerator(model=LLM_MODEL, n=MULTI_QUERY_N) if use_multi_query else None
 
     def get_config_name(self) -> str:
         parts = []
         if self.use_tfidf:      parts.append("BM25" if USE_BM25 else "TFIDF")
-        if self.use_embeddings: parts.append("EMB+HyDE" if self.use_hyde else "EMB")
+        if self.use_embeddings: parts.append("EMB+HyDE" if self.use_hyde else ("EMB+MQ" if self.use_multi_query else "EMB"))
         if self.use_reranker:   parts.append("RERANK")
         if self.use_nli:        parts.append("NLI")
         if self.use_llm:        parts.append("LLM")
@@ -144,22 +150,30 @@ class SearchPipeline:
         """Suche und gib top_k Ergebnisse zurück."""
         rank_lists = []
 
-        if self.use_tfidf:
-            res = self.tfidf.search(query, top_k=K_RETRIEVAL)
-            rank_lists.append([r.index for r in res])
+        # Bei Multi-Query: Paraphrasen generieren + Originalquery
+        queries = [query]
+        if self.use_multi_query:
+            paraphrases = self.multi_query.generate(query)
+            queries = [query] + paraphrases
             if verbose:
-                print(f"{len(rank_lists[-1])} TF-IDF Ergebnisse.")
+                print(f"Multi-Query: {len(paraphrases)} Paraphrasen generiert.")
 
-        if self.use_embeddings:
-            emb_query = query
-            if self.use_hyde:
-                emb_query = self.hyde.generate(query)
-                if verbose:
-                    print(f"HyDE-Passage: {emb_query[:80]}...")
-            res = self.embeddings.search(emb_query, top_k=K_RETRIEVAL)
-            rank_lists.append([r.index for r in res])
-            if verbose:
-                print(f"{len(rank_lists[-1])} Embedding Ergebnisse.")
+        for q in queries:
+            if self.use_tfidf:
+                res = self.tfidf.search(q, top_k=K_RETRIEVAL)
+                rank_lists.append([r.index for r in res])
+
+            if self.use_embeddings:
+                emb_query = q
+                if self.use_hyde:
+                    emb_query = self.hyde.generate(q)
+                    if verbose:
+                        print(f"HyDE-Passage: {emb_query[:80]}...")
+                res = self.embeddings.search(emb_query, top_k=K_RETRIEVAL)
+                rank_lists.append([r.index for r in res])
+
+        if verbose:
+            print(f"{len(rank_lists)} Rank-Listen für RRF ({len(queries)} Queries × {len(rank_lists)//len(queries)} Retriever).")
 
         if len(rank_lists) > 1:
             if verbose:
