@@ -20,11 +20,12 @@ def build_embeddings(chunks_path: str, output_path: str = None):
     :param output_path: Pfad zur Ausgabe der Embeddings.npy-Datei
     :return: Pfad zur gespeicherten Embeddings-Datei
     """
-    stem = pathlib.Path(chunks_path).stem  # z.B. "chunks_verwandlung_medium"
-    # chunks_X_Y → embeddings_X_Y
-    emb_stem = stem.replace("chunks_", "embeddings_", 1) if stem.startswith("chunks_") else stem
+    p = pathlib.Path(chunks_path)
+    preset = p.stem          # z.B. "medium"
+    book   = p.parent.name  # z.B. "verwandlung"
     if output_path is None:
-        output_path = os.path.join(DIR_EMBEDDINGS, f"{emb_stem}.npy")
+        os.makedirs(os.path.join(DIR_EMBEDDINGS, book), exist_ok=True)
+        output_path = os.path.join(DIR_EMBEDDINGS, book, f"{preset}.npy")
 
     with open(chunks_path, "r", encoding="utf-8") as f:
         data = json.load(f)

@@ -48,8 +48,8 @@ def _pipeline_label(preset: int) -> str:
 
 
     """Pfade zu Chunks und Embeddings zurückgeben. Bricht ab wenn Dateien fehlen."""
-    chunks_path = os.path.join(DIR_CHUNKS,     f"chunks_{book}_{CHUNK_NAME}.json")
-    emb_path    = os.path.join(DIR_EMBEDDINGS, f"embeddings_{book}_{CHUNK_NAME}.npy")
+    chunks_path = os.path.join(DIR_CHUNKS,     book, f"{CHUNK_NAME}.json")
+    emb_path    = os.path.join(DIR_EMBEDDINGS, book, f"{CHUNK_NAME}.npy")
 
     if not os.path.exists(chunks_path):
         raise FileNotFoundError(f"Chunks nicht gefunden: {chunks_path}")

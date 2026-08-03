@@ -19,6 +19,9 @@ sentence-transformers/
 *.json
 *.log
 
+# Database files
+*.db
+
 # OS-specific
 .DS_Store
 

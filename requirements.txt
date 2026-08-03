@@ -1,5 +1,9 @@
-numpy
-pandas
-scikit-learn
+torch
 sentence-transformers
-
+scikit-learn
+transformers
+numpy
+openai
+bm25s
+fastapi
+uvicorn

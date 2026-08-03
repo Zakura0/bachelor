@@ -52,10 +52,11 @@ def run_suche():
     book_stem = pathlib.Path(selected_book).stem
 
     # Vorhandene Chunk-Dateien für dieses Buch suchen
+    book_chunks_dir = os.path.join(DIR_CHUNKS, book_stem)
     existing_chunks = sorted([
-        f for f in os.listdir(DIR_CHUNKS)
-        if f.startswith(f"chunks_{book_stem}_") and f.endswith(".json")
-    ]) if os.path.isdir(DIR_CHUNKS) else []
+        f for f in os.listdir(book_chunks_dir)
+        if f.endswith(".json")
+    ]) if os.path.isdir(book_chunks_dir) else []
 
     chunks_path = None
 
@@ -72,23 +73,25 @@ def run_suche():
         overlap = int(overlap) if overlap.isdigit() else 2
         print("Name für diese Einstellung? (z.B. medium)")
         setting_name = input("Name: ").strip() or "custom"
-        chunks_path = os.path.join(DIR_CHUNKS, f"chunks_{book_stem}_{setting_name}.json")
+        chunks_path = os.path.join(DIR_CHUNKS, book_stem, f"{setting_name}.json")
+        os.makedirs(os.path.dirname(chunks_path), exist_ok=True)
         clear_terminal()
         print("Chunks werden erstellt...")
         build_chunks(selected_book, chunks_path, min_w, max_w, overlap)
         input("Enter zum Fortfahren...")
 
     def get_embeddings_path():
-        # chunks_{book}_{name}.json  →  embeddings_{book}_{name}.npy
-        emb_stem = pathlib.Path(chunks_path).stem.replace("chunks_", "embeddings_", 1)
-        return os.path.join(DIR_EMBEDDINGS, f"{emb_stem}.npy")
+        # {book}/{preset}.json  →  embeddings/{book}/{preset}.npy
+        preset = pathlib.Path(chunks_path).stem
+        book   = pathlib.Path(chunks_path).parent.name
+        return os.path.join(DIR_EMBEDDINGS, book, f"{preset}.npy")
 
     def select_chunks():
         nonlocal chunks_path
         current = sorted([
-            f for f in os.listdir(DIR_CHUNKS)
-            if f.startswith(f"chunks_{book_stem}_") and f.endswith(".json")
-        ]) if os.path.isdir(DIR_CHUNKS) else []
+            f for f in os.listdir(book_chunks_dir)
+            if f.endswith(".json")
+        ]) if os.path.isdir(book_chunks_dir) else []
         if current:
             print(f"Vorhandene Chunks für '{book_stem}':")
             for idx, f in enumerate(current, 1):
@@ -99,7 +102,7 @@ def run_suche():
                 try:
                     choice = int(input("Auswahl: "))
                     if 1 <= choice <= len(current):
-                        chunks_path = os.path.join(DIR_CHUNKS, current[choice - 1])
+                        chunks_path = os.path.join(book_chunks_dir, current[choice - 1])
                         return True
                     elif choice == len(current) + 1:
                         create_chunks()
