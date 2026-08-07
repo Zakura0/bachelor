@@ -6,12 +6,11 @@ from datetime import datetime
 
 def make_run_dir(base_dir: str, experiment_name: str) -> str:
     """
-    Erstellt einen Ordner  base_dir/<experiment_name>/<YYYY-MM-DD_HH-MM-SS>
-    und gibt den Pfad zurück.
+    Gibt den Pfad base_dir/<experiment_name>/<YYYY-MM-DD_HH-MM-SS> zurück.
+    Der Ordner wird erst beim ersten Schreibzugriff angelegt (lazy).
     """
-    ts    = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    path  = os.path.join(base_dir, experiment_name, ts)
-    os.makedirs(path, exist_ok=True)
+    ts   = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    path = os.path.join(base_dir, experiment_name, ts)
     return path
 
 

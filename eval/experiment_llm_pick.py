@@ -160,6 +160,7 @@ def main():
     print("\n" + "\n".join(summary_lines))
 
     txt_path = os.path.join(run_dir, "summary.txt")
+    os.makedirs(run_dir, exist_ok=True)
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write("\n".join(summary_lines) + "\n")
     print(f"\nZusammenfassung: {txt_path}")

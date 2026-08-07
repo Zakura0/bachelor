@@ -47,6 +47,7 @@ def _pipeline_label(preset: int) -> str:
     return "+".join(parts)
 
 
+def prepare_book(book: str):
     """Pfade zu Chunks und Embeddings zurückgeben. Bricht ab wenn Dateien fehlen."""
     chunks_path = os.path.join(DIR_CHUNKS,     book, f"{CHUNK_NAME}.json")
     emb_path    = os.path.join(DIR_EMBEDDINGS, book, f"{CHUNK_NAME}.npy")
@@ -211,6 +212,7 @@ def main():
     print("\n" + "\n".join(summary_lines))
 
     txt_path = os.path.join(run_dir, "summary.txt")
+    os.makedirs(run_dir, exist_ok=True)
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write("\n".join(summary_lines) + "\n")
     print(f"\nZusammenfassung: {txt_path}")
