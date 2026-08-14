@@ -16,7 +16,7 @@ DIR_EMBEDDINGS = os.path.join(PROJECT_ROOT, "data/embeddings/e5-large")
 EMBEDDING_MODEL = "intfloat/multilingual-e5-large"
 RERANKER_MODEL  = "BAAI/bge-reranker-v2-m3"
 NLI_MODEL       = "joeddav/xlm-roberta-large-xnli"
-LLM_MODEL       = "google/gemma-4-31B-it"
+LLM_MODEL       = "vllm/google/gemma-4-31B-it"
 
 # Pipeline-Parameter
 

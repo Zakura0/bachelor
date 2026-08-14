@@ -112,7 +112,7 @@ class LLMReranker:
             temperature=0,
         )
 
-        raw = response.choices[0].message.content.strip()
+        raw = (response.choices[0].message.content or "").strip()
 
         # Alle Zahlen aus der Antwort extrahieren (robust gegenüber beliebigen Formaten)
         parsed = [int(x) - 1 for x in re.findall(r"\b\d+\b", raw)]
