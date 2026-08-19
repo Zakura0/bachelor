@@ -4,7 +4,7 @@ type Book = { id: number; name: string; title: string }
 
 export type { Book }
 
-export function BookPicker({ onSelect }: { onSelect: (book: Book) => void }) {
+export function BookPicker({ onSelect, onUpload }: { onSelect: (book: Book) => void; onUpload: () => void }) {
   const { data: books, isLoading } = useQuery<Book[]>({
     queryKey: ['books'],
     queryFn: () => fetch('/api/books/').then(r => r.json()),
@@ -12,9 +12,19 @@ export function BookPicker({ onSelect }: { onSelect: (book: Book) => void }) {
 
   return (
     <div className="space-y-10">
-      <div>
-        <h1 className="text-4xl font-bold text-slate-100 tracking-tight">Summary-Source Alignment</h1>
-        <p className="mt-3 text-slate-400 text-lg">Wähle ein Buch um die Suche zu starten.</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-100 tracking-tight">Summary-Source Alignment</h1>
+          <p className="mt-3 text-slate-400 text-lg">Wähle ein Buch um die Suche zu starten.</p>
+        </div>
+        <button
+          onClick={onUpload}
+          title="Buch hochladen"
+          className="mt-1 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 hover:text-slate-100 hover:border-slate-500 transition-all text-sm"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          Buch
+        </button>
       </div>
 
       {isLoading ? (

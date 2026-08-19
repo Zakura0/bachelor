@@ -10,8 +10,8 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from config import DIR_CHUNKS, DIR_EMBEDDINGS
-from db.database import get_connection
+from config import DIR_CHUNKS, DIR_EMBEDDINGS, EMBEDDING_MODEL
+from db.database import get_connection, get_chunks_with_embeddings
 from src.retrieval.pipeline import SearchPipeline
 
 router = APIRouter(prefix="/api/search", tags=["search"])
@@ -35,16 +35,21 @@ class SearchResultItem(BaseModel):
     end_index: int
 
 
-def _get_pipeline(book_name: str, preset_name: str, pipeline_preset: int) -> SearchPipeline:
-    cache_key = (book_name, preset_name, pipeline_preset)
+def _get_pipeline(book_id: int, book_name: str, preset_name: str, pipeline_preset: int) -> SearchPipeline:
+    cache_key = (book_id, preset_name, pipeline_preset)
     if cache_key not in _pipeline_cache:
-        chunks_path = os.path.join(DIR_CHUNKS, book_name, f"{preset_name}.json")
-        emb_path = os.path.join(DIR_EMBEDDINGS, book_name, f"{preset_name}.npy")
-        if not os.path.exists(chunks_path):
-            raise FileNotFoundError(f"Chunks nicht gefunden: {book_name}/{preset_name}")
-        if not os.path.exists(emb_path):
-            raise FileNotFoundError(f"Embeddings nicht gefunden: {book_name}/{preset_name}")
-        _pipeline_cache[cache_key] = SearchPipeline(chunks_path, emb_path, pipeline_preset)
+        # DB-first: load chunks + embeddings from database
+        with get_connection() as conn:
+            chunks, emb = get_chunks_with_embeddings(conn, book_id, preset_name, EMBEDDING_MODEL)
+        if chunks is not None:
+            _pipeline_cache[cache_key] = SearchPipeline.from_data(chunks, emb, pipeline_preset)
+        else:
+            # Fallback: load from files (legacy books)
+            chunks_path = os.path.join(DIR_CHUNKS, book_name, f"{preset_name}.json")
+            emb_path = os.path.join(DIR_EMBEDDINGS, book_name, f"{preset_name}.npy")
+            if not os.path.exists(chunks_path) or not os.path.exists(emb_path):
+                raise FileNotFoundError(f"Keine Daten für {book_name}/{preset_name}")
+            _pipeline_cache[cache_key] = SearchPipeline(chunks_path, emb_path, pipeline_preset)
     return _pipeline_cache[cache_key]
 
 
@@ -62,7 +67,7 @@ def search_stream(req: SearchRequest):
     book_name = book["name"]
 
     try:
-        pipeline = _get_pipeline(book_name, req.preset_name, req.pipeline)
+        pipeline = _get_pipeline(req.book_id, book_name, req.preset_name, req.pipeline)
     except FileNotFoundError as e:
         raise HTTPException(status_code=422, detail=str(e))
     except ValueError as e:

@@ -86,6 +86,20 @@ class SearchPipeline:
     """
 
     def __init__(self, chunks_path: str, emb_path: str, preset: int, llm_prompt: str = _DEFAULT_LLM_PROMPT):
+        with open(chunks_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        chunks = data["chunks"]
+        emb = np.load(emb_path)
+        self._setup(chunks, emb, preset, llm_prompt)
+
+    @classmethod
+    def from_data(cls, chunks: list, emb: np.ndarray, preset: int, llm_prompt: str = _DEFAULT_LLM_PROMPT) -> "SearchPipeline":
+        """Initialize from in-memory chunks and embedding array (DB-first path)."""
+        obj = object.__new__(cls)
+        obj._setup(chunks, emb, preset, llm_prompt)
+        return obj
+
+    def _setup(self, chunks: list, emb: np.ndarray, preset: int, llm_prompt: str) -> None:
         if preset not in PIPELINE_PRESETS:
             raise ValueError(f"Unbekanntes Preset '{preset}'. Verfügbar: 1–{len(PIPELINE_PRESETS)}")
 
@@ -95,26 +109,21 @@ class SearchPipeline:
         use_reranker   = flags["use_reranker"]
         use_nli        = flags["use_nli"]
         use_llm        = flags["use_llm"]
+        use_hyde       = flags["use_hyde"]
+        use_multi_query = flags["use_multi_query"]
 
-        use_hyde         = flags["use_hyde"]
-        use_multi_query  = flags["use_multi_query"]
+        self.preset          = preset
+        self.use_tfidf       = use_tfidf
+        self.use_embeddings  = use_embeddings
+        self.use_reranker    = use_reranker
+        self.use_nli         = use_nli
+        self.use_llm         = use_llm
+        self.use_hyde        = use_hyde
+        self.use_multi_query = use_multi_query
 
-        self.preset           = preset
-        self.use_tfidf        = use_tfidf
-        self.use_embeddings   = use_embeddings
-        self.use_reranker     = use_reranker
-        self.use_nli          = use_nli
-        self.use_llm          = use_llm
-        self.use_hyde         = use_hyde
-        self.use_multi_query  = use_multi_query
-
-        with open(chunks_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-
-        self.chunks = data["chunks"]
+        self.chunks = chunks
         self.texts  = [c["content"] for c in self.chunks]
 
-        emb = np.load(emb_path)
         if emb.shape[0] != len(self.texts):
             raise ValueError("Embeddings passen nicht zur Chunk-Anzahl.")
 
@@ -131,10 +140,10 @@ class SearchPipeline:
             self.embeddings = EmbeddingRetriever(model_name=EMBEDDING_MODEL)
             self.embeddings.load_embeddings(embeddings=emb, texts=self.texts, meta=self.chunks)
 
-        self.reranker = CrossEncoderReranker(model_name=RERANKER_MODEL) if use_reranker else None
-        self.nli      = NLIVerifier(model_name=NLI_MODEL)               if use_nli      else None
-        self.llm      = LLMReranker(model=LLM_MODEL, prompt_template=llm_prompt) if use_llm      else None
-        self.hyde        = HyDEGenerator(model=LLM_MODEL)                  if use_hyde        else None
+        self.reranker    = CrossEncoderReranker(model_name=RERANKER_MODEL) if use_reranker   else None
+        self.nli         = NLIVerifier(model_name=NLI_MODEL)               if use_nli        else None
+        self.llm         = LLMReranker(model=LLM_MODEL, prompt_template=llm_prompt) if use_llm else None
+        self.hyde        = HyDEGenerator(model=LLM_MODEL)                  if use_hyde       else None
         self.multi_query = MultiQueryGenerator(model=LLM_MODEL, n=MULTI_QUERY_N) if use_multi_query else None
 
     def get_config_name(self) -> str:

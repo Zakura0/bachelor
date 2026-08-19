@@ -95,7 +95,16 @@ def get_book_by_name(conn: sqlite3.Connection, name: str) -> sqlite3.Row | None:
 
 
 def get_all_books(conn: sqlite3.Connection) -> list[sqlite3.Row]:
-    return conn.execute("SELECT id, name, title FROM books ORDER BY name").fetchall()
+    """Only returns books that have at least one indexed embedding preset."""
+    return conn.execute(
+        """
+        SELECT DISTINCT b.id, b.name, b.title
+        FROM books b
+        JOIN chunks c ON c.book_id = b.id
+        JOIN embeddings e ON e.chunk_id = c.id
+        ORDER BY b.name
+        """
+    ).fetchall()
 
 
 def get_chunks(conn: sqlite3.Connection, book_id: int, preset_name: str) -> list[sqlite3.Row]:
@@ -126,3 +135,28 @@ def get_valid_presets(conn: sqlite3.Connection, book_id: int, model_name: str) -
         (model_name, book_id),
     ).fetchall()
     return [r["preset_name"] for r in rows]
+
+
+def get_chunks_with_embeddings(
+    conn: sqlite3.Connection, book_id: int, preset_name: str, model_name: str
+) -> tuple[list[dict], np.ndarray] | tuple[None, None]:
+    """Returns (chunks_list, embedding_matrix) loaded from DB, or (None, None) if not indexed."""
+    rows = conn.execute(
+        """
+        SELECT c.start_index, c.end_index, c.content, c.word_count, e.vector
+        FROM chunks c
+        JOIN embeddings e ON e.chunk_id = c.id AND e.model_name = ?
+        WHERE c.book_id = ? AND c.preset_name = ?
+        ORDER BY c.start_index
+        """,
+        (model_name, book_id, preset_name),
+    ).fetchall()
+    if not rows:
+        return None, None
+    chunks = [
+        {"start_index": r["start_index"], "end_index": r["end_index"],
+         "content": r["content"], "word_count": r["word_count"]}
+        for r in rows
+    ]
+    emb = np.stack([blob_to_vector(r["vector"]) for r in rows])
+    return chunks, emb
