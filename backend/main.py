@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from db.database import init_db
-from backend.routers import books
+from backend.routers import books, search
 
 app = FastAPI(title="Bachelor IR API")
 
@@ -25,6 +25,7 @@ def startup():
     init_db()
 
 app.include_router(books.router)
+app.include_router(search.router)
 
 
 @app.get("/")
