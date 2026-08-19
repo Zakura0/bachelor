@@ -98,7 +98,7 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
     if (!query || isPending) return
     setIsPending(true)
     setResults(null)
-    setProgress('Initialisiere Pipeline…')
+    setProgress('Initialisiere Pipeline… (Kann beim ersten Mal etwas länger dauern)')
 
     const response = await fetch('/api/search/stream', {
       method: 'POST',
