@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 
 // Standard presets matching chunk_presets.py
@@ -185,8 +185,8 @@ function CreateAndIndexProgress({ fileData, onDone }: {
 
 // ── Preset indexing progress display ───────────────────────────────────────
 
-function IndexProgress({ bookId, presetName, minWords, maxWords, overlap, onDone, label }:
-  { bookId: number; presetName: string; minWords: number; maxWords: number; overlap: number; onDone: (chunkCount: number) => void; label?: string }
+function IndexProgress({ bookId, presetName, minWords, maxWords, overlap, onDone, label, autoStart }:
+  { bookId: number; presetName: string; minWords: number; maxWords: number; overlap: number; onDone: (chunkCount: number) => void; label?: string; autoStart?: boolean }
 ) {
   const [lines, setLines] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -219,6 +219,9 @@ function IndexProgress({ bookId, presetName, minWords, maxWords, overlap, onDone
       }
     }
   }
+
+  // auto-start when used inside AddPresetSection
+  useEffect(() => { if (autoStart) start() }, [])
 
   if (!started) {
     return (
@@ -270,7 +273,6 @@ function AddPresetSection({ bookId, existingPresets, onPresetDone }: {
     : !!customName && !existingPresets.includes(customName)
 
   function handleAddAnother() {
-    if (donePreset) onPresetDone(donePreset)
     setDonePreset(null)
     setIndexing(false)
     setCustomName('')
@@ -332,9 +334,9 @@ function AddPresetSection({ bookId, existingPresets, onPresetDone }: {
         <button
           disabled={!canAdd || available.length === 0}
           onClick={() => setIndexing(true)}
-          className="w-full py-2.5 bg-slate-700 hover:bg-slate-600 disabled:opacity-30 text-slate-100 text-sm font-medium rounded-xl transition-colors"
+          className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-30 text-white text-sm font-medium rounded-xl transition-colors"
         >
-          Preset erstellen
+          Chunks &amp; Embeddings erstellen
         </button>
       )}
 
@@ -345,7 +347,12 @@ function AddPresetSection({ bookId, existingPresets, onPresetDone }: {
           minWords={currentPreset.min_words}
           maxWords={currentPreset.max_words}
           overlap={currentPreset.overlap}
-          onDone={n => setDonePreset({ name: currentPreset.name, chunk_count: n })}
+          autoStart
+          onDone={n => {
+            const preset = { name: currentPreset.name, chunk_count: n }
+            onPresetDone(preset)
+            setDonePreset(preset)
+          }}
         />
       )}
 
