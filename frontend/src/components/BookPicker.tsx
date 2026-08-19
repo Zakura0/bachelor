@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 type Book = { id: number; name: string; title: string }
@@ -70,11 +70,21 @@ function DeleteModal({ books, onClose, onDeleted }: {
 
 export function BookPicker({ onSelect, onUpload }: { onSelect: (book: Book) => void; onUpload: () => void }) {
   const [showDelete, setShowDelete] = useState(false)
+  const [showMenu, setShowMenu] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
   const queryClient = useQueryClient()
   const { data: books, isLoading } = useQuery<Book[]>({
     queryKey: ['books'],
     queryFn: () => fetch('/api/books/').then(r => r.json()),
   })
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setShowMenu(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
 
   return (
     <div className="space-y-10">
@@ -90,24 +100,33 @@ export function BookPicker({ onSelect, onUpload }: { onSelect: (book: Book) => v
           <h1 className="text-4xl font-bold text-slate-100 tracking-tight">Summary-Source Alignment</h1>
           <p className="mt-3 text-slate-400 text-lg">Wähle ein Buch um die Suche zu starten.</p>
         </div>
-        <div className="flex items-center gap-2 mt-1">
+        <div className="relative mt-1" ref={menuRef}>
           <button
-            onClick={onUpload}
-            title="Buch hochladen"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 hover:text-green-400 hover:border-slate-500 transition-all text-sm"
+            onClick={() => setShowMenu(s => !s)}
+            className={`p-2 rounded-xl border transition-all ${showMenu ? 'bg-slate-700 border-slate-600 text-slate-200' : 'bg-slate-800/60 border-slate-700/60 text-slate-500 hover:text-slate-300 hover:border-slate-600'}`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-            Buch
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
           </button>
-          <button
-            onClick={() => setShowDelete(true)}
-            title="Buch löschen"
-            disabled={!books || books.length === 0}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 hover:text-red-400 hover:border-red-800/60 disabled:opacity-30 transition-all text-sm"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/></svg>
-            Buch
-          </button>
+          {showMenu && (
+            <div className="absolute right-0 top-full mt-2 w-48 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden z-20">
+              <button
+                onClick={() => { setShowMenu(false); onUpload() }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-700/60 hover:text-slate-100 transition-colors text-left"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                Buch hinzufügen
+              </button>
+              <div className="mx-3 border-t border-slate-700/60" />
+              <button
+                onClick={() => { setShowMenu(false); setShowDelete(true) }}
+                disabled={!books || books.length === 0}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-400 hover:bg-red-950/40 hover:text-red-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-left"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                Buch löschen
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
