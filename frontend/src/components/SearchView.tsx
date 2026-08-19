@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { type Book } from './BookPicker'
+import { AddPresetSection } from './PresetBuilder'
 
 type SearchResult = {
   rank: number
@@ -46,6 +47,8 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
   const [preset, setPreset] = useState('large')
   const [pipeline, setPipeline] = useState(4)
   const [showSettings, setShowSettings] = useState(false)
+  const [showAddPreset, setShowAddPreset] = useState(false)
+  const queryClient = useQueryClient()
   const settingsRef = useRef<HTMLDivElement>(null)
 
   // Close settings panel when clicking outside
@@ -119,6 +122,22 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
 
   return (
     <div className="space-y-8">
+      {/* Preset-add modal */}
+      {showAddPreset && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowAddPreset(false)}>
+          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md space-y-5" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <p className="text-slate-100 font-semibold">Preset hinzufügen</p>
+              <button onClick={() => setShowAddPreset(false)} className="text-slate-500 hover:text-slate-200 transition-colors text-lg leading-none">×</button>
+            </div>
+            <AddPresetSection
+              bookId={book.id}
+              existingPresets={presetsData?.presets ?? []}
+              onPresetDone={() => queryClient.invalidateQueries({ queryKey: ['presets', book.id] })}
+            />
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="flex items-center gap-4">
         <button
@@ -169,7 +188,7 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
               </button>
 
               {showSettings && (
-                <div className="absolute left-0 bottom-full mb-2 w-80 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl shadow-black/50 p-5 space-y-4 z-20">
+                <div className="absolute left-0 top-full mt-2 w-80 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl shadow-black/50 p-5 space-y-4 z-20">
                   <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Einstellungen</p>
                   <div className="space-y-1">
                     <label className="block text-xs text-slate-500">Chunk-Preset</label>
@@ -192,6 +211,15 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
                         <option key={p.value} value={p.value}>{p.value} — {p.label}</option>
                       ))}
                     </select>
+                  </div>
+                  <div className="pt-1 border-t border-slate-700/60">
+                    <button
+                      onClick={() => { setShowSettings(false); setShowAddPreset(true) }}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-700/60 transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                      Preset hinzufügen…
+                    </button>
                   </div>
                 </div>
               )}
