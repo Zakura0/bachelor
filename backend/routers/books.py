@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Response
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import json, os, queue, re, sys, threading
@@ -149,6 +149,27 @@ class IndexRequest(BaseModel):
 
 def _sse(data: dict) -> str:
     return f"data: {json.dumps(data, ensure_ascii=False)}\n\n"
+
+
+@router.get("/{book_id}/cover")
+def get_cover(book_id: int):
+    with get_connection() as conn:
+        row = conn.execute("SELECT cover_image, cover_mime FROM books WHERE id = ?", (book_id,)).fetchone()
+    if not row or not row["cover_image"]:
+        raise HTTPException(status_code=404, detail="Kein Cover")
+    return Response(content=row["cover_image"], media_type=row["cover_mime"] or "image/jpeg")
+
+
+@router.post("/{book_id}/cover")
+async def upload_cover(book_id: int, file: UploadFile = File(...)):
+    data = await file.read()
+    mime = file.content_type or "image/jpeg"
+    with get_connection() as conn:
+        if not conn.execute("SELECT id FROM books WHERE id = ?", (book_id,)).fetchone():
+            raise HTTPException(status_code=404, detail="Buch nicht gefunden")
+        conn.execute("UPDATE books SET cover_image = ?, cover_mime = ? WHERE id = ?", (data, mime, book_id))
+        conn.commit()
+    return {"ok": True}
 
 
 @router.get("/{book_id}/text")

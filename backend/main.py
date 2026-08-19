@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from db.database import init_db, migrate_add_title
+from db.database import init_db, migrate_add_title, migrate_add_cover
 from backend.routers import books, search
 
 app = FastAPI(title="Bachelor IR API")
@@ -24,6 +24,7 @@ app.add_middleware(
 def startup():
     init_db()
     migrate_add_title()
+    migrate_add_cover()
 
 app.include_router(books.router)
 app.include_router(search.router)

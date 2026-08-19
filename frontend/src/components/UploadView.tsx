@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { AddPresetSection, CheckIcon, SpinnerIcon, type IndexedPreset } from './PresetBuilder'
 
 type Book = { id: number; name: string; title: string }
-type FileData = { title: string; name: string; rawText: string }
+type FileData = { title: string; name: string; rawText: string; coverFile?: File }
 
 function BackIcon() {
   return (
@@ -19,8 +19,10 @@ function UploadForm({ onReady }: { onReady: (data: FileData) => void }) {
   const [file, setFile] = useState<File | null>(null)
   const [title, setTitle] = useState('')
   const [name, setName] = useState('')
+  const [coverFile, setCoverFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const coverRef = useRef<HTMLInputElement>(null)
 
   const { data: existingBooks } = useQuery<{ name: string }[]>({
     queryKey: ['books'],
@@ -40,7 +42,7 @@ function UploadForm({ onReady }: { onReady: (data: FileData) => void }) {
     setLoading(true)
     const rawText = await file.text()
     setLoading(false)
-    onReady({ title, name, rawText })
+    onReady({ title, name, rawText, coverFile: coverFile ?? undefined })
   }
 
   return (
@@ -83,6 +85,26 @@ function UploadForm({ onReady }: { onReady: (data: FileData) => void }) {
             {nameConflict && (
               <span className="text-xs text-red-400 shrink-0">bereits vorhanden</span>
             )}
+          </div>
+        </div>
+        <div>
+          <label className="block text-xs text-slate-500 mb-1">
+            Cover-Bild <span className="text-slate-700">(optional)</span>
+          </label>
+          <div
+            onClick={() => coverRef.current?.click()}
+            className="flex items-center gap-3 bg-slate-800/60 border border-slate-700 rounded-xl px-3 py-2.5 cursor-pointer hover:border-slate-600 transition-colors"
+          >
+            {coverFile ? (
+              <>
+                <img src={URL.createObjectURL(coverFile)} className="h-10 w-7 object-cover rounded shrink-0" />
+                <span className="text-slate-400 text-sm truncate flex-1">{coverFile.name}</span>
+                <button onClick={e => { e.stopPropagation(); setCoverFile(null) }} className="text-slate-600 hover:text-slate-400 transition-colors text-base leading-none">×</button>
+              </>
+            ) : (
+              <span className="text-slate-600 text-sm">Bild auswählen…</span>
+            )}
+            <input ref={coverRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) setCoverFile(f) }} />
           </div>
         </div>
       </div>
@@ -133,7 +155,15 @@ function CreateAndIndexProgress({ fileData, onDone }: {
       for (const line of parts) {
         if (!line.startsWith('data: ')) continue
         const evt = JSON.parse(line.slice(6))
-        if (evt.type === 'book_created') createdBook = { id: evt.id, name: evt.name, title: evt.title }
+        if (evt.type === 'book_created') {
+          createdBook = { id: evt.id, name: evt.name, title: evt.title }
+          // fire cover upload in parallel — doesn't block chunking/embedding
+          if (fileData.coverFile) {
+            const fd = new FormData()
+            fd.append('file', fileData.coverFile)
+            fetch(`/api/books/${evt.id}/cover`, { method: 'POST', body: fd }).catch(() => {})
+          }
+        }
         else if (evt.type === 'progress') setLines(l => [...l, evt.message])
         else if (evt.type === 'done') {
           setLines(l => [...l, `✓ Fertig (${evt.chunk_count} Chunks)`])

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
-type Book = { id: number; name: string; title: string }
+type Book = { id: number; name: string; title: string; has_cover: boolean }
 
 export type { Book }
 
@@ -142,13 +142,23 @@ export function BookPicker({ onSelect, onUpload }: { onSelect: (book: Book) => v
             <button
               key={book.id}
               onClick={() => onSelect(book)}
-              className="group text-left bg-slate-800/60 border border-slate-700/50 hover:border-blue-500/50 hover:bg-slate-700/50 rounded-2xl p-6 transition-all duration-200 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-0.5 cursor-pointer"
+              className="group text-left bg-slate-800/60 border border-slate-700/50 hover:border-blue-500/50 hover:bg-slate-700/50 rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-0.5 cursor-pointer"
             >
-              <div className="text-3xl mb-4">📖</div>
-              <div className="font-semibold text-slate-100 group-hover:text-blue-300 transition-colors text-sm leading-snug">
-                {book.title || book.name}
+              {book.has_cover ? (
+                <img
+                  src={`/api/books/${book.id}/cover`}
+                  alt={book.title}
+                  className="w-full h-40 object-cover"
+                />
+              ) : (
+                <div className="px-6 pt-6 pb-2 text-3xl">📖</div>
+              )}
+              <div className={book.has_cover ? 'px-4 py-3' : 'px-6 pb-6'}>
+                <div className="font-semibold text-slate-100 group-hover:text-blue-300 transition-colors text-sm leading-snug">
+                  {book.title || book.name}
+                </div>
+                <div className="mt-1 text-xs text-slate-600 font-mono">{book.name}</div>
               </div>
-              <div className="mt-1 text-xs text-slate-600 font-mono">{book.name}</div>
             </button>
           ))}
         </div>

@@ -90,6 +90,16 @@ def blob_to_vector(blob: bytes) -> np.ndarray:
     return np.frombuffer(blob, dtype=np.float32)
 
 
+def migrate_add_cover() -> None:
+    """Adds cover_image and cover_mime columns to books if missing."""
+    with get_connection() as conn:
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(books)").fetchall()]
+        if "cover_image" not in cols:
+            conn.execute("ALTER TABLE books ADD COLUMN cover_image BLOB")
+            conn.execute("ALTER TABLE books ADD COLUMN cover_mime TEXT")
+            conn.commit()
+
+
 def get_book_by_name(conn: sqlite3.Connection, name: str) -> sqlite3.Row | None:
     return conn.execute("SELECT * FROM books WHERE name = ?", (name,)).fetchone()
 
@@ -98,7 +108,8 @@ def get_all_books(conn: sqlite3.Connection) -> list[sqlite3.Row]:
     """Only returns books that have at least one indexed embedding preset."""
     return conn.execute(
         """
-        SELECT DISTINCT b.id, b.name, b.title
+        SELECT DISTINCT b.id, b.name, b.title,
+               (b.cover_image IS NOT NULL) AS has_cover
         FROM books b
         JOIN chunks c ON c.book_id = b.id
         JOIN embeddings e ON e.chunk_id = c.id
