@@ -151,6 +151,22 @@ def _sse(data: dict) -> str:
     return f"data: {json.dumps(data, ensure_ascii=False)}\n\n"
 
 
+@router.delete("/{book_id}")
+def delete_book(book_id: int):
+    with get_connection() as conn:
+        book = conn.execute("SELECT id, name, title FROM books WHERE id = ?", (book_id,)).fetchone()
+        if not book:
+            raise HTTPException(status_code=404, detail="Buch nicht gefunden")
+        conn.execute(
+            "DELETE FROM embeddings WHERE chunk_id IN (SELECT id FROM chunks WHERE book_id = ?)",
+            (book_id,),
+        )
+        conn.execute("DELETE FROM chunks WHERE book_id = ?", (book_id,))
+        conn.execute("DELETE FROM books WHERE id = ?", (book_id,))
+        conn.commit()
+    return {"deleted": book_id, "name": book["name"]}
+
+
 @router.post("/{book_id}/index")
 def index_preset(book_id: int, req: IndexRequest):
     with get_connection() as conn:
