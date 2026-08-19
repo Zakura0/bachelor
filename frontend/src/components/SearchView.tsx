@@ -64,9 +64,23 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
     queryFn: () => fetch(`/api/books/${book.id}/presets`).then(r => r.json()),
   })
 
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const [borderDims, setBorderDims] = useState({ w: 0, h: 0 })
+
   const [isPending, setIsPending] = useState(false)
   const [progress, setProgress] = useState<string | null>(null)
   const [results, setResults] = useState<SearchResult[] | null>(null)
+
+  useEffect(() => {
+    if (isPending && wrapRef.current) {
+      setBorderDims({ w: wrapRef.current.offsetWidth, h: wrapRef.current.offsetHeight })
+    }
+  }, [isPending])
+
+  const bR = 16
+  const borderPerim = borderDims.w > 0
+    ? 2 * (borderDims.w - 2 * bR) + 2 * (borderDims.h - 2 * bR) + 2 * Math.PI * bR
+    : 0
 
   async function runSearch() {
     if (!query || isPending) return
@@ -119,15 +133,8 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
       </div>
 
       {/* Search input */}
-      <div className={`relative overflow-hidden rounded-2xl transition-all duration-300 ${isPending ? 'p-px' : 'border border-slate-700 focus-within:border-blue-500/60 focus-within:ring-2 focus-within:ring-blue-500/10'}`}>
-        {/* Rotating conic gradient — shows through 1px gap as a travelling light */}
-        {isPending && (
-          <div
-            className="absolute w-[300%] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-[spin_2s_linear_infinite]"
-            style={{ background: 'conic-gradient(from 0deg, transparent 0deg, transparent 350deg, #60a5fa 356deg, #3b82f6 360deg)' }}
-          />
-        )}
-        <div className={`relative flex items-center gap-3 bg-slate-800 px-4 py-3.5 transition-all duration-200 ${isPending ? 'rounded-[calc(1rem-1px)]' : 'rounded-2xl'}`}>
+      <div ref={wrapRef} className={`relative rounded-2xl transition-all duration-300 ${isPending ? '' : 'border border-slate-700 focus-within:border-blue-500/60 focus-within:ring-2 focus-within:ring-blue-500/10'}`}>
+        <div className="relative flex items-center gap-3 bg-slate-800 px-4 py-3.5 rounded-2xl">
           <textarea
             autoFocus
             rows={1}
@@ -203,6 +210,36 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
             {isPending ? 'Suche…' : 'Suchen'}
           </button>
         </div>
+        {isPending && borderPerim > 0 && (
+          <>
+            <style>{`@keyframes borderBeam { to { stroke-dashoffset: ${-borderPerim}; } }`}</style>
+            <svg
+              className="absolute inset-0 pointer-events-none"
+              width={borderDims.w}
+              height={borderDims.h}
+              style={{ overflow: 'visible' }}
+            >
+              <defs>
+                <filter id="beamGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+              </defs>
+              <rect
+                x={1} y={1}
+                width={borderDims.w - 2} height={borderDims.h - 2}
+                rx={bR - 1} ry={bR - 1}
+                fill="none"
+                stroke="#60a5fa"
+                strokeWidth="2"
+                strokeLinecap="round"
+                filter="url(#beamGlow)"
+                strokeDasharray={`${borderPerim * 0.08} ${borderPerim * 0.92}`}
+                style={{ strokeDashoffset: 0, animation: 'borderBeam 2s linear infinite' }}
+              />
+            </svg>
+          </>
+        )}
       </div>
 
       {/* Pipeline step text */}
