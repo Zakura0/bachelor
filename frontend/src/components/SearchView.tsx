@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { type Book } from './BookPicker'
 import { AddPresetSection } from './PresetBuilder'
+import { TextHighlight } from './TextHighlight'
 
 type SearchResult = {
   rank: number
@@ -73,6 +74,14 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
   const [isPending, setIsPending] = useState(false)
   const [progress, setProgress] = useState<string | null>(null)
   const [results, setResults] = useState<SearchResult[] | null>(null)
+  const [selectedRank, setSelectedRank] = useState(0)
+
+  const { data: bookText } = useQuery<{ raw_text: string }>({
+    queryKey: ['book-text', book.id],
+    queryFn: () => fetch(`/api/books/${book.id}/text`).then(r => r.json()),
+    enabled: !!results,
+    staleTime: Infinity,
+  })
 
   useEffect(() => {
     if (isPending && wrapRef.current) {
@@ -111,7 +120,7 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
         if (!line.startsWith('data: ')) continue
         const event = JSON.parse(line.slice(6))
         if (event.type === 'progress') setProgress(event.message)
-        else if (event.type === 'result') { setResults(event.data); setProgress(null) }
+        else if (event.type === 'result') { setResults(event.data); setSelectedRank(0); setProgress(null) }
         else if (event.type === 'error') { setProgress(`Fehler: ${event.message}`); setIsPending(false) }
       }
     }
@@ -278,21 +287,37 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
 
       {/* Results */}
       {results && (
-        <div className="space-y-3">
-          {results.map(r => (
-            <div
-              key={r.rank}
-              className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-5 hover:border-slate-600/50 transition-colors"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-xs font-bold text-blue-400 bg-blue-950/60 border border-blue-800/40 px-2.5 py-0.5 rounded-full">
-                  #{r.rank}
-                </span>
-                <span className="text-xs text-slate-500 font-mono">score {r.score.toFixed(4)}</span>
-              </div>
-              <p className="text-sm text-slate-300 leading-relaxed">{r.content}</p>
+        <div className="space-y-4">
+          {/* Rank selector tabs */}
+          <div className="flex items-center gap-2">
+            {results.map((r, i) => (
+              <button
+                key={r.rank}
+                onClick={() => setSelectedRank(i)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm transition-all ${
+                  selectedRank === i
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                    : 'bg-slate-800/70 text-slate-400 hover:text-slate-200 border border-slate-700/50'
+                }`}
+              >
+                <span className="font-semibold">#{r.rank}</span>
+                <span className="text-xs opacity-60 font-mono">{r.score.toFixed(3)}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Full text with highlight */}
+          {bookText ? (
+            <TextHighlight
+              text={bookText.raw_text}
+              startIndex={results[selectedRank].start_index}
+              endIndex={results[selectedRank].end_index}
+            />
+          ) : (
+            <div className="h-[65vh] rounded-2xl bg-slate-800/40 border border-slate-700/50 flex items-center justify-center">
+              <p className="text-slate-500 text-sm animate-pulse">Lade Buchtext…</p>
             </div>
-          ))}
+          )}
         </div>
       )}
     </div>

@@ -151,6 +151,15 @@ def _sse(data: dict) -> str:
     return f"data: {json.dumps(data, ensure_ascii=False)}\n\n"
 
 
+@router.get("/{book_id}/text")
+def get_book_text(book_id: int):
+    with get_connection() as conn:
+        book = conn.execute("SELECT raw_text FROM books WHERE id = ?", (book_id,)).fetchone()
+        if not book:
+            raise HTTPException(status_code=404, detail="Buch nicht gefunden")
+    return {"raw_text": book["raw_text"]}
+
+
 @router.delete("/{book_id}")
 def delete_book(book_id: int):
     with get_connection() as conn:
