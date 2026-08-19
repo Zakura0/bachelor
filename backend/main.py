@@ -14,7 +14,7 @@ app = FastAPI(title="Bachelor IR API")
 # React Dev-Server auf Port 5173 darf Requests schicken
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173", "http://localhost:5174"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

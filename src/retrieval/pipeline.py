@@ -146,38 +146,39 @@ class SearchPipeline:
         if self.use_llm:        parts.append("LLM")
         return "+".join(parts)
 
-    def search(self, query: str, top_k: int = 10, verbose: bool = False):
+    def search(self, query: str, top_k: int = 10, verbose: bool = False, on_progress=None):
         """Suche und gib top_k Ergebnisse zurück."""
+        def progress(msg: str):
+            if on_progress:
+                on_progress(msg)
+            if verbose:
+                print(msg)
+
         rank_lists = []
 
-        # Bei Multi-Query: Paraphrasen generieren + Originalquery
         queries = [query]
         if self.use_multi_query:
+            progress("Multi-Query: Paraphrasen generieren…")
             paraphrases = self.multi_query.generate(query)
             queries = [query] + paraphrases
-            if verbose:
-                print(f"Multi-Query: {len(paraphrases)} Paraphrasen generiert.")
 
         for q in queries:
             if self.use_tfidf:
+                progress("Sparse Retrieval (TF-IDF)…")
                 res = self.tfidf.search(q, top_k=K_RETRIEVAL)
                 rank_lists.append([r.index for r in res])
 
             if self.use_embeddings:
                 emb_query = q
                 if self.use_hyde:
+                    progress("HyDE: Passage generieren…")
                     emb_query = self.hyde.generate(q)
-                    if verbose:
-                        print(f"HyDE-Passage: {emb_query[:80]}...")
+                progress("Dense Retrieval (Embeddings)…")
                 res = self.embeddings.search(emb_query, top_k=K_RETRIEVAL)
                 rank_lists.append([r.index for r in res])
 
-        if verbose:
-            print(f"{len(rank_lists)} Rank-Listen für RRF ({len(queries)} Queries × {len(rank_lists)//len(queries)} Retriever).")
-
         if len(rank_lists) > 1:
-            if verbose:
-                print("Führe RRF durch...")
+            progress("Reciprocal Rank Fusion…")
             fused = rrf_fuse(rank_lists)
             candidate_indices = sorted(fused, key=lambda i: fused[i], reverse=True)
         else:
@@ -186,8 +187,7 @@ class SearchPipeline:
         candidate_indices = candidate_indices[:K_RRF]
 
         if self.use_reranker:
-            if verbose:
-                print(f"Starte Reranking mit {len(candidate_indices)} Kandidaten...")
+            progress(f"Cross-Encoder Reranking ({len(candidate_indices)} Kandidaten)…")
             reranked = self.reranker.rerank(
                 query=query,
                 candidate_texts=[self.texts[i] for i in candidate_indices],
@@ -197,12 +197,9 @@ class SearchPipeline:
                 batch_size=32,
             )
             candidate_indices = [r.index for r in reranked[:K_RERANKER]]
-            if verbose:
-                print("Reranking abgeschlossen.")
 
         if self.use_nli:
-            if verbose:
-                print("Starte NLI-Verifikation...")
+            progress("NLI Verifikation…")
             top_results = self.nli.score_entailment(
                 hypothesis=query,
                 premises=[self.texts[i] for i in candidate_indices],
@@ -210,8 +207,6 @@ class SearchPipeline:
                 meta=[self.chunks[i] for i in candidate_indices],
                 batch_size=16,
             )[:top_k]
-            if verbose:
-                print("NLI-Verifikation abgeschlossen.")
         else:
             top_results = [
                 SearchResult(text=self.texts[i], index=i, meta=self.chunks[i], score=1.0)
@@ -219,8 +214,7 @@ class SearchPipeline:
             ]
 
         if self.use_llm:
-            if verbose:
-                print("Starte LLM-Reranking...")
+            progress("LLM Reranking…")
             top_results = self.llm.rerank(
                 query=query,
                 candidate_texts=[r.text for r in top_results],
@@ -228,7 +222,5 @@ class SearchPipeline:
                 candidate_indices=[r.index for r in top_results],
                 top_k=top_k,
             )
-            if verbose:
-                print("LLM-Reranking abgeschlossen.")
 
         return top_results
