@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from db.database import init_db
-from web.routers import books
+from backend.routers import books
 
 app = FastAPI(title="Bachelor IR API")
 
