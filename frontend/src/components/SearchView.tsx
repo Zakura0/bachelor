@@ -46,7 +46,7 @@ function SearchIcon() {
 export function SearchView({ book, onBack }: { book: Book; onBack: () => void }) {
   const [query, setQuery] = useState('')
   const [preset, setPreset] = useState('large')
-  const [pipeline, setPipeline] = useState(4)
+  const [pipeline, setPipeline] = useState(7)
   const [showSettings, setShowSettings] = useState(false)
   const [showAddPreset, setShowAddPreset] = useState(false)
   const queryClient = useQueryClient()

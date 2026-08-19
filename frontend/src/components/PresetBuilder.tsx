@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 
 export const STANDARD_PRESETS = [
@@ -67,7 +67,13 @@ export function IndexProgress({ bookId, presetName, minWords, maxWords, overlap,
     }
   }
 
-  useEffect(() => { if (autoStart) start() }, [])
+  const autoStarted = useRef(false)
+  useEffect(() => {
+    if (autoStart && !autoStarted.current) {
+      autoStarted.current = true
+      start()
+    }
+  }, [])
 
   if (!started) {
     return (
