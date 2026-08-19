@@ -2,7 +2,8 @@ from fastapi import APIRouter, HTTPException
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from db.database import get_connection, get_all_books, get_chunk_presets
+from config import EMBEDDING_MODEL
+from db.database import get_connection, get_all_books, get_valid_presets
 
 router = APIRouter(prefix="/api/books", tags=["books"])
 
@@ -20,5 +21,5 @@ def list_presets(book_id: int):
         book = conn.execute("SELECT id, name FROM books WHERE id = ?", (book_id,)).fetchone()
         if not book:
             raise HTTPException(status_code=404, detail="Buch nicht gefunden")
-        presets = get_chunk_presets(conn, book_id)
+        presets = get_valid_presets(conn, book_id, EMBEDDING_MODEL)
     return {"book_id": book_id, "book_name": book["name"], "presets": presets}

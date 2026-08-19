@@ -1,16 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
-type Book = { id: number; name: string }
+type Book = { id: number; name: string; title: string }
 
-const BOOK_TITLES: Record<string, string> = {
-  verwandlung: 'Die Verwandlung',
-  erdbeben: 'Das Erdbeben in Chili',
-  judenbuche: 'Die Judenbuche',
-  krambambuli: 'Krambambuli',
-  harrypotter: 'Harry Potter',
-}
-
-export { BOOK_TITLES }
 export type { Book }
 
 export function BookPicker({ onSelect }: { onSelect: (book: Book) => void }) {
@@ -42,7 +33,7 @@ export function BookPicker({ onSelect }: { onSelect: (book: Book) => void }) {
             >
               <div className="text-3xl mb-4">📖</div>
               <div className="font-semibold text-slate-100 group-hover:text-blue-300 transition-colors text-sm leading-snug">
-                {BOOK_TITLES[book.name] ?? book.name}
+                {book.title || book.name}
               </div>
               <div className="mt-1 text-xs text-slate-600 font-mono">{book.name}</div>
             </button>

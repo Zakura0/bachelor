@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { BOOK_TITLES, type Book } from './BookPicker'
+import { type Book } from './BookPicker'
 
 type SearchResult = {
   rank: number
@@ -115,7 +115,7 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
     setIsPending(false)
   }
 
-  const title = BOOK_TITLES[book.name] ?? book.name
+  const title = book.title || book.name
 
   return (
     <div className="space-y-8">

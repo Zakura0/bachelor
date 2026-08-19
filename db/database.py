@@ -23,6 +23,29 @@ def get_connection() -> sqlite3.Connection:
     return conn
 
 
+_KNOWN_TITLES: dict[str, str] = {
+    "erdbeben":    "Das Erdbeben in Chili",
+    "harrypotter": "Harry Potter",
+    "judenbuche":  "Die Judenbuche",
+    "krambambuli": "Krambambuli",
+    "verwandlung":  "Die Verwandlung",
+}
+
+
+def migrate_add_title() -> None:
+    """Adds title column to books if missing and back-fills known titles."""
+    with get_connection() as conn:
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(books)").fetchall()]
+        if "title" not in cols:
+            conn.execute("ALTER TABLE books ADD COLUMN title TEXT NOT NULL DEFAULT ''")
+        for name, title in _KNOWN_TITLES.items():
+            conn.execute(
+                "UPDATE books SET title = ? WHERE name = ? AND title = ''",
+                (title, name),
+            )
+        conn.commit()
+
+
 def init_db() -> None:
     """Schema anlegen falls noch nicht vorhanden."""
     with get_connection() as conn:
@@ -30,6 +53,7 @@ def init_db() -> None:
             CREATE TABLE IF NOT EXISTS books (
                 id        INTEGER PRIMARY KEY AUTOINCREMENT,
                 name      TEXT    NOT NULL UNIQUE,
+                title     TEXT    NOT NULL DEFAULT '',
                 raw_text  TEXT    NOT NULL
             );
 
@@ -71,7 +95,7 @@ def get_book_by_name(conn: sqlite3.Connection, name: str) -> sqlite3.Row | None:
 
 
 def get_all_books(conn: sqlite3.Connection) -> list[sqlite3.Row]:
-    return conn.execute("SELECT id, name FROM books ORDER BY name").fetchall()
+    return conn.execute("SELECT id, name, title FROM books ORDER BY name").fetchall()
 
 
 def get_chunks(conn: sqlite3.Connection, book_id: int, preset_name: str) -> list[sqlite3.Row]:
@@ -85,5 +109,20 @@ def get_chunk_presets(conn: sqlite3.Connection, book_id: int) -> list[str]:
     rows = conn.execute(
         "SELECT DISTINCT preset_name FROM chunks WHERE book_id = ? ORDER BY preset_name",
         (book_id,),
+    ).fetchall()
+    return [r["preset_name"] for r in rows]
+
+
+def get_valid_presets(conn: sqlite3.Connection, book_id: int, model_name: str) -> list[str]:
+    """Only presets that have embeddings in the DB for the given model."""
+    rows = conn.execute(
+        """
+        SELECT DISTINCT c.preset_name
+        FROM chunks c
+        JOIN embeddings e ON e.chunk_id = c.id AND e.model_name = ?
+        WHERE c.book_id = ?
+        ORDER BY c.preset_name
+        """,
+        (model_name, book_id),
     ).fetchall()
     return [r["preset_name"] for r in rows]
