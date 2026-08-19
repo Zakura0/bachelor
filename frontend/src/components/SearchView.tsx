@@ -33,10 +33,10 @@ function GearIcon() {
   )
 }
 
-function SendIcon() {
+function SearchIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" />
+      <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
     </svg>
   )
 }
@@ -134,11 +134,11 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
 
       {/* Search input */}
       <div ref={wrapRef} className={`relative rounded-2xl transition-all duration-300 ${isPending ? '' : 'border border-slate-700 focus-within:border-blue-500/60 focus-within:ring-2 focus-within:ring-blue-500/10'}`}>
-        <div className="relative flex items-center gap-3 bg-slate-800 px-4 py-3.5 rounded-2xl">
+        <div className="bg-slate-800 rounded-2xl">
           <textarea
             autoFocus
             rows={1}
-            className="flex-1 bg-transparent text-slate-100 placeholder-slate-500 outline-none text-sm resize-none leading-relaxed"
+            className="w-full bg-transparent text-slate-100 placeholder-slate-500 outline-none text-sm resize-none leading-relaxed px-4 pt-4 pb-2 block"
             placeholder={`${title} durchsuchen…`}
             value={query}
             onChange={e => {
@@ -153,62 +153,63 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
               }
             }}
           />
+          <div className="flex items-center justify-between px-3 pb-3">
+            {/* Settings gear */}
+            <div className="relative" ref={settingsRef}>
+              <button
+                onClick={() => setShowSettings(s => !s)}
+                title="Einstellungen"
+                className={`p-1.5 rounded-lg transition-all duration-150 ${
+                  showSettings
+                    ? 'text-blue-400 bg-blue-500/20'
+                    : 'text-slate-500 hover:text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                <GearIcon />
+              </button>
 
-          {/* Settings gear */}
-          <div className="relative" ref={settingsRef}>
+              {showSettings && (
+                <div className="absolute left-0 bottom-full mb-2 w-80 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl shadow-black/50 p-5 space-y-4 z-20">
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Einstellungen</p>
+                  <div className="space-y-1">
+                    <label className="block text-xs text-slate-500">Chunk-Preset</label>
+                    <select
+                      className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
+                      value={preset}
+                      onChange={e => setPreset(e.target.value)}
+                    >
+                      {presetsData?.presets.map(p => <option key={p} value={p}>{p}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-xs text-slate-500">Pipeline</label>
+                    <select
+                      className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
+                      value={pipeline}
+                      onChange={e => setPipeline(Number(e.target.value))}
+                    >
+                      {PIPELINES.map(p => (
+                        <option key={p.value} value={p.value}>{p.value} — {p.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <button
-              onClick={() => setShowSettings(s => !s)}
-              title="Einstellungen"
-              className={`p-1.5 rounded-lg transition-all duration-150 ${
-                showSettings
-                  ? 'text-blue-400 bg-blue-500/20'
-                  : 'text-slate-500 hover:text-slate-300 hover:bg-slate-700'
-              }`}
+              onClick={() => runSearch()}
+              disabled={!query || isPending}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-medium rounded-xl transition-all duration-150"
             >
-              <GearIcon />
+              {isPending ? (
+                <svg className="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
+              ) : (
+                <SearchIcon />
+              )}
+              {isPending ? 'Suche…' : 'Suchen'}
             </button>
-
-            {showSettings && (
-              <div className="absolute right-0 top-full mt-2 w-80 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl shadow-black/50 p-5 space-y-4 z-20">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Einstellungen</p>
-                <div className="space-y-1">
-                  <label className="block text-xs text-slate-500">Chunk-Preset</label>
-                  <select
-                    className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
-                    value={preset}
-                    onChange={e => setPreset(e.target.value)}
-                  >
-                    {presetsData?.presets.map(p => <option key={p} value={p}>{p}</option>)}
-                  </select>
-                </div>
-                <div className="space-y-1">
-                  <label className="block text-xs text-slate-500">Pipeline</label>
-                  <select
-                    className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
-                    value={pipeline}
-                    onChange={e => setPipeline(Number(e.target.value))}
-                  >
-                    {PIPELINES.map(p => (
-                      <option key={p.value} value={p.value}>{p.value} — {p.label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            )}
           </div>
-
-          <button
-            onClick={() => runSearch()}
-            disabled={!query || isPending}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-medium rounded-xl transition-all duration-150"
-          >
-            {isPending ? (
-              <svg className="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
-            ) : (
-              <SendIcon />
-            )}
-            {isPending ? 'Suche…' : 'Suchen'}
-          </button>
         </div>
         {isPending && borderPerim > 0 && (
           <>
