@@ -94,7 +94,7 @@ export function BookPicker({ onSelect, onUpload }: { onSelect: (book: Book) => v
           <button
             onClick={onUpload}
             title="Buch hochladen"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 hover:text-slate-100 hover:border-slate-500 transition-all text-sm"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 hover:text-green-400 hover:border-slate-500 transition-all text-sm"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
             Buch

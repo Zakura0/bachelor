@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 // Standard presets matching chunk_presets.py
 const STANDARD_PRESETS = [
@@ -48,14 +48,21 @@ function UploadForm({ onReady }: { onReady: (data: FileData) => void }) {
   const [loading, setLoading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const { data: existingBooks } = useQuery<{ name: string }[]>({
+    queryKey: ['books'],
+    queryFn: () => fetch('/api/books/').then(r => r.json()),
+  })
+
+  const nameConflict = !!name && existingBooks?.some(b => b.name === name)
+
   function handleFile(f: File) {
     setFile(f)
     if (!title) setTitle(f.name.replace(/\.txt$/i, ''))
-    if (!name) setName(f.name.replace(/\.txt$/i, '').toLowerCase().replace(/[^a-z0-9]/g, ''))
+    setName(f.name.replace(/\.txt$/i, '').toLowerCase().replace(/[^a-z0-9]/g, ''))
   }
 
   async function handleSubmit() {
-    if (!file || !title) return
+    if (!file || !title || nameConflict) return
     setLoading(true)
     const rawText = await file.text()
     setLoading(false)
@@ -97,17 +104,17 @@ function UploadForm({ onReady }: { onReady: (data: FileData) => void }) {
         </div>
         <div>
           <label className="block text-xs text-slate-500 mb-1">Interner Name (Slug)</label>
-          <input
-            className="w-full bg-slate-800 border border-slate-700 text-slate-100 placeholder-slate-500 rounded-xl px-3 py-2.5 text-sm font-mono outline-none focus:border-blue-500/60"
-            placeholder="verwandlung"
-            value={name}
-            onChange={e => setName(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
-          />
+          <div className={`flex items-center gap-2 bg-slate-800/60 border rounded-xl px-3 py-2.5 ${nameConflict ? 'border-red-700/70' : 'border-slate-700'}`}>
+            <span className="flex-1 text-sm font-mono text-slate-400">{name || <span className="text-slate-600">— wird aus Dateiname abgeleitet —</span>}</span>
+            {nameConflict && (
+              <span className="text-xs text-red-400 shrink-0">bereits vorhanden</span>
+            )}
+          </div>
         </div>
       </div>
 
       <button
-        disabled={!file || !title || loading}
+        disabled={!file || !title || loading || nameConflict}
         onClick={handleSubmit}
         className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-30 text-white text-sm font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
       >
