@@ -8,7 +8,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)s  %(message)s",
     handlers=[
-        logging.FileHandler(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "backend.log")),
+        logging.FileHandler(os.path.join(os.path.dirname(os.path.abspath(__file__)), "backend.log")),
         logging.StreamHandler(),
     ],
 )
