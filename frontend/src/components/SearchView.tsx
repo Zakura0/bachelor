@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { type Book } from './BookPicker'
 import { AddPresetSection } from './PresetBuilder'
@@ -133,7 +134,7 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
   return (
     <div className="space-y-8">
       {/* Preset-add modal */}
-      {showAddPreset && (
+      {showAddPreset && createPortal(
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowAddPreset(false)}>
           <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md space-y-5" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
@@ -146,7 +147,8 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
               onPresetDone={() => queryClient.invalidateQueries({ queryKey: ['presets', book.id] })}
             />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
       {/* Header */}
       <div className="flex items-center gap-4">

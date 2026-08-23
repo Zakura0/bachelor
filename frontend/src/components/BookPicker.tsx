@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 type Book = { id: number; name: string; title: string; has_cover: boolean }
@@ -88,12 +89,13 @@ export function BookPicker({ onSelect, onUpload }: { onSelect: (book: Book) => v
 
   return (
     <div className="space-y-10">
-      {showDelete && books && books.length > 0 && (
+      {showDelete && books && books.length > 0 && createPortal(
         <DeleteModal
           books={books}
           onClose={() => setShowDelete(false)}
           onDeleted={() => { setShowDelete(false); queryClient.invalidateQueries({ queryKey: ['books'] }) }}
-        />
+        />,
+        document.body
       )}
       <div className="flex items-start justify-between">
         <div>
