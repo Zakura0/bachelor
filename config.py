@@ -14,8 +14,6 @@ DIR_EMBEDDINGS = os.path.join(PROJECT_ROOT, "data/embeddings/e5-large")
 # Modelle
 EMBEDDING_MODEL = "intfloat/multilingual-e5-large"
 
-# "BAAI/bge-reranker-v2-m3"                    
-# "jinaai/jina-reranker-v2-base-multilingual"
 RERANKER_MODEL  = "BAAI/bge-reranker-v2-m3"
 
 NLI_MODEL       = "joeddav/xlm-roberta-large-xnli"
