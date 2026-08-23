@@ -29,7 +29,8 @@ class CrossEncoderReranker:
     ) -> None:
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.model_name = model_name
-        self.model = CrossEncoder(model_name, device=self.device)
+        # trust_remote_code wird von Jina-Modellen benötigt, schadet anderen nicht
+        self.model = CrossEncoder(model_name, device=self.device, trust_remote_code=True)
 
     def rerank(
         self,

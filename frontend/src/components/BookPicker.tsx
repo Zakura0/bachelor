@@ -154,10 +154,10 @@ export function BookPicker({ onSelect, onUpload }: { onSelect: (book: Book) => v
                 <div className="px-6 pt-6 pb-2 text-3xl">📖</div>
               )}
               <div className={book.has_cover ? 'px-4 py-3' : 'px-6 pb-6'}>
-                <div className="font-semibold text-slate-100 group-hover:text-blue-300 transition-colors text-sm leading-snug">
+                <div className="font-semibold text-slate-100 group-hover:text-blue-300 transition-colors text-sm leading-snug truncate">
                   {book.title || book.name}
                 </div>
-                <div className="mt-1 text-xs text-slate-600 font-mono">{book.name}</div>
+                <div className="mt-1 text-xs text-slate-600 font-mono truncate">{book.name}</div>
               </div>
             </button>
           ))}

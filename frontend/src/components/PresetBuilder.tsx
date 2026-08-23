@@ -158,6 +158,7 @@ export function AddPresetSection({ bookId, existingPresets, onPresetDone }: {
             <input
               className="w-full bg-slate-700 border border-slate-600 text-slate-100 placeholder-slate-500 rounded-xl px-3 py-2.5 text-sm font-mono outline-none focus:border-blue-500/60"
               placeholder="mein_preset"
+              maxLength={50}
               value={customName}
               onChange={e => setCustomName(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
             />

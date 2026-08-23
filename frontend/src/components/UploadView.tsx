@@ -58,7 +58,7 @@ function UploadForm({ onReady }: { onReady: (data: FileData) => void }) {
         <input ref={inputRef} type="file" accept=".txt" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }} />
         {file ? (
           <div className="space-y-1">
-            <p className="text-slate-200 font-medium">{file.name}</p>
+            <p className="text-slate-200 font-medium truncate">{file.name}</p>
             <p className="text-slate-500 text-sm">{(file.size / 1024).toFixed(0)} KB</p>
           </div>
         ) : (
@@ -75,6 +75,7 @@ function UploadForm({ onReady }: { onReady: (data: FileData) => void }) {
           <input
             className="w-full bg-slate-800 border border-slate-700 text-slate-100 placeholder-slate-500 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-blue-500/60"
             placeholder="z.B. Die Verwandlung"
+            maxLength={60}
             value={title}
             onChange={e => setTitle(e.target.value)}
           />
