@@ -1,7 +1,20 @@
 import sys
 import os
+import logging
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s  %(levelname)s  %(message)s",
+    handlers=[
+        logging.FileHandler(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "backend.log")),
+        logging.StreamHandler(),
+    ],
+)
+# Silence noisy third-party loggers
+for _noisy in ("sentence_transformers", "httpx", "httpcore", "transformers", "huggingface_hub"):
+    logging.getLogger(_noisy).setLevel(logging.WARNING)
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

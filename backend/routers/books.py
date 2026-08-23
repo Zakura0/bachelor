@@ -33,11 +33,17 @@ async def create_book(
     name: str = Form(None),
     file: UploadFile = File(...),
 ):
+    if not (file.filename or "").lower().endswith(".txt"):
+        raise HTTPException(status_code=422, detail="Nur .txt-Dateien erlaubt")
+
     raw_bytes = await file.read()
     try:
         raw_text = raw_bytes.decode("utf-8")
     except UnicodeDecodeError:
-        raw_text = raw_bytes.decode("latin-1")
+        try:
+            raw_text = raw_bytes.decode("latin-1")
+        except Exception:
+            raise HTTPException(status_code=422, detail="Datei konnte nicht als Text gelesen werden")
 
     if not name:
         name = re.sub(r"[^a-z0-9]", "", (file.filename or "buch").lower().replace(".txt", ""))

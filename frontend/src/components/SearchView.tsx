@@ -47,6 +47,7 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
   const [query, setQuery] = useState('')
   const [preset, setPreset] = useState('large')
   const [pipeline, setPipeline] = useState(7)
+  const [llmPrompt, setLlmPrompt] = useState<'expert' | 'normal'>('normal')
   const [showSettings, setShowSettings] = useState(false)
   const [showAddPreset, setShowAddPreset] = useState(false)
   const queryClient = useQueryClient()
@@ -103,7 +104,7 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
     const response = await fetch('/api/search/stream', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ book_id: book.id, preset_name: preset, pipeline, query, top_k: 5 }),
+      body: JSON.stringify({ book_id: book.id, preset_name: preset, pipeline, query, top_k: 5, llm_prompt: llmPrompt }),
     })
 
     const reader = response.body!.getReader()
@@ -221,6 +222,19 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
                       ))}
                     </select>
                   </div>
+                  {[6, 7, 8, 10].includes(pipeline) && (
+                    <div className="space-y-1">
+                      <label className="block text-xs text-slate-500">LLM-Prompt</label>
+                      <select
+                        className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
+                        value={llmPrompt}
+                        onChange={e => setLlmPrompt(e.target.value as 'expert' | 'normal')}
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="expert">German Literature Expert</option>
+                      </select>
+                    </div>
+                  )}
                   <div className="pt-1 border-t border-slate-700/60">
                     <button
                       onClick={() => { setShowSettings(false); setShowAddPreset(true) }}

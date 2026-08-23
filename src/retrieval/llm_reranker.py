@@ -22,6 +22,26 @@ Textstellen:
 
 Nummer der relevantesten Textstelle:"""
 
+# Fragt das LLM, alle Textstellen nach Relevanz zu sortieren (generisch).
+PROMPT_RANK_ALL_NORMAL = """\
+Du bekommst eine abstrakte Zusammenfassung einer Szene und {n} Textstellen, die alle aus demselben Buch stammen.
+Deine Aufgabe: Finde die Textstellen, die genau die Szene aus der Zusammenfassung beschreiben.
+Beachte: Die Zusammenfassung ist abstrakt formuliert, die Textstellen sind der originale Buchtext – die Formulierungen können sich stark unterscheiden, der Inhalt soll aber übereinstimmen.
+
+Sortiere alle Textstellen nach ihrer inhaltlichen Übereinstimmung mit der Zusammenfassung.
+Platz 1 = beste Übereinstimmung.
+
+Antworte NUR mit den Nummern in sortierter Reihenfolge, getrennt durch Kommas.
+Beispiel: 3,1,5,2,4
+
+Zusammenfassung:
+"{query}"
+
+Textstellen:
+{candidates_block}
+
+Sortierte Reihenfolge (nur Nummern):"""
+
 # Fragt das LLM, alle Textstellen nach Relevanz zu sortieren.
 PROMPT_RANK_ALL = """\
 Du bist ein Experte für deutschsprachige Literatur des frühen 20. Jahrhunderts.

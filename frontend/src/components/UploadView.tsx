@@ -32,6 +32,7 @@ function UploadForm({ onReady }: { onReady: (data: FileData) => void }) {
   const nameConflict = !!name && existingBooks?.some(b => b.name === name)
 
   function handleFile(f: File) {
+    if (!f.name.toLowerCase().endsWith('.txt')) return
     setFile(f)
     if (!title) setTitle(f.name.replace(/\.txt$/i, ''))
     setName(f.name.replace(/\.txt$/i, '').toLowerCase().replace(/[^a-z0-9]/g, ''))
