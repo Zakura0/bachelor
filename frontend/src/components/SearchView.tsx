@@ -132,7 +132,7 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
   const title = book.title || book.name
 
   return (
-    <div className="space-y-8">
+    <div className="flex-1 flex flex-col min-h-0">
       {/* Preset-add modal */}
       {showAddPreset && createPortal(
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowAddPreset(false)}>
@@ -150,8 +150,9 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
         </div>,
         document.body
       )}
+
       {/* Header */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 pb-6 flex-none">
         <button
           onClick={onBack}
           className="flex items-center gap-1.5 text-slate-500 hover:text-slate-200 transition-colors text-sm"
@@ -163,179 +164,179 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
         <h2 className="text-slate-200 font-semibold">{title}</h2>
       </div>
 
-      {/* Search input */}
-      <div ref={wrapRef} className={`relative rounded-2xl transition-all duration-300 ${isPending ? '' : 'border border-slate-700 focus-within:border-blue-500/60 focus-within:ring-2 focus-within:ring-blue-500/10'}`}>
-        <div className="bg-slate-800 rounded-2xl">
-          <textarea
-            autoFocus
-            rows={1}
-            className="w-full bg-transparent text-slate-100 placeholder-slate-500 outline-none text-sm resize-none leading-relaxed px-4 pt-4 pb-2 block"
-            placeholder={`${title} durchsuchen…`}
-            value={query}
-            onChange={e => {
-              setQuery(e.target.value)
-              e.target.style.height = 'auto'
-              e.target.style.height = e.target.scrollHeight + 'px'
-            }}
-            onKeyDown={e => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault()
-                if (query) runSearch()
-              }
-            }}
-          />
-          <div className="flex items-center justify-between px-3 pb-3">
-            {/* Settings gear */}
-            <div className="relative" ref={settingsRef}>
-              <button
-                onClick={() => setShowSettings(s => !s)}
-                title="Einstellungen"
-                className={`p-1.5 rounded-lg transition-all duration-150 ${
-                  showSettings
-                    ? 'text-blue-400 bg-blue-500/20'
-                    : 'text-slate-500 hover:text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                <GearIcon />
-              </button>
-
-              {showSettings && (
-                <div className="absolute left-0 top-full mt-2 w-80 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl shadow-black/50 p-5 space-y-4 z-20">
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Einstellungen</p>
-                  <div className="space-y-1">
-                    <label className="block text-xs text-slate-500">Chunk-Preset</label>
-                    <select
-                      className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
-                      value={preset}
-                      onChange={e => setPreset(e.target.value)}
-                    >
-                      {presetsData?.presets.map(p => <option key={p} value={p}>{p}</option>)}
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="block text-xs text-slate-500">Pipeline</label>
-                    <select
-                      className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
-                      value={pipeline}
-                      onChange={e => setPipeline(Number(e.target.value))}
-                    >
-                      {PIPELINES.map(p => (
-                        <option key={p.value} value={p.value}>{p.value} — {p.label}</option>
-                      ))}
-                    </select>
-                  </div>
-                  {[6, 7, 8, 10].includes(pipeline) && (
-                    <div className="space-y-1">
-                      <label className="block text-xs text-slate-500">LLM-Prompt</label>
-                      <select
-                        className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
-                        value={llmPrompt}
-                        onChange={e => setLlmPrompt(e.target.value as 'expert' | 'normal')}
-                      >
-                        <option value="normal">Normal</option>
-                        <option value="expert">German Literature Expert</option>
-                      </select>
-                    </div>
-                  )}
-                  <div className="pt-1 border-t border-slate-700/60">
-                    <button
-                      onClick={() => { setShowSettings(false); setShowAddPreset(true) }}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-700/60 transition-colors"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                      Preset hinzufügen…
-                    </button>
-                  </div>
-                </div>
-              )}
+      {/* Results area */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        {isPending && (
+          <div className="h-full" />
+        )}
+        {results && (
+          <div className="space-y-4 pb-4">
+            <div className="flex items-center gap-2">
+              {results.map((r, i) => (
+                <button
+                  key={r.rank}
+                  onClick={() => setSelectedRank(i)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm transition-all ${
+                    selectedRank === i
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                      : 'bg-slate-800/70 text-slate-400 hover:text-slate-200 border border-slate-700/50'
+                  }`}
+                >
+                  <span className="font-semibold">#{r.rank}</span>
+                  <span className="text-xs opacity-60 font-mono">{r.score.toFixed(3)}</span>
+                </button>
+              ))}
             </div>
-
-            <button
-              onClick={() => runSearch()}
-              disabled={!query || isPending}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-medium rounded-xl transition-all duration-150"
-            >
-              {isPending ? (
-                <svg className="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
-              ) : (
-                <SearchIcon />
-              )}
-              {isPending ? 'Suche…' : 'Suchen'}
-            </button>
-          </div>
-        </div>
-        {isPending && borderPerim > 0 && (
-          <>
-            <style>{`@keyframes borderBeam { to { stroke-dashoffset: ${-borderPerim}; } }`}</style>
-            <svg
-              className="absolute inset-0 pointer-events-none"
-              width={borderDims.w}
-              height={borderDims.h}
-              style={{ overflow: 'visible' }}
-            >
-              <defs>
-                <filter id="beamGlow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="4" result="blur" />
-                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                </filter>
-              </defs>
-              <rect
-                x={1} y={1}
-                width={borderDims.w - 2} height={borderDims.h - 2}
-                rx={bR - 1} ry={bR - 1}
-                fill="none"
-                stroke="#60a5fa"
-                strokeWidth="2"
-                strokeLinecap="round"
-                filter="url(#beamGlow)"
-                strokeDasharray={`${borderPerim * 0.08} ${borderPerim * 0.92}`}
-                style={{ strokeDashoffset: 0, animation: 'borderBeam 2s linear infinite' }}
+            {bookText ? (
+              <TextHighlight
+                text={bookText.raw_text}
+                startIndex={results[selectedRank].start_index}
+                endIndex={results[selectedRank].end_index}
               />
-            </svg>
-          </>
+            ) : (
+              <div className="h-[65vh] rounded-2xl bg-slate-800/40 border border-slate-700/50 flex items-center justify-center">
+                <p className="text-slate-500 text-sm animate-pulse">Lade Buchtext…</p>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
-      {/* Pipeline step text */}
-      {isPending && progress && (
-        <p className="text-xs text-slate-500 pl-1">{progress}</p>
-      )}
-
-      {/* Results */}
-      {results && (
-        <div className="space-y-4">
-          {/* Rank selector tabs */}
-          <div className="flex items-center gap-2">
-            {results.map((r, i) => (
-              <button
-                key={r.rank}
-                onClick={() => setSelectedRank(i)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm transition-all ${
-                  selectedRank === i
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
-                    : 'bg-slate-800/70 text-slate-400 hover:text-slate-200 border border-slate-700/50'
-                }`}
-              >
-                <span className="font-semibold">#{r.rank}</span>
-                <span className="text-xs opacity-60 font-mono">{r.score.toFixed(3)}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Full text with highlight */}
-          {bookText ? (
-            <TextHighlight
-              text={bookText.raw_text}
-              startIndex={results[selectedRank].start_index}
-              endIndex={results[selectedRank].end_index}
+      {/* Search input at bottom */}
+      <div className="flex-none pt-3">
+        {isPending && progress && (
+          <p className="text-xs text-slate-500 animate-pulse pb-2 pl-1">{progress}</p>
+        )}
+        <div ref={wrapRef} className={`relative rounded-2xl transition-all duration-300 ${isPending ? '' : 'border border-slate-700 focus-within:border-blue-500/60 focus-within:ring-2 focus-within:ring-blue-500/10'}`}>
+          <div className="bg-slate-800 rounded-2xl">
+            <textarea
+              autoFocus
+              rows={1}
+              className="w-full bg-transparent text-slate-100 placeholder-slate-500 outline-none text-sm resize-none leading-relaxed px-4 pt-4 pb-2 block"
+              placeholder={`${title} durchsuchen…`}
+              value={query}
+              onChange={e => {
+                setQuery(e.target.value)
+                e.target.style.height = 'auto'
+                e.target.style.height = e.target.scrollHeight + 'px'
+              }}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  if (query) runSearch()
+                }
+              }}
             />
-          ) : (
-            <div className="h-[65vh] rounded-2xl bg-slate-800/40 border border-slate-700/50 flex items-center justify-center">
-              <p className="text-slate-500 text-sm animate-pulse">Lade Buchtext…</p>
+            <div className="flex items-center justify-between px-3 pb-3">
+              {/* Settings gear - opens upward */}
+              <div className="relative" ref={settingsRef}>
+                <button
+                  onClick={() => setShowSettings(s => !s)}
+                  title="Einstellungen"
+                  className={`p-1.5 rounded-lg transition-all duration-150 ${
+                    showSettings
+                      ? 'text-blue-400 bg-blue-500/20'
+                      : 'text-slate-500 hover:text-slate-300 hover:bg-slate-700'
+                  }`}
+                >
+                  <GearIcon />
+                </button>
+                {showSettings && (
+                  <div className="absolute left-0 bottom-full mb-2 w-80 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl shadow-black/50 p-5 space-y-4 z-20">
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Einstellungen</p>
+                    <div className="space-y-1">
+                      <label className="block text-xs text-slate-500">Chunk-Preset</label>
+                      <select
+                        className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
+                        value={preset}
+                        onChange={e => setPreset(e.target.value)}
+                      >
+                        {presetsData?.presets.map(p => <option key={p} value={p}>{p}</option>)}
+                      </select>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="block text-xs text-slate-500">Pipeline</label>
+                      <select
+                        className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
+                        value={pipeline}
+                        onChange={e => setPipeline(Number(e.target.value))}
+                      >
+                        {PIPELINES.map(p => (
+                          <option key={p.value} value={p.value}>{p.value} — {p.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    {[6, 7, 8, 10].includes(pipeline) && (
+                      <div className="space-y-1">
+                        <label className="block text-xs text-slate-500">LLM-Prompt</label>
+                        <select
+                          className="w-full bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500/60"
+                          value={llmPrompt}
+                          onChange={e => setLlmPrompt(e.target.value as 'expert' | 'normal')}
+                        >
+                          <option value="normal">Normal</option>
+                          <option value="expert">German Literature Expert</option>
+                        </select>
+                      </div>
+                    )}
+                    <div className="pt-1 border-t border-slate-700/60">
+                      <button
+                        onClick={() => { setShowSettings(false); setShowAddPreset(true) }}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-700/60 transition-colors"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                        Preset hinzufügen…
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => runSearch()}
+                disabled={!query || isPending}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-medium rounded-xl transition-all duration-150"
+              >
+                {isPending ? (
+                  <svg className="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
+                ) : (
+                  <SearchIcon />
+                )}
+                {isPending ? 'Suche…' : 'Suchen'}
+              </button>
             </div>
+          </div>
+          {isPending && borderPerim > 0 && (
+            <>
+              <style>{`@keyframes borderBeam { to { stroke-dashoffset: ${-borderPerim}; } }`}</style>
+              <svg
+                className="absolute inset-0 pointer-events-none"
+                width={borderDims.w}
+                height={borderDims.h}
+                style={{ overflow: 'visible' }}
+              >
+                <defs>
+                  <filter id="beamGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
+                </defs>
+                <rect
+                  x={1} y={1}
+                  width={borderDims.w - 2} height={borderDims.h - 2}
+                  rx={bR - 1} ry={bR - 1}
+                  fill="none"
+                  stroke="#60a5fa"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  filter="url(#beamGlow)"
+                  strokeDasharray={`${borderPerim * 0.08} ${borderPerim * 0.92}`}
+                  style={{ strokeDashoffset: 0, animation: 'borderBeam 2s linear infinite' }}
+                />
+              </svg>
+            </>
           )}
         </div>
-      )}
+      </div>
     </div>
   )
 }
