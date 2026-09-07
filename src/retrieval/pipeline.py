@@ -45,17 +45,19 @@ SearchResult = namedtuple("SearchResult", ["text", "index", "meta", "score"])
 # 8 = TF-IDF + Embeddings(HyDE) + Reranker + LLM
 # 9 = TF-IDF + Embeddings(HyDE) + Reranker
 # 10 = TF-IDF + Embeddings(Multi-Query) + Reranker + LLM
+# 11 = wie 7, aber Hit-Berechnung mit Span-Toleranz (siehe HIT_TOLERANCE_CHARS in config.py)
 PIPELINE_PRESETS = {
-    1: dict(use_tfidf=True,  use_embeddings=False, use_reranker=False, use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False),
-    2: dict(use_tfidf=False, use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False),
-    3: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False),
-    4: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False),
-    5: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=True,  use_llm=False, use_hyde=False, use_multi_query=False),
-    6: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=True,  use_hyde=False, use_multi_query=False),
-    7: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=False, use_multi_query=False),
-    8: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=True,  use_multi_query=False),
-    9: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False, use_hyde=True,  use_multi_query=False),
-   10: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=False, use_multi_query=True),
+    1: dict(use_tfidf=True,  use_embeddings=False, use_reranker=False, use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False, use_span_tolerance=False),
+    2: dict(use_tfidf=False, use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False, use_span_tolerance=False),
+    3: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False, use_span_tolerance=False),
+    4: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False, use_hyde=False, use_multi_query=False, use_span_tolerance=False),
+    5: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=True,  use_llm=False, use_hyde=False, use_multi_query=False, use_span_tolerance=False),
+    6: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=False, use_nli=False, use_llm=True,  use_hyde=False, use_multi_query=False, use_span_tolerance=False),
+    7: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=False, use_multi_query=False, use_span_tolerance=False),
+    8: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=True,  use_multi_query=False, use_span_tolerance=False),
+    9: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=False, use_hyde=True,  use_multi_query=False, use_span_tolerance=False),
+   10: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=False, use_multi_query=True,  use_span_tolerance=False),
+   11: dict(use_tfidf=True,  use_embeddings=True,  use_reranker=True,  use_nli=False, use_llm=True,  use_hyde=False, use_multi_query=False, use_span_tolerance=True),
 }
 
 
@@ -120,6 +122,7 @@ class SearchPipeline:
         self.use_llm         = use_llm
         self.use_hyde        = use_hyde
         self.use_multi_query = use_multi_query
+        self.use_span_tolerance = flags.get("use_span_tolerance", False)
 
         self.chunks = chunks
         self.texts  = [c["content"] for c in self.chunks]

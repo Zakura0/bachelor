@@ -87,7 +87,12 @@ class LLMReranker:
     """
 
     def __init__(self, model: str, prompt_template: str = PROMPT_PICK_ONE) -> None:
-        self.client = OpenAI(base_url="http://hcdsgpu2.informatik.uni-hamburg.de:1111/v1", api_key="REDACTED_API_KEY")
+        # Echte OpenAI-Modelle (z.B. gpt-4o) laufen über die offizielle API (Key aus Env),
+        # alles andere über den lokalen vLLM-Proxy.
+        if model.startswith("gpt-"):
+            self.client = OpenAI()
+        else:
+            self.client = OpenAI(base_url="http://hcdsgpu2.informatik.uni-hamburg.de:1111/v1", api_key="REDACTED_API_KEY")
         self.model = model
         self.prompt_template = prompt_template
 

@@ -1,8 +1,9 @@
 """
-Evaluation-Experiment
+Chunk-Size-Ablation
 
-Konfigurierbares Experiment zur Auswertung der Retrieval-Pipeline.
-Misst Recall@k über alle Eval-Bücher.
+Vergleicht alle Chunk-Größen-Presets unter Pipeline 7
+(TF-IDF + Embeddings + Cross-Encoder-Reranker + LLM).
+Misst Recall@k über alle Eval-Bücher, je Chunk-Größe.
 """
 import json
 import os
@@ -18,40 +19,20 @@ from config import (
     DIR_PROCESSED, DIR_CHUNKS, DIR_EMBEDDINGS,
     K_RETRIEVAL, K_RRF, K_RERANKER, RRF_K,
     EMBEDDING_MODEL, LLM_MODEL, USE_BM25,
-    HIT_TOLERANCE_CHARS,
-    EXP_CHUNK        as CHUNK_PRESET,
-    EXP_PIPELINE     as PIPELINE_PRESET,
 )
 from src.preprocessing.chunk_presets import CHUNK_PRESETS
-from src.retrieval.pipeline import SearchPipeline, PIPELINE_PRESETS
+from src.retrieval.pipeline import SearchPipeline
 from eval.eval_utils import make_run_dir, build_misses, save_misses
 
-CHUNK_CFG       = CHUNK_PRESETS[CHUNK_PRESET]
-CHUNK_NAME      = CHUNK_CFG["name"]
-CHUNK_MIN_WORDS = CHUNK_CFG["min_words"]
-CHUNK_MAX_WORDS = CHUNK_CFG["max_words"]
-CHUNK_OVERLAP   = CHUNK_CFG["overlap"]
-
+PIPELINE_PRESET = 7  # TF-IDF + Embeddings + Reranker + LLM (beste Konfiguration, siehe EXPERIMENT_RESULTS.md)
 
 BASE_RESULTS_DIR = os.path.join(project_root, "eval", "results")
 
 
-def _pipeline_label(preset: int) -> str:
-    """Komponenten-String für einen Pipeline-Preset ohne Instanziierung."""
-    flags = PIPELINE_PRESETS[preset]
-    parts = []
-    if flags["use_tfidf"]:      parts.append("BM25" if USE_BM25 else "TFIDF")
-    if flags["use_embeddings"]: parts.append("EMB+MQ" if flags.get("use_multi_query") else ("EMB+HyDE" if flags.get("use_hyde") else "EMB"))
-    if flags["use_reranker"]:   parts.append("RERANK")
-    if flags["use_nli"]:        parts.append("NLI")
-    if flags["use_llm"]:        parts.append("LLM")
-    return "+".join(parts)
-
-
-def prepare_book(book: str):
+def prepare_book(book: str, chunk_name: str):
     """Pfade zu Chunks und Embeddings zurückgeben. Bricht ab wenn Dateien fehlen."""
-    chunks_path = os.path.join(DIR_CHUNKS,     book, f"{CHUNK_NAME}.json")
-    emb_path    = os.path.join(DIR_EMBEDDINGS, book, f"{CHUNK_NAME}.npy")
+    chunks_path = os.path.join(DIR_CHUNKS,     book, f"{chunk_name}.json")
+    emb_path    = os.path.join(DIR_EMBEDDINGS, book, f"{chunk_name}.npy")
 
     if not os.path.exists(chunks_path):
         raise FileNotFoundError(f"Chunks nicht gefunden: {chunks_path}")
@@ -74,9 +55,6 @@ def run_trial(pipeline: SearchPipeline, pair: dict):
     first_hit_rank = None
     for rank, r in enumerate(results, start=1):
         for exp_start, exp_end in expected_spans:
-            if pipeline.use_span_tolerance:
-                exp_start = max(0, exp_start - HIT_TOLERANCE_CHARS)
-                exp_end   = exp_end + HIT_TOLERANCE_CHARS
             if r.meta["start_index"] < exp_end and exp_start < r.meta["end_index"]:
                 first_hit_rank = rank
                 break
@@ -111,59 +89,32 @@ def compute_recall(trials: list):
     return recall, avg_rank, hits_at_k
 
 
-def main():
-    ts      = datetime.now().isoformat()
-    run_dir = make_run_dir(BASE_RESULTS_DIR, "experiment")
+def run_chunk_size(chunk_preset: int, eval_pairs_per_book: dict):
+    """Führt das Recall-Experiment für eine Chunk-Größe über alle Bücher aus."""
+    cfg  = CHUNK_PRESETS[chunk_preset]
+    name = cfg["name"]
+    print(f"\n{'='*80}")
+    print(f"Chunk-Größe: {name}  (min={cfg['min_words']}, max={cfg['max_words']}, overlap={cfg['overlap']})")
+    print(f"{'='*80}")
 
-
-    print("=" * 80)
-    print("RECALL-EXPERIMENT")
-    print("=" * 80)
-    print(f"Pipeline:    {PIPELINE_PRESET}")
-    print(f"Chunks:      {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})")
-    print(f"Top-K:       {K_RERANKER}")
-    print(f"Bücher:      {', '.join(EVAL_BOOKS)}")
-    print()
-
-    # --- Eval-Pairs laden ---
-    eval_pairs_per_book = {}
-    for book in EVAL_BOOKS:
-        ep_path = os.path.join(DIR_PROCESSED, f"eval_pairs_{book}.json")
-        if not os.path.exists(ep_path):
-            print(f"  WARNUNG: {ep_path} nicht gefunden — {book} wird übersprungen")
-            continue
-        with open(ep_path, encoding="utf-8") as f:
-            eval_pairs_per_book[book] = json.load(f)
-        print(f"  {book}: {len(eval_pairs_per_book[book])} Pairs geladen")
-    print()
-
-    # --- Je Buch auswerten ---
     per_book_results = {}
+    for book, pairs in eval_pairs_per_book.items():
+        print(f"  Buch: {book}")
+        chunks_path, emb_path = prepare_book(book, name)
+        pipeline = SearchPipeline(chunks_path, emb_path, preset=PIPELINE_PRESET)
 
-    for book in eval_pairs_per_book:
-        print(f"{'='*80}")
-        print(f"Buch: {book}")
-        chunks_path, emb_path = prepare_book(book)
-
-        pipeline = SearchPipeline(
-            chunks_path, emb_path,
-            preset=PIPELINE_PRESET,
-        )
-
-        pairs  = eval_pairs_per_book[book]
         trials = []
-
         for i, pair in enumerate(pairs, 1):
             trial = run_trial(pipeline, pair)
             trials.append(trial)
             status = "✓" if trial["hit"] else "✗"
             rank   = trial["first_hit_rank"] or "-"
-            print(f"  {i:>3}/{len(pairs)}  {status}  Rank={rank:<4}  {trial['query'][:60]}")
+            print(f"    {i:>3}/{len(pairs)}  {status}  Rank={rank:<4}  {trial['query'][:55]}")
 
         recall, avg_rank, hits_at_k = compute_recall(trials)
         recall_str = "  ".join(f"R@{k}={recall[k]:.1%}" for k in RECALL_K)
         avg_t = sum(t["time_s"] for t in trials) / len(trials) if trials else 0
-        print(f"\n  {recall_str}  avg_rank={avg_rank:.2f}  {avg_t:.2f}s/query\n")
+        print(f"    -> {recall_str}  avg_rank={avg_rank:.2f}  {avg_t:.2f}s/query")
 
         per_book_results[book] = {
             "metrics": {
@@ -176,68 +127,16 @@ def main():
             "trials": trials,
         }
 
-    # --- Aggregation ---
     all_trials = [t for bm in per_book_results.values() for t in bm["trials"]]
     agg_recall, agg_avg_rank, agg_hits = compute_recall(all_trials)
     agg_total = len(all_trials)
     agg_avg_t = sum(t["time_s"] for t in all_trials) / agg_total if agg_total else 0
 
-    # --- Summary-Tabelle (Konsole + TXT) ---
-    summary_lines = [
-        "=" * 80,
-        "RECALL-EXPERIMENT — ZUSAMMENFASSUNG",
-        f"Datum:      {ts[:19]}",
-        f"Pipeline:   {PIPELINE_PRESET}  [{_pipeline_label(PIPELINE_PRESET)}]",
-        f"Chunks:     {CHUNK_NAME}  (min={CHUNK_MIN_WORDS}, max={CHUNK_MAX_WORDS}, overlap={CHUNK_OVERLAP})",
-        f"Top-K:      {K_RERANKER}",
-        f"Embedding:  {EMBEDDING_MODEL}",
-        f"LLM:        {LLM_MODEL}",
-        f"BM25:       {'ja' if USE_BM25 else 'nein'}",
-        f"Span-Toleranz: {'±' + str(HIT_TOLERANCE_CHARS) + ' Zeichen' if PIPELINE_PRESETS[PIPELINE_PRESET].get('use_span_tolerance') else 'nein'}",
-        "=" * 80,
-        f"{'Buch':<20}  " + "  ".join(f"R@{k:>2}" for k in RECALL_K) + f"  {'AvgRank':>7}  {'s/query':>7}",
-        "-" * 80,
-    ]
-
-    for book, bm in per_book_results.items():
-        m = bm["metrics"]
-        k_vals = "  ".join(f"{m['recall_at_k'][str(k)]:>5.1%}" for k in RECALL_K)
-        summary_lines.append(
-            f"{book:<20}  {k_vals}  {m['avg_rank']:>7.2f}  {m['avg_time_per_query_s']:>6.2f}s"
-        )
-
-    summary_lines.append("-" * 80)
-    k_vals = "  ".join(f"{agg_recall[k]:>5.1%}" for k in RECALL_K)
-    summary_lines.append(
-        f"{'GESAMT':<20}  {k_vals}  {agg_avg_rank:>7.2f}  {agg_avg_t:>6.2f}s"
-        f"  ({agg_hits[1]}/{agg_total} @1)"
-    )
-    summary_lines.append("=" * 80)
-
-    print("\n" + "\n".join(summary_lines))
-
-    txt_path = os.path.join(run_dir, "summary.txt")
-    os.makedirs(run_dir, exist_ok=True)
-    with open(txt_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(summary_lines) + "\n")
-    print(f"\nZusammenfassung: {txt_path}")
-
-    # --- Detail-JSON ---
-    details = {
-        "timestamp":    ts,
-        "pipeline":     PIPELINE_PRESET,
-        "chunk_config": {
-            "name":      CHUNK_NAME,
-            "min_words": CHUNK_MIN_WORDS,
-            "max_words": CHUNK_MAX_WORDS,
-            "overlap":   CHUNK_OVERLAP,
-        },
-        "pipeline_params": {
-            "K_RETRIEVAL": K_RETRIEVAL,
-            "K_RRF":       K_RRF,
-            "K_RERANKER":  K_RERANKER,
-            "RRF_K":       RRF_K,
-        },
+    return {
+        "chunk_preset": chunk_preset,
+        "chunk_name":   name,
+        "chunk_config": cfg,
+        "per_book":     per_book_results,
         "aggregate": {
             "total":    agg_total,
             "avg_rank": round(agg_avg_rank, 3),
@@ -245,13 +144,91 @@ def main():
             "hits_at_k":   {str(k): agg_hits[k] for k in RECALL_K},
             "avg_time_per_query_s": round(agg_avg_t, 3),
         },
-        "books": [
+    }
+
+
+def main():
+    ts      = datetime.now().isoformat()
+    run_dir = make_run_dir(BASE_RESULTS_DIR, "chunk_ablation")
+
+    print("=" * 80)
+    print("CHUNK-SIZE-ABLATION")
+    print("=" * 80)
+    print(f"Pipeline:     {PIPELINE_PRESET}  [TF-IDF + Embeddings + Reranker + LLM]")
+    print(f"Top-K:        {K_RERANKER}")
+    print(f"Bücher:       {', '.join(EVAL_BOOKS)}")
+    print(f"Chunk-Größen: {', '.join(cfg['name'] for cfg in CHUNK_PRESETS.values())}")
+    print()
+
+    # --- Eval-Pairs laden (einmalig, gilt für alle Chunk-Größen) ---
+    eval_pairs_per_book = {}
+    for book in EVAL_BOOKS:
+        ep_path = os.path.join(DIR_PROCESSED, f"eval_pairs_{book}.json")
+        if not os.path.exists(ep_path):
+            print(f"  WARNUNG: {ep_path} nicht gefunden — {book} wird übersprungen")
+            continue
+        with open(ep_path, encoding="utf-8") as f:
+            eval_pairs_per_book[book] = json.load(f)
+        print(f"  {book}: {len(eval_pairs_per_book[book])} Pairs geladen")
+    print()
+
+    # --- Je Chunk-Größe auswerten ---
+    chunk_results = [run_chunk_size(preset, eval_pairs_per_book) for preset in sorted(CHUNK_PRESETS)]
+
+    # --- Vergleichstabelle (Konsole + TXT) ---
+    summary_lines = [
+        "=" * 80,
+        "CHUNK-SIZE-ABLATION — ZUSAMMENFASSUNG",
+        f"Datum:      {ts[:19]}",
+        f"Pipeline:   {PIPELINE_PRESET}  [TF-IDF + Embeddings + Reranker + LLM]",
+        f"Top-K:      {K_RERANKER}",
+        f"Embedding:  {EMBEDDING_MODEL}",
+        f"LLM:        {LLM_MODEL}",
+        f"BM25:       {'ja' if USE_BM25 else 'nein'}",
+        "=" * 80,
+        f"{'Chunk-Größe':<22}  " + "  ".join(f"R@{k:>2}" for k in RECALL_K) + f"  {'AvgRank':>7}  {'s/query':>7}",
+        "-" * 80,
+    ]
+
+    for r in chunk_results:
+        m = r["aggregate"]
+        k_vals = "  ".join(f"{m['recall_at_k'][str(k)]:>5.1%}" for k in RECALL_K)
+        summary_lines.append(
+            f"{r['chunk_name']:<22}  {k_vals}  {m['avg_rank']:>7.2f}  {m['avg_time_per_query_s']:>6.2f}s"
+        )
+
+    summary_lines.append("=" * 80)
+
+    print("\n" + "\n".join(summary_lines))
+
+    os.makedirs(run_dir, exist_ok=True)
+    txt_path = os.path.join(run_dir, "summary.txt")
+    with open(txt_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(summary_lines) + "\n")
+    print(f"\nZusammenfassung: {txt_path}")
+
+    # --- Detail-JSON ---
+    details = {
+        "timestamp": ts,
+        "pipeline":  PIPELINE_PRESET,
+        "pipeline_params": {
+            "K_RETRIEVAL": K_RETRIEVAL,
+            "K_RRF":       K_RRF,
+            "K_RERANKER":  K_RERANKER,
+            "RRF_K":       RRF_K,
+        },
+        "chunk_sizes": [
             {
-                "book":    book,
-                "metrics": bm["metrics"],
-                "trials":  bm["trials"],
+                "chunk_preset": r["chunk_preset"],
+                "chunk_name":   r["chunk_name"],
+                "chunk_config": r["chunk_config"],
+                "aggregate":    r["aggregate"],
+                "books": [
+                    {"book": book, "metrics": bm["metrics"], "trials": bm["trials"]}
+                    for book, bm in r["per_book"].items()
+                ],
             }
-            for book, bm in per_book_results.items()
+            for r in chunk_results
         ],
     }
     details_path = os.path.join(run_dir, "results.json")
@@ -259,9 +236,12 @@ def main():
         json.dump(details, f, ensure_ascii=False, indent=2)
     print(f"Ergebnisse:      {details_path}")
 
-    misses = build_misses(per_book_results, got_key="top1_text")
-    misses_path = save_misses(misses, run_dir)
-    print(f"Misses:          {misses_path}  ({len(misses)} Einträge)")
+    # --- Misses je Chunk-Größe ---
+    for r in chunk_results:
+        misses = build_misses(r["per_book"], got_key="top1_text")
+        chunk_dir = os.path.join(run_dir, r["chunk_name"])
+        misses_path = save_misses(misses, chunk_dir)
+        print(f"Misses ({r['chunk_name']}): {misses_path}  ({len(misses)} Einträge)")
 
 
 if __name__ == "__main__":

@@ -30,6 +30,8 @@ MULTI_QUERY_N = 3   # Anzahl Paraphrasen bei Multi-Query-Retrieval
 
 RRF_K       = 60    # RRF-Hyperparameter
 
+HIT_TOLERANCE_CHARS = 500   # Toleranz (Zeichen) nach oben/unten für Hit-Berechnung, falls Pipeline-Preset aktiviert
+
 # Suche
 
 # Verfügbare Presets
@@ -43,6 +45,7 @@ RRF_K       = 60    # RRF-Hyperparameter
 # 8 = TF-IDF + Emb(HyDE) + Reranker + LLM
 # 9 = TF-IDF + Emb(HyDE) + Reranker
 # 10 = TF-IDF + Emb(Multi-Query) + Reranker + LLM
+# 11 = wie 7, aber Hit-Berechnung mit ±HIT_TOLERANCE_CHARS Toleranz
 SEARCH_PIPELINE = 7
 
 
@@ -56,7 +59,7 @@ RECALL_K   = [1, 5, 10, 20, 30]
 EXP_CHUNK    = 4
 
 # Pipeline-Preset
-EXP_PIPELINE = 7
+EXP_PIPELINE = 11
 
 # Pipeline-Preset für LLM-Pick-Experiment
 EXP_LLM_PIPELINE = 7
