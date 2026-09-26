@@ -77,6 +77,8 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
   const [progress, setProgress] = useState<string | null>(null)
   const [results, setResults] = useState<SearchResult[] | null>(null)
   const [selectedRank, setSelectedRank] = useState(0)
+  const [elapsedSeconds, setElapsedSeconds] = useState<number | null>(null)
+  const searchStartRef = useRef<number | null>(null)
 
   const { data: bookText } = useQuery<{ raw_text: string }>({
     queryKey: ['book-text', book.id],
@@ -100,6 +102,8 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
     if (!query || isPending) return
     setIsPending(true)
     setResults(null)
+    setElapsedSeconds(null)
+    searchStartRef.current = performance.now()
     setProgress('Initialisiere Pipeline… (Kann beim ersten Mal etwas länger dauern)')
 
     const response = await fetch('/api/search/stream', {
@@ -122,7 +126,12 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
         if (!line.startsWith('data: ')) continue
         const event = JSON.parse(line.slice(6))
         if (event.type === 'progress') setProgress(event.message)
-        else if (event.type === 'result') { setResults(event.data); setSelectedRank(0); setProgress(null) }
+        else if (event.type === 'result') {
+          setResults(event.data)
+          setSelectedRank(0)
+          setProgress(null)
+          if (searchStartRef.current !== null) setElapsedSeconds((performance.now() - searchStartRef.current) / 1000)
+        }
         else if (event.type === 'error') { setProgress(`Fehler: ${event.message}`); setIsPending(false) }
       }
     }
@@ -206,6 +215,9 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
       <div className="flex-none pt-3">
         {isPending && progress && (
           <p className="text-xs text-slate-500 animate-pulse pb-2 pl-1">{progress}</p>
+        )}
+        {!isPending && elapsedSeconds !== null && (
+          <p className="text-xs text-slate-500 pb-2 pl-1">Suche abgeschlossen in {elapsedSeconds.toFixed(2)} s</p>
         )}
         <div ref={wrapRef} className={`relative rounded-2xl transition-all duration-300 ${isPending ? '' : 'border border-slate-700 focus-within:border-blue-500/60 focus-within:ring-2 focus-within:ring-blue-500/10'}`}>
           <div className="bg-slate-800 rounded-2xl">

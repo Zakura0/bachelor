@@ -2,6 +2,8 @@ torch
 sentence-transformers
 scikit-learn
 transformers
+sentencepiece
+protobuf
 numpy
 openai
 bm25s

@@ -56,10 +56,10 @@ RECALL_K   = [1, 5, 10, 20, 30]
 # Chunk-Preset 
 # 1 = tiny (10–30)    3 = medium (30–100)    5 = xlarge (80–200)
 # 2 = small (10–50)   4 = large (50–150)     6 = medium_high_overlap   7 = large_high_overlap
-EXP_CHUNK    = 4
+EXP_CHUNK    = 3
 
 # Pipeline-Preset
-EXP_PIPELINE = 11
+EXP_PIPELINE = 7
 
 # Pipeline-Preset für LLM-Pick-Experiment
 EXP_LLM_PIPELINE = 7
