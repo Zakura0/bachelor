@@ -6,7 +6,7 @@ A multi-stage information retrieval pipeline for literary texts, built as part o
 
 ## Retrieval Pipeline
 
-The pipeline is configurable via 10 presets defined in `config.py`. The default (preset 7) runs all stages:
+The pipeline is configurable via 11 presets defined in `config.py`. The default (preset 7) runs all stages:
 
 ```
 ┌─────────────────────────┐   ┌──────────────────────────────────┐
@@ -84,7 +84,7 @@ bachelor/
 │   ├── parse_data.py           # data.json → eval_pairs_{book}.json
 │   ├── experiment.py           # Recall@k evaluation across pipeline presets
 │   ├── experiment_llm_pick.py  # LLM single-pick accuracy evaluation
-│   ├── experiment_chunk_ablation.py  # Recall@k über verschiedene Chunk-Größen
+│   ├── experiment_chunk_ablation.py  # Recall@k across different chunk sizes
 │   ├── llm_fulltext_experiment.py  # Baseline: LLM given full book text
 │   ├── eval_utils.py           # Shared helpers (timestamped result dirs, misses)
 │   └── results/                # Timestamped experiment outputs
@@ -96,8 +96,8 @@ bachelor/
 ├── backend/
 │   ├── main.py                 # FastAPI app (CORS: localhost:5173/5174, serves frontend/dist)
 │   └── routers/
-│       ├── books.py            # Buch-CRUD, Cover-Upload, Chunking + Indexierung (SSE)
-│       └── search.py           # Suche über die Pipeline (SSE-Streaming + einfacher Endpoint)
+│       ├── books.py            # Book CRUD, cover upload, chunking + indexing (SSE)
+│       └── search.py           # Search via the pipeline (SSE streaming + simple endpoint)
 │
 ├── frontend/                   # React + Vite + Tailwind SPA
 │   └── src/
@@ -123,6 +123,12 @@ pip install -r requirements.txt
 
 The LLM reranker and HyDE/Multi-Query components require an OpenAI-compatible API endpoint (configured in `config.py`) and an `OPENAI_API_KEY` environment variable.
 
+To populate `db/library.db` from existing file-based chunks/embeddings (optional, for pre-built data):
+
+```bash
+python db/migrate.py
+```
+
 ### Frontend (optional Web-UI)
 
 ```bash
@@ -141,9 +147,9 @@ npm run dev
 python main.py
 ```
 
-Menu options:
-- **Suche** — Select a book, load/build chunks and embeddings, run interactive queries.
-- **Experimente** — Run one of three evaluation experiments (see below).
+Menu options (the CLI itself is German-language):
+- **Suche** (Search) — Select a book, load/build chunks and embeddings, run interactive queries.
+- **Experimente** (Experiments) — Run one of three evaluation experiments (see below).
 
 ### Standalone search script
 
@@ -157,21 +163,21 @@ python script/run_search.py
 uvicorn backend.main:app --reload
 ```
 
-Bücher (`/api/books`):
-- `GET /` — Liste aller Bücher
-- `GET /{book_id}/presets` — Verfügbare Chunk-Presets für ein Buch
-- `POST /` — Neues Buch anlegen (Upload einer .txt-Datei)
-- `POST /create-and-index` — Buch anlegen und erstes Preset indexieren (SSE-Fortschritt)
-- `POST /{book_id}/index` — Weiteres Chunk-Preset für ein Buch indexieren (SSE-Fortschritt)
-- `GET /{book_id}/text` — Rohtext eines Buchs
-- `GET`/`POST /{book_id}/cover` — Cover-Bild abrufen/hochladen
-- `DELETE /{book_id}` — Buch inkl. Chunks/Embeddings löschen
+Books (`/api/books`):
+- `GET /` — List all books
+- `GET /{book_id}/presets` — Available chunk presets for a book
+- `POST /` — Create a new book (upload a .txt file)
+- `POST /create-and-index` — Create a book and index its first preset (SSE progress)
+- `POST /{book_id}/index` — Index another chunk preset for a book (SSE progress)
+- `GET /{book_id}/text` — Raw text of a book
+- `GET`/`POST /{book_id}/cover` — Fetch/upload a cover image
+- `DELETE /{book_id}` — Delete a book including its chunks/embeddings
 
-Suche (`/api/search`):
-- `POST /stream` — Suche mit Fortschritts-Updates (SSE)
-- `POST /` — Suche ohne Streaming
+Search (`/api/search`):
+- `POST /stream` — Search with progress updates (SSE)
+- `POST /` — Search without streaming
 
-Das gebaute Frontend (`frontend/dist`) wird automatisch mitausgeliefert, sofern vorhanden.
+The built frontend (`frontend/dist`) is served automatically if present.
 
 ---
 
@@ -224,5 +230,6 @@ Runs Experiment 1's pipeline (preset 7) across all chunk-size presets to compare
 | `K_RERANKER` | 30 | Candidates after CrossEncoder |
 | `RRF_K` | 60 | RRF hyperparameter |
 | `SEARCH_PIPELINE` | 7 | Default pipeline preset |
+| `HIT_TOLERANCE_CHARS` | 500 | Char tolerance for hit calculation (preset 11 only) |
 | `EXP_CHUNK` | 3 | Chunk preset used in experiments (`medium`, 30–100 words) |
 | `EVAL_BOOKS` | verwandlung, erdbeben, judenbuche, krambambuli | Books evaluated |
