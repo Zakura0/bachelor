@@ -84,17 +84,25 @@ bachelor/
 │   ├── parse_data.py           # data.json → eval_pairs_{book}.json
 │   ├── experiment.py           # Recall@k evaluation across pipeline presets
 │   ├── experiment_llm_pick.py  # LLM single-pick accuracy evaluation
+│   ├── experiment_chunk_ablation.py  # Recall@k über verschiedene Chunk-Größen
 │   ├── llm_fulltext_experiment.py  # Baseline: LLM given full book text
 │   ├── eval_utils.py           # Shared helpers (timestamped result dirs, misses)
 │   └── results/                # Timestamped experiment outputs
 │       ├── experiment/
 │       ├── experiment_llm_pick/
+│       ├── chunk_ablation/
 │       └── llm_fulltext/
 │
-├── web/
-│   ├── main.py                 # FastAPI app (CORS: localhost:5173)
+├── backend/
+│   ├── main.py                 # FastAPI app (CORS: localhost:5173/5174, serves frontend/dist)
 │   └── routers/
-│       └── books.py            # GET /api/books/, GET /api/books/{id}/presets
+│       ├── books.py            # Buch-CRUD, Cover-Upload, Chunking + Indexierung (SSE)
+│       └── search.py           # Suche über die Pipeline (SSE-Streaming + einfacher Endpoint)
+│
+├── frontend/                   # React + Vite + Tailwind SPA
+│   └── src/
+│       ├── App.tsx
+│       └── components/         # BookPicker, SearchView, UploadView, PresetBuilder, ...
 │
 └── data/
     ├── raw/                    # Original .txt files + data.json ground truth
@@ -111,9 +119,17 @@ bachelor/
 pip install -r requirements.txt
 ```
 
-**Requirements:** `torch`, `sentence-transformers`, `scikit-learn`, `transformers`, `numpy`, `openai`, `bm25s`, `fastapi`, `uvicorn`
+**Requirements:** `torch`, `sentence-transformers`, `scikit-learn`, `transformers`, `sentencepiece`, `protobuf`, `numpy`, `openai`, `bm25s`, `fastapi`, `pydantic`, `python-multipart`, `uvicorn`
 
-The LLM reranker and HyDE/Multi-Query components require an OpenAI-compatible API endpoint (configured in `config.py`).
+The LLM reranker and HyDE/Multi-Query components require an OpenAI-compatible API endpoint (configured in `config.py`) and an `OPENAI_API_KEY` environment variable.
+
+### Frontend (optional Web-UI)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
 ---
 
@@ -138,12 +154,24 @@ python script/run_search.py
 ### Web API
 
 ```bash
-uvicorn web.main:app --reload
+uvicorn backend.main:app --reload
 ```
 
-Endpoints:
-- `GET /api/books/` — List all books
-- `GET /api/books/{book_id}/presets` — Available chunk presets for a book
+Bücher (`/api/books`):
+- `GET /` — Liste aller Bücher
+- `GET /{book_id}/presets` — Verfügbare Chunk-Presets für ein Buch
+- `POST /` — Neues Buch anlegen (Upload einer .txt-Datei)
+- `POST /create-and-index` — Buch anlegen und erstes Preset indexieren (SSE-Fortschritt)
+- `POST /{book_id}/index` — Weiteres Chunk-Preset für ein Buch indexieren (SSE-Fortschritt)
+- `GET /{book_id}/text` — Rohtext eines Buchs
+- `GET`/`POST /{book_id}/cover` — Cover-Bild abrufen/hochladen
+- `DELETE /{book_id}` — Buch inkl. Chunks/Embeddings löschen
+
+Suche (`/api/search`):
+- `POST /stream` — Suche mit Fortschritts-Updates (SSE)
+- `POST /` — Suche ohne Streaming
+
+Das gebaute Frontend (`frontend/dist`) wird automatisch mitausgeliefert, sofern vorhanden.
 
 ---
 
@@ -174,6 +202,13 @@ LLM receives the entire book text and must locate the relevant passage without a
 **Metrics:** Hit-rate, Recall@k, latency  
 **Output:** `eval/results/llm_fulltext/{timestamp}/`
 
+### Experiment 4 — Chunk-Size Ablation (`eval/experiment_chunk_ablation.py`)
+
+Runs Experiment 1's pipeline (preset 7) across all chunk-size presets to compare Recall@k by chunk size.
+
+**Metrics:** Recall@{1, 5, 10, 20, 30}, average rank, latency (per chunk-size preset)  
+**Output:** `eval/results/chunk_ablation/{timestamp}/`
+
 ---
 
 ## Key Configuration (`config.py`)
@@ -183,11 +218,11 @@ LLM receives the entire book text and must locate the relevant passage without a
 | `EMBEDDING_MODEL` | `intfloat/multilingual-e5-large` | Dense retriever |
 | `RERANKER_MODEL` | `BAAI/bge-reranker-v2-m3` | CrossEncoder reranker |
 | `NLI_MODEL` | `joeddav/xlm-roberta-large-xnli` | NLI entailment filter |
-| `LLM_MODEL` | `google/gemma-4-31B-it` | LLM reranker / HyDE / Multi-Query |
+| `LLM_MODEL` | `vllm/google/gemma-4-31B-it` | LLM reranker / HyDE / Multi-Query |
 | `K_RETRIEVAL` | 200 | Candidates per retriever |
 | `K_RRF` | 300 | Candidates after fusion |
 | `K_RERANKER` | 30 | Candidates after CrossEncoder |
 | `RRF_K` | 60 | RRF hyperparameter |
 | `SEARCH_PIPELINE` | 7 | Default pipeline preset |
-| `EXP_CHUNK` | 4 | Chunk preset used in experiments (`large`, 50–150 words) |
+| `EXP_CHUNK` | 3 | Chunk preset used in experiments (`medium`, 30–100 words) |
 | `EVAL_BOOKS` | verwandlung, erdbeben, judenbuche, krambambuli | Books evaluated |

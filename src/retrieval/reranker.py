@@ -44,7 +44,7 @@ class CrossEncoderReranker:
         """
         Führt das Reranking der Kandidaten durch.
         
-        :param query: Beschreibung der Suchanfrage
+        :param query: Suchanfrage
         :param candidate_texts: Liste der Kandidatentexte
         :param candidate_meta: Metadaten zu den Kandidaten
         :param candidate_indices: Indizes der Kandidaten

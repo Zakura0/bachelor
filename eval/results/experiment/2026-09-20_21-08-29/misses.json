@@ -1,0 +1,1798 @@
+[
+  {
+    "book": "verwandlung",
+    "query": "Anstatt weitere Gedanken über seinen Zustand zu verlieren, macht sich Gregor Samsa Gedanken darüber, wie er trotz seines Unglücks rechtzeitig zu seiner Arbeitsstelle komme.",
+    "expected_text": "Es war halb sieben Uhr, und die Zeiger gingen ruhig vorwärts, es war sogar halb vorüber, es näherte sich schon dreiviertel. Sollte der Wecker nicht geläutet haben? Man sah vom Bett aus, daß er auf vier Uhr richtig eingestellt war; gewiß hatte er auch geläutet. Ja, aber war es möglich, dieses möbelerschütternde Läuten ruhig zu verschlafen? Nun, ruhig hatte er ja nicht geschlafen, aber wahrscheinlich desto fester. Was aber sollte er jetzt tun? Der nächste Zug ging um sieben Uhr; um den einzuholen, hätte er sich unsinnig beeilen müssen, und die Kollektion war noch nicht eingepackt, und er selbst fühlte sich durchaus nicht besonders frisch und beweglich. Und selbst wenn er den Zug einholte, ein Donnerwetter des Chefs war nicht zu vermeiden, denn der Geschäftsdiener hatte beim Fünfuhrzug gewartet und die Meldung von seiner Versäumnis längst erstattet",
+    "expected_spans": [
+      [
+        4052,
+        4909
+      ]
+    ],
+    "got": "Würden sie erschrecken, dann hatte Gregor keine Verantwortung mehr und konnte ruhig sein. Würden sie aber alles ruhig hinnehmen, dann hatte auch er keinen Grund sich aufzuregen, und konnte, wenn er sich beeilte, um acht Uhr tatsächlich auf dem Bahnhof sein. Zuerst glitt er nun einige Male von dem glatten Kasten ab, aber endlich gab er sich einen letzten Schwung\nund stand aufrecht da; auf die Schmerzen im Unterleib achtete er gar nicht mehr, so sehr sie auch brannten. Nun ließ er sich gegen die Rückenlehne eines nahen Stuhles fallen, an deren Rändern er sich mit seinen Beinchen festhielt.",
+    "got_span": [
+      21886,
+      22480
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Er realisiert es nicht.",
+    "expected_text": "»Dies frühzeitige Aufstehen«, dachte er, »macht einen ganz blödsinnig",
+    "expected_spans": [
+      [
+        2797,
+        2866
+      ]
+    ],
+    "got": "So hatte er sich den Vater wirklich nicht vorgestellt, wie er jetzt dastand; allerdings hatte er in der letzten Zeit über dem neuartigen Herumkriechen versäumt, sich so wie früher um die Vorgänge in der übrigen Wohnung zu kümmern, und hätte eigentlich darauf gefaßt sein müssen, veränderte Verhältnisse anzutreffen. Trotzdem, trotzdem, war das noch der Vater?",
+    "got_span": [
+      75814,
+      76173
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Seine Familie versuchen Gregor zu helfen.",
+    "expected_text": " Aus dem Nebenzimmer rechts flüsterte die Schwester, um Gregor\nzu verständigen: »Gregor, der Prokurist ist da.« »Ich weiß,« sagte Gregor vor sich hin; aber so laut, daß es die Schwester hätte hören können, wagte er die Stimme nicht zu erheben.\n\n»Gregor,« sagte nun der Vater aus dem Nebenzimmer links, »der Herr Prokurist ist gekommen und erkundigt sich, warum du nicht mit dem Frühzug weggefahren bist. Wir wissen nicht, was wir ihm sagen sollen. Übrigens will er auch mit dir persönlich sprechen. Also bitte mach die Tür auf. Er wird die Unordnung im Zimmer zu entschuldigen schon die Güte haben.« »Guten Morgen, Herr Samsa,« rief der Prokurist freundlich dazwischen. »Ihm ist nicht wohl,« sagte die Mutter zum Prokuristen, während der Vater noch an der Tür redete, »ihm ist nicht wohl, glauben Sie mir, Herr Prokurist. Wie würde denn Gregor sonst einen Zug versäumen! Der Junge hat ja nichts im Kopf als das Geschäft. Ich ärgere mich schon fast, daß er abends niemals ausgeht; jetzt war er doch acht Tage in der Stadt, aber jeden Abend war er zu Hause. Da sitzt er bei uns am Tisch und liest still die Zeitung oder studiert Fahrpläne. Es ist schon eine Zerstreuung für ihn, wenn er sich mit Laubsägearbeiten beschäftigt. Da hat er zum Beispiel im Laufe von zwei, drei Abenden einen kleinen Rahmen geschnitzt; Sie werden staunen, wie hübsch er ist; er hängt drin im Zimmer; Sie werden ihn gleich sehen, bis Gregor aufmacht. Ich bin übrigens glücklich, daß Sie da sind, Herr Prokurist; wir allein hätten Gregor nicht dazu gebracht, die Tür zu öffnen; er ist so hartnäckig; und bestimmt ist ihm nicht wohl, trotzdem er es am Morgen geleugnet hat.«",
+    "expected_spans": [
+      [
+        15286,
+        16933
+      ]
+    ],
+    "got": "Er war der Meinung gewesen, daß dem Vater von jenem Geschäft her nicht das Geringste übriggeblieben war, zumindest hatte ihm der Vater nichts Gegenteiliges gesagt, und Gregor allerdings hatte ihn auch nicht darum gefragt. Gregors Sorge war damals nur gewesen, alles daranzusetzen, um die Familie das geschäftliche Unglück, das alle in eine vollständige Hoffnungslosigkeit gebracht hatte, möglichst rasch vergessen zu lassen.",
+    "got_span": [
+      51765,
+      52189
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Er kommt aus seinem Zimmer heraus.",
+    "expected_text": "Da er die Türe auf diese Weise öffnen mußte, war sie eigentlich schon recht weit geöffnet, und er selbst noch nicht zu sehen. Er mußte sich erst langsam um den einen Türflügel herumdrehen, und zwar sehr vorsichtig, wenn er nicht gerade vor dem Eintritt ins Zimmer plump auf den Rücken fallen wollte",
+    "expected_spans": [
+      [
+        26404,
+        26702
+      ]
+    ],
+    "got": "Er drängte nur und drängte, bis schon in der Tür des Zimmers der mittlere der Herren donnernd mit dem Fuß aufstampfte und dadurch den Vater zum Stehen brachte. »Ich erkläre hiermit,« sagte er, hob die Hand und suchte mit den Blicken auch die Mutter und die Schwester, »daß ich mit Rücksicht auf die in dieser Wohnung und Familie herrschenden widerlichen Verhältnisse« - hierbei spie er kurz entschlossen auf den Boden - »mein Zimmer augenblicklich kündige.",
+    "got_span": [
+      103321,
+      103777
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Jeder erschreckt sich vor Gregor.",
+    "expected_text": "Er war noch mit jener schwierigen Bewegung beschäftigt und hatte nicht Zeit, auf anderes zu achten, da hörte er schon den Prokuristen ein lautes »Oh!« ausstoßen\n- es klang, wie wenn der Wind saust - und nun sah er ihn auch, wie er, der der Nächste an der Türe war, die Hand gegen den offenen Mund drückte und langsam zurückwich, als vertreibe ihn eine unsichtbare, gleichmäßig fortwirkende Kraft. Die Mutter - sie stand hier trotz der Anwesenheit des Prokuristen mit von der Nacht her noch aufgelösten, hoch sich sträubenden Haaren - sah zuerst mit gefalteten Händen den Vater an, ging dann zwei Schritte zu Gregor hin und fiel inmitten ihrer rings um sie herum sich ausbreitenden Röcke nieder, das Gesicht ganz unauffindbar zu ihrer Brust gesenkt. Der Vater ballte mit feindseligem Ausdruck die Faust, als wolle er Gregor in sein Zimmer zurückstoßen, sah sich dann unsicher im Wohnzimmer um, beschattete dann mit den Händen die Augen und weinte, daß sich seine mächtige Brust schüttelte",
+    "expected_spans": [
+      [
+        26704,
+        27691
+      ]
+    ],
+    "got": "Einmal, es war wohl schon ein Monat seit Gregors Verwandlung vergangen, und es war doch schon für die Schwester kein besonderer Grund mehr, über Gregors Aussehen in Erstaunen zu geraten, kam sie ein wenig früher als sonst und traf Gregor noch an, wie er, unbeweglich und so recht zum Erschrecken aufgestellt, aus dem Fenster schaute.",
+    "got_span": [
+      59164,
+      59497
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Man versteht ihn in seinem Zimmer.",
+    "expected_text": "da gab ihm der Vater von hinten einen jetzt wahrhaftig erlösenden starken Stoß, und er flog, heftig blutend, weit in sein Zimmer hinein. Die Tür wurde noch mit dem Stock zugeschlagen, dann war es endlich still",
+    "expected_spans": [
+      [
+        38517,
+        38726
+      ]
+    ],
+    "got": "Mit welchen Ausreden man an jenem ersten Vormittag den Arzt und den Schlosser wieder aus der Wohnung geschafft hatte, konnte Gregor gar nicht erfahren, denn da er nicht verstanden wurde, dachte niemand daran, auch die Schwester nicht, daß er die anderen verstehen könne, und so mußte er sich, wenn die Schwester in seinem Zimmer war, damit begnügen, nur hier und da ihre Seufzer und Anrufe der Heiligen zu hören.",
+    "got_span": [
+      48454,
+      48866
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Gregors Lage verschlechtert sich von Tag zu Tag.",
+    "expected_text": "Gregor aß nun fast gar nichts mehr. Nur wenn er zufällig an der vorbereiteten Speise vorüberkam, nahm er zum Spiel einen Bissen in den Mund, hielt ihn dort stundenlang und spie ihn dann meist wieder aus",
+    "expected_spans": [
+      [
+        92329,
+        92531
+      ]
+    ],
+    "got": "Daß wir es solange geglaubt haben, das ist ja unser eigentliches Unglück. Aber wie kann es denn Gregor sein? Wenn es Gregor wäre, er hätte längst eingesehen, daß ein Zusammenleben von Menschen mit einem solchen Tier nicht möglich ist, und wäre freiwillig fortgegangen. Wir hätten dann keinen Bruder, aber könnten weiter leben und sein Andenken in Ehren halten. So aber verfolgt uns dieses Tier, vertreibt die Zimmerherren, will offenbar die ganze Wohnung einnehmen und uns auf der Gasse übernachten lassen.",
+    "got_span": [
+      107323,
+      107829
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Er kann die Menschen verstehen. -- Aber die Menschen können ihn nicht verstehen.",
+    "expected_text": "»Gregor,« rief es - es war die Mutter -, »es ist dreiviertel sieben. Wolltest du nicht wegfahren?« Die sanfte Stimme! Gregor erschrak, als er seine antwortende Stimme hörte, die wohl unverkennbar seine frühere war, in die sich aber, wie von unten her, ein nicht zu unterdrückendes, schmerzliches Piepsen mischte, das die Worte förmlich nur im ersten Augenblick in ihrer Deutlichkeit beließ, um sie im Nachklang derart zu zerstören, daß man nicht\nwußte, ob man recht gehört hatte. Gregor hatte ausführlich antworten und alles erklären wollen, beschränkte sich aber bei diesen Umständen darauf, zu sagen: »Ja, ja, danke Mutter, ich stehe schon auf.« Infolge der Holztür war die Veränderung in Gregors Stimme draußen wohl nicht zu merken, denn die Mutter beruhigte sich mit dieser Erklärung und schlürfte davon. Aber durch das kleine Gespräch waren die anderen Familienmitglieder darauf aufmerksam geworden, daß Gregor wider Erwarten noch zu Hause war, und schon klopfte an der einen Seitentür der Vater, schwach, aber schon mit der Faust. »Gregor, Gregor,« rief er, »was ist denn?« Und nach einer kleinen Weile mahnte er nochmals mit tieferer Stimme: »Gregor! Gregor!« An der anderen Seitentür aber klagte leise die Schwester: »Gregor? Ist dir nicht wohl? Brauchst du etwas?« Nach beiden Seiten hin antwortete Gregor: »Bin schon fertig,« und bemühte sich, durch die sorgfältigste Aussprache und durch Einschaltung von langen Pausen zwischen den einzelnen Worten seiner Stimme alles Auffallende zu nehmen. Der Vater kehrte auch zu seinem Frühstück zurück",
+    "expected_spans": [
+      [
+        5840,
+        7391
+      ]
+    ],
+    "got": "Mit welchen Ausreden man an jenem ersten Vormittag den Arzt und den Schlosser wieder aus der Wohnung geschafft hatte, konnte Gregor gar nicht erfahren, denn da er nicht verstanden wurde, dachte niemand daran, auch die Schwester nicht, daß er die anderen verstehen könne, und so mußte er sich, wenn die Schwester in seinem Zimmer war, damit begnügen, nur hier und da ihre Seufzer und Anrufe der Heiligen zu hören.",
+    "got_span": [
+      48454,
+      48866
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Aber die Menschen können ihn nicht verstehen.",
+    "expected_text": "»Nein,« sagte Gregor. Im Nebenzimmer links trat eine peinliche Stille ein, im Nebenzimmer rechts begann die Schwester zu schluchzen [...] Und während Gregor dies alles hastig ausstieß und kaum wußte, was er sprach",
+    "expected_spans": [
+      [
+        17485,
+        17616
+      ],
+      [
+        21484,
+        21559
+      ]
+    ],
+    "got": "Mit welchen Ausreden man an jenem ersten Vormittag den Arzt und den Schlosser wieder aus der Wohnung geschafft hatte, konnte Gregor gar nicht erfahren, denn da er nicht verstanden wurde, dachte niemand daran, auch die Schwester nicht, daß er die anderen verstehen könne, und so mußte er sich, wenn die Schwester in seinem Zimmer war, damit begnügen, nur hier und da ihre Seufzer und Anrufe der Heiligen zu hören.",
+    "got_span": [
+      48454,
+      48866
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Zunächst versorgt die Schwester Gregor mit dem Nötigsten und ist sein einziger Kontakt.",
+    "expected_text": "Auf diese Weise bekam nun Gregor täglich sein Essen, einmal am Morgen, wenn die Eltern und das Dienstmädchen noch schliefen, das zweitemal nach dem allgemeinen Mittagessen, denn dann schliefen die Eltern gleichfalls noch ein Weilchen, und das Dienstmädchen wurde von der Schwester mit irgendeiner Besorgung weggeschickt [...] Denn in einen Raum, in dem Gregor ganz allein die leeren Wände beherrschte, würde wohl kein Mensch außer Grete jemals einzutreten sich getrauen",
+    "expected_spans": [
+      [
+        47864,
+        48183
+      ],
+      [
+        68736,
+        68879
+      ]
+    ],
+    "got": "»Wenn er uns verstünde,« wiederholte der Vater und nahm durch Schließen der Augen die Überzeugung der Schwester von der Unmöglichkeit dessen in sich auf, »dann wäre vielleicht ein Übereinkommen mit ihm möglich. Aber so - «\n\n»Weg muß es,« rief die Schwester, »das ist das einzige Mittel, Vater. Du mußt bloß den Gedanken loszuwerden suchen, daß es Gregor ist. Daß wir es solange geglaubt haben, das ist ja unser eigentliches Unglück. Aber wie kann es denn Gregor sein?",
+    "got_span": [
+      106964,
+      107431
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Gegen Ende werden die einzelnen Familienmitglieder immer eigenständiger und aktiver. -- Durch Gregors Verdienstausfall muss nun die restliche Familie, für das Einkommen zu sorgen.",
+    "expected_text": "der Vater holte den kleinen Bankbeamten das Frühstück, die Mutter opferte sich für die Wäsche fremder Leute, die Schwester lief nach dem Befehl der Kunden hinter dem Pulte hin und her",
+    "expected_spans": [
+      [
+        86143,
+        86326
+      ]
+    ],
+    "got": "Und so hatte er damals mit ganz besonderem Feuer zu arbeiten angefangen und war fast über Nacht aus einem kleinen Kommis ein Reisender geworden, der natürlich ganz andere Möglichkeiten des Geldverdienens hatte, und dessen Arbeitserfolge sich sofort in Form der Provision zu Bargeld verwandelten, das der erstaunten und beglückten Familie zu Hause auf den Tisch gelegt werden konnte. Es waren schöne Zeiten gewesen, und niemals nachher hatten sie sich, wenigstens in diesem Glanze, wiederholt, trotzdem Gregor später so viel Geld verdiente, daß er den Aufwand der ganzen Familie zu tragen imstande war und auch trug.",
+    "got_span": [
+      52190,
+      52805
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Gregors Tod führt die restliche Familie stärkt und enger zusammen.",
+    "expected_text": "Dann verließen alle drei gemeinschaftlich die Wohnung, was sie schon seit Monaten nicht getan hatten, und fuhren in der Elektrischen ins Freie vor die Stadt. Der Wagen, in dem sie allein saßen, war ganz von warmer Sonne durchschienen. Sie besprachen, bequem auf ihren Sitzen zurückgelehnt, die Aussichten für die Zukunft, und es fand sich, daß diese bei näherer Betrachtung durchaus nicht schlecht waren, denn aller drei Anstellungen waren, worüber sie einander eigentlich noch gar nicht ausgefragt hatten, überaus günstig und besonders für später vielversprechend. Die größte augenblickliche Besserung\nder Lage mußte sich natürlich leicht durch einen Wohnungswechsel ergeben; sie wollten nun eine kleinere und billigere, aber besser gelegene und überhaupt praktischere Wohnung nehmen, als es die jetzige, noch von Gregor ausgesuchte war. Während sie sich so unterhielten, fiel es Herrn und Frau Samsa im Anblick ihrer immer lebhafter werdenden Tochter fast gleichzeitig ein, wie sie in der letzten Zeit trotz aller Plage, die ihre Wangen bleich gemacht hatte, zu einem schönen und üppigen Mädchen aufgeblüht war. Stiller werdend und fast unbewußt durch Blicke sich verständigend, dachten sie daran, daß es nun Zeit sein werde, auch einen braven Mann für sie zu suchen. Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte",
+    "expected_spans": [
+      [
+        119606,
+        121042
+      ]
+    ],
+    "got": "III.\n\nDie schwere Verwundung Gregors, an der er über einen Monat litt - der Apfel blieb, da ihn niemand zu entfernen wagte, als sichtbares Andenken im Fleische sitzen - , schien selbst den Vater daran erinnert zu haben, daß Gregor trotz seiner gegenwärtigen traurigen und ekelhaften Gestalt ein Familienmitglied war, das man nicht wie einen Feind behandeln durfte, sondern dem gegenüber es das Gebot der Familienpflicht war, den Widerwillen hinunterzuschlucken und zu dulden, nichts als zu dulden.",
+    "got_span": [
+      80518,
+      81015
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Die Schwester pflegt ihn.",
+    "expected_text": "Auf diese Weise bekam nun Gregor täglich sein Essen, einmal am Morgen, wenn die Eltern und das Dienstmädchen noch schliefen, das zweitemal nach dem allgemeinen Mittagessen, denn dann schliefen die Eltern gleichfalls noch ein Weilchen, und das Dienstmädchen wurde von der Schwester mit irgendeiner Besorgung weggeschickt",
+    "expected_spans": [
+      [
+        47864,
+        48183
+      ]
+    ],
+    "got": "Aber er hätte wohl wochenlang dort bleiben können, ohne daß sich die Schwester gebessert hätte; sie sah ja den Schmutz genau so wie er, aber sie hatte sich eben entschlossen, ihn zu lassen. Dabei wachte sie mit einer an ihr ganz neuen Empfindlichkeit, die überhaupt die ganze Familie ergriffen hatte, darüber, daß das Aufräumen von Gregors Zimmer ihr vorbehalten blieb.",
+    "got_span": [
+      88708,
+      89077
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Nachdem sie Gregor gesehen haben.",
+    "expected_text": "»Herr Samsa!« rief der mittlere Herr dem Vater zu und zeigte, ohne ein weiteres Wort zu verlieren, mit dem Zeigefinger auf den langsam sich vorwärtsbewegenden Gregor",
+    "expected_spans": [
+      [
+        101375,
+        101540
+      ]
+    ],
+    "got": "Einmal, es war wohl schon ein Monat seit Gregors Verwandlung vergangen, und es war doch schon für die Schwester kein besonderer Grund mehr, über Gregors Aussehen in Erstaunen zu geraten, kam sie ein wenig früher als sonst und traf Gregor noch an, wie er, unbeweglich und so recht zum Erschrecken aufgestellt, aus dem Fenster schaute.",
+    "got_span": [
+      59164,
+      59497
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Aufgrund Gregors Verfassung wird sein Vater aggressiv.",
+    "expected_text": "da gab ihm der Vater von hinten einen jetzt wahrhaftig erlösenden starken Stoß, und er flog, heftig blutend, weit in sein Zimmer hinein. Die Tür wurde noch mit dem Stock zugeschlagen, dann war es endlich still",
+    "expected_spans": [
+      [
+        38517,
+        38726
+      ]
+    ],
+    "got": "Sie wurden nun tatsächlich ein wenig böse,\nman wußte nicht mehr, ob über das Benehmen des Vaters oder über die ihnen jetzt aufgehende Erkenntnis, ohne es zu wissen, einen solchen Zimmernachbar wie Gregor besessen zu haben. Sie verlangten vom Vater Erklärungen, hoben ihrerseits die Arme, zupften unruhig an ihren Bärten und wichen nur langsam gegen ihr Zimmer zurück.",
+    "got_span": [
+      102024,
+      102391
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Gregor wird von seiner Familie nach und nach mehr vernachlässigt.",
+    "expected_text": "Ohne jetzt mehr nachzudenken, womit man Gregor einen besonderen Gefallen machen könnte, schob die Schwester eiligst, ehe sie morgens und mittags ins Geschäft lief, mit dem Fuß irgendeine beliebige Speise in Gregors Zimmer hinein, um sie am Abend, gleichgültig dagegen, ob die Speise vielleicht nur verkostet\noder - der häufigste Fall - gänzlich unberührt war, mit einem Schwenken des Besens hinauszukehren. Das Aufräumen des Zimmers, das sie nun immer abends besorgte, konnte gar nicht mehr schneller getan sein. Schmutzstreifen zogen sich die Wände entlang, hie und da lagen Knäuel von Staub und Unrat [...] Gregor aß nun fast gar nichts mehr. Nur wenn er zufällig an der vorbereiteten Speise vorüberkam, nahm er zum Spiel einen Bissen in den Mund, hielt ihn dort stundenlang und spie ihn dann meist wieder aus. Zuerst dachte er, es sei die Trauer über den Zustand seines Zimmers, die ihn vom Essen abhalte, aber gerade mit den Veränderungen des Zimmers söhnte er sich sehr bald aus. Man hatte sich angewöhnt, Dinge, die man anderswo nicht unterbringen konnte, in dieses Zimmer hineinzustellen",
+    "expected_spans": [
+      [
+        87954,
+        88556
+      ],
+      [
+        92329,
+        92814
+      ]
+    ],
+    "got": "Er war der Meinung gewesen, daß dem Vater von jenem Geschäft her nicht das Geringste übriggeblieben war, zumindest hatte ihm der Vater nichts Gegenteiliges gesagt, und Gregor allerdings hatte ihn auch nicht darum gefragt. Gregors Sorge war damals nur gewesen, alles daranzusetzen, um die Familie das geschäftliche Unglück, das alle in eine vollständige Hoffnungslosigkeit gebracht hatte, möglichst rasch vergessen zu lassen.",
+    "got_span": [
+      51765,
+      52189
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Die Familie verdient ihr Geld nun durch das Vermieten von Zimmern ihrer Wohnung und deshalb muss Gregor in seinem Zimmer bleiben.",
+    "expected_text": "und solcher Dinge gab es nun viele, da man ein Zimmer der Wohnung an drei Zimmerherren\nvermietet hatte [...] Da die Zimmerherren manchmal auch ihr Abendessen zu Hause im gemeinsamen Wohnzimmer einnahmen, blieb die Wohnzimmertür an manchen Abenden geschlossen, aber Gregor verzichtete ganz leicht auf das Öffnen der Tür, hatte er doch schon manche Abende, an denen sie geöffnet war, nicht ausgenutzt, sondern war, ohne daß es die Familie merkte, im dunkelsten Winkel seines Zimmers gelegen",
+    "expected_spans": [
+      [
+        92816,
+        92918
+      ],
+      [
+        94319,
+        94698
+      ]
+    ],
+    "got": "Und wenn nun auch Gregor durch seine Wunde an Beweglichkeit wahrscheinlich für immer verloren hatte und vorläufig zur Durchquerung seines Zimmers wie ein alter Invalide lange, lange Minuten brauchte - an das Kriechen in der Höhe war nicht zu denken - , so bekam er für diese Verschlimmerung seines Zustandes einen\nseiner Meinung nach vollständig genügenden Ersatz dadurch, daß immer gegen Abend die Wohnzimmertür, die er schon ein bis zwei Stunden vorher scharf zu beobachten pflegte, geöffnet wurde, so daß er, im Dunkel seines Zimmers liegend, vom Wohnzimmer aus unsichtbar, die ganze Familie beim beleuchteten Tische sehen und ihre Reden, gewissermaßen mit allgemeiner Erlaubnis, also ganz anders als früher, anhören durfte.",
+    "got_span": [
+      81016,
+      81743
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Grete wird von ihren Eltern nun noch mehr gefördert und Gregor wird vergessen.",
+    "expected_text": "Sie besprachen, bequem auf ihren Sitzen zurückgelehnt, die Aussichten für die Zukunft, und es fand sich, daß diese bei näherer Betrachtung durchaus nicht schlecht waren, denn aller drei Anstellungen waren, worüber sie einander eigentlich noch gar nicht ausgefragt hatten, überaus günstig und besonders für später vielversprechend. Die größte augenblickliche Besserung\nder Lage mußte sich natürlich leicht durch einen Wohnungswechsel ergeben; sie wollten nun eine kleinere und billigere, aber besser gelegene und überhaupt praktischere Wohnung nehmen, als es die jetzige, noch von Gregor ausgesuchte war",
+    "expected_spans": [
+      [
+        119841,
+        120443
+      ]
+    ],
+    "got": "Die Schwester begann zu spielen; Vater und Mutter verfolgten, jeder von seiner Seite, aufmerksam die Bewegungen ihrer Hände. Gregor hatte, von dem Spiele angezogen, sich ein wenig weiter vorgewagt und war schon mit dem Kopf im Wohnzimmer. Er wunderte sich kaum darüber, daß er in letzter Zeit so wenig Rücksicht auf die andern nahm; früher war diese Rücksichtnahme sein Stolz gewesen.",
+    "got_span": [
+      97992,
+      98376
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Gregorio hatte starke Schmerzen beim aufstehen.",
+    "expected_text": "Zuerst wollte er mit dem unteren Teil seines Körpers aus dem Bett hinauskommen, aber dieser untere Teil, den er übrigens noch nicht gesehen und von dem er sich auch keine rechte Vorstellung machen konnte, erwies sich als zu schwer beweglich; es ging so langsam; und als er schließlich, fast wild geworden, mit gesammelter Kraft, ohne Rücksicht sich vorwärtsstieß, hatte er die Richtung falsch gewählt, schlug an den unteren Bettpfosten heftig an, und der brennende Schmerz, den er empfand, belehrte ihn, daß gerade der untere Teil seines Körpers augenblicklich vielleicht der empfindlichste war.\n\nEr versuchte es daher, zuerst den Oberkörper aus dem Bett zu bekommen, und drehte vorsichtig den Kopf dem Bettrand zu. Dies gelang auch leicht, und trotz ihrer Breite und Schwere folgte schließlich die Körpermasse langsam der Wendung des Kopfes. Aber als er den Kopf endlich außerhalb des Bettes in der freien Luft hielt, bekam er Angst, weiter auf diese Weise vorzurücken, denn wenn er sich schließlich so fallen ließ, mußte geradezu ein Wunder geschehen, wenn der Kopf nicht verletzt werden sollte",
+    "expected_spans": [
+      [
+        9020,
+        10116
+      ]
+    ],
+    "got": "Er hätte Arme und Hände gebraucht, um sich aufzurichten; statt dessen aber\nhatte er nur die vielen Beinchen, die ununterbrochen in der verschiedensten Bewegung waren und die er überdies nicht beherrschen konnte. Wollte er eines einmal einknicken, so war es das erste, daß es sich streckte; und gelang es ihm endlich, mit diesem Bein das auszuführen, was er wollte, so arbeiteten inzwischen alle anderen, wie freigelassen, in höchster, schmerzlicher Aufregung. »Nur sich nicht im Bett unnütz aufhalten,« sagte sich Gregor.",
+    "got_span": [
+      8467,
+      8988
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Gregorio machte sich sorgen und schämte sich für die Zukunft seiner Familie.",
+    "expected_text": "Nun genügte dieses Geld aber ganz und gar nicht, um die Familie etwa von den Zinsen leben zu lassen; es genügte vielleicht, um die Familie ein, höchstens zwei Jahre zu erhalten, mehr war es nicht. Es war also bloß eine Summe, die man eigentlich nicht angreifen durfte, und die für den Notfall zurückgelegt werden mußte; das Geld zum Leben aber mußte man verdienen [...] Wenn die Rede auf diese Notwendigkeit des Geldverdienens kam, ließ zuerst immer Gregor die Türe los und warf sich auf das neben der Tür befindliche kühle Ledersofa, denn ihm war ganz heiß vor Beschämung und Trauer",
+    "expected_spans": [
+      [
+        55432,
+        55795
+      ],
+      [
+        56701,
+        56914
+      ]
+    ],
+    "got": "Er war der Meinung gewesen, daß dem Vater von jenem Geschäft her nicht das Geringste übriggeblieben war, zumindest hatte ihm der Vater nichts Gegenteiliges gesagt, und Gregor allerdings hatte ihn auch nicht darum gefragt. Gregors Sorge war damals nur gewesen, alles daranzusetzen, um die Familie das geschäftliche Unglück, das alle in eine vollständige Hoffnungslosigkeit gebracht hatte, möglichst rasch vergessen zu lassen.",
+    "got_span": [
+      51765,
+      52189
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Gregorios erschreckte mit seinem Anblick die neuen Mieter.",
+    "expected_text": "»Herr Samsa!« rief der mittlere Herr dem Vater zu und zeigte, ohne ein weiteres Wort zu verlieren, mit dem Zeigefinger auf den langsam sich vorwärtsbewegenden Gregor",
+    "expected_spans": [
+      [
+        101375,
+        101540
+      ]
+    ],
+    "got": "Sie wurden nun tatsächlich ein wenig böse,\nman wußte nicht mehr, ob über das Benehmen des Vaters oder über die ihnen jetzt aufgehende Erkenntnis, ohne es zu wissen, einen solchen Zimmernachbar wie Gregor besessen zu haben. Sie verlangten vom Vater Erklärungen, hoben ihrerseits die Arme, zupften unruhig an ihren Bärten und wichen nur langsam gegen ihr Zimmer zurück.",
+    "got_span": [
+      102024,
+      102391
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Gregorios Leib wurde vom Dienstmädchen entsorgt.",
+    "expected_text": "»Also was wollen Sie eigentlich?« fragte Frau Samsa, vor welcher die Bedienerin noch am meisten Respekt hatte. »Ja,« antwortete die Bedienerin und konnte vor freundlichem Lachen nicht gleich weiter reden, »also darüber, wie das Zeug von nebenan weggeschafft werden soll, müssen Sie sich keine Sorge machen. Es ist schon in Ordnung.«",
+    "expected_spans": [
+      [
+        118231,
+        118563
+      ]
+    ],
+    "got": "Die Bedienerin hatte vielleicht die Absicht, bei Zeit und Gelegenheit die Dinge wieder zu holen oder alle insgesamt mit einemmal hinauszuwerfen, tatsächlich aber blieben sie dort liegen, wohin sie durch den ersten Wurf gekommen waren, wenn nicht Gregor sich durch das Rumpelzeug wand und es in Bewegung brachte, zuerst gezwungen, weil kein sonstiger Platz zum Kriechen frei war, später aber mit wachsendem Vergnügen, obwohl er nach solchen Wanderungen, zum Sterben müde und traurig, wieder stundenlang sich nicht rührte.",
+    "got_span": [
+      93767,
+      94287
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Gregorios Familie war durch seinen Tod erleichtert.",
+    "expected_text": "Sie besprachen, bequem auf ihren Sitzen zurückgelehnt, die Aussichten für die Zukunft, und es fand sich, daß diese bei näherer Betrachtung durchaus nicht schlecht waren, denn aller drei Anstellungen waren, worüber sie einander eigentlich noch gar nicht ausgefragt hatten, überaus günstig und besonders für später vielversprechend. Die größte augenblickliche Besserung\nder Lage mußte sich natürlich leicht durch einen Wohnungswechsel ergeben; sie wollten nun eine kleinere und billigere, aber besser gelegene und überhaupt praktischere Wohnung nehmen, als es die jetzige, noch von Gregor ausgesuchte war",
+    "expected_spans": [
+      [
+        119841,
+        120443
+      ]
+    ],
+    "got": "Diese Erklärungen des Vaters waren zum Teil das erste Erfreuliche,\nwas Gregor seit seiner Gefangenschaft zu hören bekam. Er war der Meinung gewesen, daß dem Vater von jenem Geschäft her nicht das Geringste übriggeblieben war, zumindest hatte ihm der Vater nichts Gegenteiliges gesagt, und Gregor allerdings hatte ihn auch nicht darum gefragt. Gregors Sorge war damals nur gewesen, alles daranzusetzen, um die Familie das geschäftliche Unglück, das alle in eine vollständige Hoffnungslosigkeit gebracht hatte, möglichst rasch vergessen zu lassen.",
+    "got_span": [
+      51644,
+      52189
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Seine Schwester, Grete, bringt ihm Essen und räumt sein Zimmer auf.",
+    "expected_text": "Auf diese Weise bekam nun Gregor täglich sein Essen, einmal am Morgen, wenn die Eltern und das Dienstmädchen noch schliefen, das zweitemal nach dem allgemeinen Mittagessen, denn dann schliefen die Eltern gleichfalls noch ein Weilchen, und das Dienstmädchen wurde von der Schwester mit irgendeiner Besorgung weggeschickt",
+    "expected_spans": [
+      [
+        47864,
+        48183
+      ]
+    ],
+    "got": "Ohne jetzt mehr nachzudenken, womit man Gregor einen besonderen Gefallen machen könnte, schob die Schwester eiligst, ehe sie morgens und mittags ins Geschäft lief, mit dem Fuß irgendeine beliebige Speise in Gregors Zimmer hinein, um sie am Abend, gleichgültig dagegen, ob die Speise vielleicht nur verkostet\noder - der häufigste Fall - gänzlich unberührt war, mit einem Schwenken des Besens hinauszukehren. Das Aufräumen des Zimmers, das sie nun immer abends besorgte, konnte gar nicht mehr schneller getan sein. Schmutzstreifen zogen sich die Wände entlang, hie und da lagen Knäuel von Staub und Unrat.",
+    "got_span": [
+      87924,
+      88527
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Durch die Verwandlung kann er seinen Beruf nicht mehr ausüben.",
+    "expected_text": "Nun genügte dieses Geld aber ganz und gar nicht, um die Familie etwa von den Zinsen leben zu lassen; es genügte vielleicht, um die Familie ein, höchstens zwei Jahre zu erhalten, mehr war es nicht. Es war also bloß eine Summe, die man eigentlich nicht angreifen durfte, und die für den Notfall zurückgelegt werden mußte; das Geld zum Leben aber mußte man verdienen",
+    "expected_spans": [
+      [
+        55432,
+        55795
+      ]
+    ],
+    "got": "Und ohne daran zu denken, daß er seine gegenwärtigen Fähigkeiten, sich zu bewegen, noch gar nicht kannte, ohne auch daran zu denken, daß seine Rede möglicher- ja wahrscheinlicherweise wieder nicht verstanden worden war, verließ er den Türflügel; schob sich durch die Öffnung; wollte zum Prokuristen hingehen, der sich schon am Geländer des Vorplatzes lächerlicherweise mit beiden Händen festhielt; fiel aber sofort, nach einem Halt suchend, mit einem kleinen Schrei auf seine vielen Beinchen nieder.",
+    "got_span": [
+      32751,
+      33250
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Seine Familie lebt ohne Gedanken an ihn zu verschwenden weiter.",
+    "expected_text": "Sie besprachen, bequem auf ihren Sitzen zurückgelehnt, die Aussichten für die Zukunft, und es fand sich, daß diese bei näherer Betrachtung durchaus nicht schlecht waren, denn aller drei Anstellungen waren, worüber sie einander eigentlich noch gar nicht ausgefragt hatten, überaus günstig und besonders für später vielversprechend. Die größte augenblickliche Besserung\nder Lage mußte sich natürlich leicht durch einen Wohnungswechsel ergeben; sie wollten nun eine kleinere und billigere, aber besser gelegene und überhaupt praktischere Wohnung nehmen, als es die jetzige, noch von Gregor ausgesuchte war. Während sie sich so unterhielten, fiel es Herrn und Frau Samsa im Anblick ihrer immer lebhafter werdenden Tochter fast gleichzeitig ein, wie sie in der letzten Zeit trotz aller Plage, die ihre Wangen bleich gemacht hatte, zu einem schönen und üppigen Mädchen aufgeblüht war. Stiller werdend und fast unbewußt durch Blicke sich verständigend, dachten sie daran, daß es nun Zeit sein werde, auch einen braven Mann für sie zu suchen. Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte",
+    "expected_spans": [
+      [
+        119841,
+        121042
+      ]
+    ],
+    "got": "Aber er hätte wohl wochenlang dort bleiben können, ohne daß sich die Schwester gebessert hätte; sie sah ja den Schmutz genau so wie er, aber sie hatte sich eben entschlossen, ihn zu lassen. Dabei wachte sie mit einer an ihr ganz neuen Empfindlichkeit, die überhaupt die ganze Familie ergriffen hatte, darüber, daß das Aufräumen von Gregors Zimmer ihr vorbehalten blieb.",
+    "got_span": [
+      88708,
+      89077
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Er hält diese Verwandlung anfangs nur für vorübergehend und stellt sich erst langsam den verschiedenen Konsequenzen seiner unfreiwilligen Metamorphose.",
+    "expected_text": "»Wie wäre es, wenn ich noch ein wenig weiterschliefe und alle Narrheiten vergäße,« dachte er, aber das war gänzlich undurchführbar, denn er war gewöhnt, auf der rechten Seite zu schlafen, konnte sich aber in seinem gegenwärtigen Zustand nicht in diese Lage bringen. Mit welcher Kraft er sich auch auf die rechte Seite warf, immer wieder schaukelte er in die Rückenlage\nzurück",
+    "expected_spans": [
+      [
+        1340,
+        1715
+      ]
+    ],
+    "got": "Erst später, als sie sich ein wenig an alles gewöhnt hatte - von vollständiger Gewöhnung konnte natürlich niemals die Rede sein - , erhaschte Gregor manchmal eine Bemerkung, die freundlich gemeint war oder so gedeutet werden konnte.",
+    "got_span": [
+      48867,
+      49099
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Zunächst unfähig aufzustehen und das Bett zu verlassen, reflektiert Gregor über seinen Beruf als Handelsreisender und Tuchhändler:",
+    "expected_text": "Er versuchte es wohl hundertmal, schloß die Augen, um die zappelnden Beine nicht sehen zu müssen und ließ erst ab, als er in der Seite einen noch nie gefühlten, leichten, dumpfen Schmerz zu fühlen begann.\n\n»Ach Gott,« dachte er, »was für einen anstrengenden Beruf habe ich gewählt! Tag aus, Tag ein auf der Reise",
+    "expected_spans": [
+      [
+        1717,
+        2029
+      ]
+    ],
+    "got": "Wenn die Rede auf diese Notwendigkeit des Geldverdienens kam, ließ zuerst immer Gregor die Türe los und warf sich auf das neben der Tür befindliche kühle Ledersofa, denn ihm war ganz heiß vor Beschämung und Trauer.\n\nOft lag er dort die ganzen langen Nächte über, schlief keinen Augenblick und scharrte nur stundenlang auf dem Leder.",
+    "got_span": [
+      56671,
+      57003
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Weil Gregor Samsa auch an diesem Morgen an seiner Arbeitsstelle erwartet wird, jedoch wegen seiner Ungeziefergestalt das Zimmer der elterlichen Wohnung nicht verlassen kann,",
+    "expected_text": "Im übrigen wird auch bis dahin jemand aus dem Geschäft ",
+    "expected_spans": [
+      [
+        11431,
+        11486
+      ]
+    ],
+    "got": "Und wenn nun auch Gregor durch seine Wunde an Beweglichkeit wahrscheinlich für immer verloren hatte und vorläufig zur Durchquerung seines Zimmers wie ein alter Invalide lange, lange Minuten brauchte - an das Kriechen in der Höhe war nicht zu denken - , so bekam er für diese Verschlimmerung seines Zustandes einen\nseiner Meinung nach vollständig genügenden Ersatz dadurch, daß immer gegen Abend die Wohnzimmertür, die er schon ein bis zwei Stunden vorher scharf zu beobachten pflegte, geöffnet wurde, so daß er, im Dunkel seines Zimmers liegend, vom Wohnzimmer aus unsichtbar, die ganze Familie beim beleuchteten Tische sehen und ihre Reden, gewissermaßen mit allgemeiner Erlaubnis, also ganz anders als früher, anhören durfte.",
+    "got_span": [
+      81016,
+      81743
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "(a) Weil Gregor Samsa auch an diesem Morgen an seiner Arbeitsstelle erwartet wird, jedoch wegen seiner Ungeziefergestalt das Zimmer der elterlichen Wohnung nicht verlassen kann, (b) erscheint im Laufe des Vormittags der Prokurist, ein Vorgesetzter Gregors, bei den Samsas, um sich empört nach dem unentschuldigten Fernbleiben seines Angestellten zu erkundigen und auf dessen sofortigem Erscheinen zu insistieren.",
+    "expected_text": "kommen, um nach mir zu fragen, denn das Geschäft wird vor sieben Uhr geöffnet.« Und er machte sich nun daran, den Körper in seiner ganzen Länge vollständig gleichmäßig aus dem Bett hinauszuschaukeln",
+    "expected_spans": [
+      [
+        11486,
+        11684
+      ]
+    ],
+    "got": "»Gregor,« sagte nun der Vater aus dem Nebenzimmer links, »der Herr Prokurist ist gekommen und erkundigt sich, warum du nicht mit dem Frühzug weggefahren bist. Wir wissen nicht, was wir ihm sagen sollen. Übrigens will er auch mit dir persönlich sprechen. Also bitte mach die Tür auf. Er wird die Unordnung im Zimmer zu entschuldigen schon die Güte haben.« »Guten Morgen, Herr Samsa,« rief der Prokurist freundlich dazwischen. »Ihm ist nicht wohl,« sagte die Mutter zum Prokuristen, während der Vater noch an der Tür redete, »ihm ist nicht wohl, glauben Sie mir, Herr Prokurist.",
+    "got_span": [
+      15501,
+      16077
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Als er den Verwandelten erblickt, der sich unter großen Mühen bis an die Tür geschleppt hat, ergreift er die Flucht.",
+    "expected_text": "Aber der Prokurist hatte sich schon bei den ersten Worten Gregors abgewendet, und nur über die zuckende Schulter hinweg sah er mit aufgeworfenen Lippen nach Gregor zurück. Und während Gregors Rede stand er keinen Augenblick still, sondern verzog sich, ohne Gregor aus den Augen zu lassen, gegen die Tür, aber ganz allmählich\n, als bestehe ein geheimes Verbot, das Zimmer zu verlassen. Schon war er im Vorzimmer, und nach der plötzlichen Bewegung, mit der er zum letztenmal den Fuß aus dem Wohnzimmer zog, hätte man glauben können, er habe sich soeben die Sohle verbrannt. Im Vorzimmer aber streckte er die rechte Hand weit von sich zur Treppe hin, als warte dort auf ihn eine geradezu überirdische Erlösung",
+    "expected_spans": [
+      [
+        31071,
+        31777
+      ]
+    ],
+    "got": "Er war noch mit jener schwierigen Bewegung beschäftigt und hatte nicht Zeit, auf anderes zu achten, da hörte er schon den Prokuristen ein lautes »Oh!« ausstoßen\n- es klang, wie wenn der Wind saust - und nun sah er ihn auch, wie er, der der Nächste an der Türe war, die Hand gegen den offenen Mund drückte und langsam zurückwich, als vertreibe ihn eine unsichtbare, gleichmäßig fortwirkende Kraft.",
+    "got_span": [
+      26674,
+      27070
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Die sich bisher fürsorglich um Gregor kümmernde Schwester, die bisher Obligatorisches (wie die Reinigung des Zimmers oder die Fütterung) übernahm, äußert als erste den ausdrücklichen Wunsch, das Ungeziefer loszuwerden.",
+    "expected_text": "so geht es nicht weiter. Wenn ihr das vielleicht nicht einsehet, ich sehe es ein. Ich will vor diesem Untier nicht den Namen meines Bruders aussprechen, und sage daher bloß: wir müssen versuchen, es loszuwerden. Wir haben das Menschenmögliche versucht, es zu pflegen und zu dulden, ich glaube, es kann uns niemand den geringsten Vorwurf machen.« »Sie hat tausendmal Recht,« sagte der Vater für sich",
+    "expected_spans": [
+      [
+        105205,
+        105603
+      ]
+    ],
+    "got": "Aber er hätte wohl wochenlang dort bleiben können, ohne daß sich die Schwester gebessert hätte; sie sah ja den Schmutz genau so wie er, aber sie hatte sich eben entschlossen, ihn zu lassen. Dabei wachte sie mit einer an ihr ganz neuen Empfindlichkeit, die überhaupt die ganze Familie ergriffen hatte, darüber, daß das Aufräumen von Gregors Zimmer ihr vorbehalten blieb.",
+    "got_span": [
+      88708,
+      89077
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Am selben Tag weist der Vater, als Reaktion auf Gregors Tod, die Untermieter entschlossen aus der Wohnung.",
+    "expected_text": "»Verlassen Sie sofort meine Wohnung!« sagte Herr Samsa und zeigte auf die Tür, ohne die Frauen von sich zu lassen. »Wie meinen Sie das?« sagte der mittlere der Herren etwas bestürzt und lächelte süßlich. Die zwei anderen hielten die Hände auf dem Rücken und rieben sie ununterbrochen aneinander, wie in freudiger Erwartung\neines großen Streites, der aber für sie günstig ausfallen mußte. »Ich meine es genau so, wie ich es sage,« antwortete Herr Samsa und ging in einer Linie mit seinen zwei Begleiterinnen auf den Zimmerherrn zu [...] Dann verließen alle drei gemeinschaftlich die Wohnung, was sie schon seit Monaten nicht getan hatten, und fuhren in der Elektrischen ins Freie vor die Stadt. Der Wagen, in dem sie allein saßen, war ganz von warmer Sonne durchschienen",
+    "expected_spans": [
+      [
+        115211,
+        115740
+      ],
+      [
+        119606,
+        119839
+      ]
+    ],
+    "got": "Er war der Meinung gewesen, daß dem Vater von jenem Geschäft her nicht das Geringste übriggeblieben war, zumindest hatte ihm der Vater nichts Gegenteiliges gesagt, und Gregor allerdings hatte ihn auch nicht darum gefragt. Gregors Sorge war damals nur gewesen, alles daranzusetzen, um die Familie das geschäftliche Unglück, das alle in eine vollständige Hoffnungslosigkeit gebracht hatte, möglichst rasch vergessen zu lassen.",
+    "got_span": [
+      51765,
+      52189
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "erlaubt es sich daher nur ganz selten, seinem Unmut über die zunehmende Verdrängung und Vernachlässigung Ausdruck zu verleihen.",
+    "expected_text": "rotzdem sich Gregor immer wieder sagte, daß ja nichts Außergewöhnliches geschehe, sondern nur ein paar Möbel umgestellt würden, wirkte doch, wie er sich bald eingestehen mußte, dieses Hin- und Hergehen der Frauen, ihre kleinen Zurufe, das Kratzen der Möbel auf dem Boden, wie ein großer, von allen Seiten genährter Trubel auf ihn, und er mußte sich, so fest er Kopf und Beine an sich zog und den Leib bis an den Boden drückte, unweigerlich sagen, daß er das Ganze nicht lange aushalten werde. Sie räumten ihm sein Zimmer aus; nahmen ihm alles, was ihm lieb war; den Kasten, in dem die Laubsäge und andere Werkzeuge lagen, hatten sie schon hinausgetragen; lockerten jetzt den schon im Boden fest eingegrabenen Schreibtisch, an dem er als Handelsakademiker, als Bürgerschüler, ja sogar schon als Volksschüler seine Aufgaben geschrieben hatte, - da hatte er wirklich keine Zeit mehr, die guten Absichten zu prüfen, welche die zwei Frauen hatten, deren Existenz er übrigens fast vergessen hatte, denn vor Erschöpfung arbeiteten sie schon stumm, und man hörte nur das schwere Tappen ihrer Füße.\n\nUnd so brach er denn hervor - die Frauen stützten sich gerade im Nebenzimmer an den Schreibtisch, um ein wenig zu verschnaufen - , wechselte viermal die Richtung des Laufes, er wußte wirklich nicht, was er zuerst retten sollte, da sah er an der im übrigen schon leeren Wand auffallend das Bild der in lauter Pelzwerk gekleideten Dame hängen, kroch eilends hinauf und preßte sich an das Glas, das ihn festhielt und seinem heißen Bauch wohltat. Dieses Bild wenigstens, das Gregor jetzt ganz verdeckte, würde nun gewiß niemand wegnehmen. Er verdrehte den Kopf nach der Tür des Wohnzimmers, um die Frauen bei ihrer Rückkehr zu beobachten.\n\nSie hatten sich nicht viel Ruhe gegönnt und kamen schon wieder; Grete hatte den Arm um die Mutter gelegt und trug sie fast. »Also was nehmen wir jetzt?«, sagte Grete und sah sich um. Da kreuzten sich ihre Blicke mit denen Gregors an der Wand. Wohl nur infolge der Gegenwart der Mutter behielt sie ihre Fassung, beugte ihr Gesicht zur Mutter, um diese vom Herumschauen abzuhalten, und sagte, allerdings zitternd und unüberlegt: »Komm, wollen wir nicht lieber auf einen Augenblick noch ins Wohnzimmer zurückgehen?« Die Absicht Gretes war für Gregor klar, sie wollte die Mutter in Sicherheit\nbringen und dann ihn von der Wand hinunterjagen. Nun, sie konnte es ja immerhin versuchen! Er saß auf seinem Bild und gab es nicht her. Lieber würde er Grete ins Gesicht springen",
+    "expected_spans": [
+      [
+        70022,
+        72516
+      ]
+    ],
+    "got": "Dann aber war er wieder gar nicht in der Laune, sich um seine Familie zu sorgen, bloß Wut über die schlechte Wartung erfüllte ihn, und trotzdem er sich nichts vorstellen konnte, worauf er Appetit gehabt hätte, machte er doch Pläne, wie er in die Speisekammer gelangen könnte, um dort zu nehmen, was ihm, auch wenn er keinen Hunger hatte, immerhin gebührte.",
+    "got_span": [
+      87567,
+      87923
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "(a) Mutter, Vater und Schwester sind jetzt statt seiner berufstätig, (b) wodurch vor allem die beiden Letzteren auf erstaunliche Weise an Kraft und Selbständigkeit gewinnen und (c) Gregor mehr und mehr aus dem Familienverbund verdrängen:",
+    "expected_text": "Nun aber war er recht gut aufgerichtet; in eine\nstraffe blaue Uniform mit Goldknöpfen gekleidet, wie sie Diener der Bankinstitute tragen; über dem hohen steifen Kragen des Rockes entwickelte sich sein starkes Doppelkinn; unter den buschigen Augenbrauen drang der Blick der schwarzen Augen frisch und aufmerksam hervor; das sonst zerzauste weiße Haar war zu einer peinlich genauen, leuchtenden Scheitelfrisur niedergekämmt",
+    "expected_spans": [
+      [
+        76910,
+        77331
+      ]
+    ],
+    "got": "Die Schwester begann zu spielen; Vater und Mutter verfolgten, jeder von seiner Seite, aufmerksam die Bewegungen ihrer Hände. Gregor hatte, von dem Spiele angezogen, sich ein wenig weiter vorgewagt und war schon mit dem Kopf im Wohnzimmer. Er wunderte sich kaum darüber, daß er in letzter Zeit so wenig Rücksicht auf die andern nahm; früher war diese Rücksichtnahme sein Stolz gewesen.",
+    "got_span": [
+      97992,
+      98376
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "Gregors letzte Gedanken zeigen,dass er sich innerlich in keiner Weise ›verwandelt‹ hat.",
+    "expected_text": "Zustand leeren und friedlichen Nachdenkens",
+    "expected_spans": [
+      [
+        111324,
+        111366
+      ]
+    ],
+    "got": "Er war der Meinung gewesen, daß dem Vater von jenem Geschäft her nicht das Geringste übriggeblieben war, zumindest hatte ihm der Vater nichts Gegenteiliges gesagt, und Gregor allerdings hatte ihn auch nicht darum gefragt. Gregors Sorge war damals nur gewesen, alles daranzusetzen, um die Familie das geschäftliche Unglück, das alle in eine vollständige Hoffnungslosigkeit gebracht hatte, möglichst rasch vergessen zu lassen.",
+    "got_span": [
+      51765,
+      52189
+    ]
+  },
+  {
+    "book": "verwandlung",
+    "query": "der Vater kündigt den Zimmerherren,",
+    "expected_text": "Verlassen Sie sofort meine Wohnung!« sagte Herr Samsa und zeigte auf die Tür, ohne die Frauen von sich zu lassen. »Wie meinen Sie das?« sagte der mittlere der Herren etwas bestürzt und lächelte süßlich. Die zwei anderen hielten die Hände auf dem Rücken und rieben sie ununterbrochen aneinander, wie in freudiger Erwartung\neines großen Streites, der aber für sie günstig ausfallen mußte. »Ich meine es genau so, wie ich es sage,« antwortete Herr Samsa und ging in einer Linie mit seinen zwei Begleiterinnen auf den Zimmerherrn zu",
+    "expected_spans": [
+      [
+        115212,
+        115740
+      ]
+    ],
+    "got": "Der Vater schien wieder von seinem Eigensinn derartig ergriffen, daß er jeden Respekt vergaß, den er seinen Mietern immerhin schuldete. Er drängte nur und drängte, bis schon in der Tür des Zimmers der mittlere der Herren donnernd mit dem Fuß aufstampfte und dadurch den Vater zum Stehen brachte. »Ich erkläre hiermit,« sagte er, hob die Hand und suchte mit den Blicken auch die Mutter und die Schwester, »daß ich mit Rücksicht auf die in dieser Wohnung und Familie herrschenden widerlichen Verhältnisse« - hierbei spie er kurz entschlossen auf den Boden - »mein Zimmer augenblicklich kündige.",
+    "got_span": [
+      103185,
+      103777
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Dort wird der Sohn Philipp geboren.",
+    "expected_text": "Es war am Fronleichnamsfeste, und die feierliche Prozession der Nonnen, welchen die Novizen folgten, nahm eben ihren Anfang, als die unglückliche Josephe, bei dem Anklange der Glocken, in Mutterwehen auf den Stufen der Kathedrale niedersank",
+    "expected_spans": [
+      [
+        1136,
+        1376
+      ]
+    ],
+    "got": "An dem nächsten Scheidewege stand sie still, und harrte, ob nicht einer, der ihr, nach dem kleinen Philipp, der liebste auf der Welt war, noch erscheinen würde. Sie ging, weil niemand kam, und das Gewühl der Menschen anwuchs, weiter, und kehrte sich wieder um, und harrte wieder; und schlich, viel Tränen vergießend, in ein dunkles, von Pinien beschattetes Tal, um seiner Seele, die sie entflohen glaubte, nachzubeten; und fand ihn hier, diesen Geliebten, im Tale, und Seligkeit, als ob es das Tal von Eden gewesen wäre.",
+    "got_span": [
+      12203,
+      12723
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Donna Josephe soll wegen Unzüchtigkeit hingerichtet werden.",
+    "expected_text": "Alles, was geschehen konnte, war, daß der Feuertod, zu dem sie verurteilt wurde, zur großen Entrüstung der Matronen und Jungfrauen von St. Jago, durch einen Machtspruch des Vizekönigs, in eine Enthauptung verwandelt ward",
+    "expected_spans": [
+      [
+        2076,
+        2296
+      ]
+    ],
+    "got": "Josephe sagte: so werden Sie mir wohl, Donna Elisabeth, diesen kleinen Liebling abnehmen, der sich schon wieder, wie Sie sehen, bei mir eingefunden hat. Sehr gern, antwortete Donna Elisabeth, und machte Anstalten ihn zu ergreifen; doch da dieser über das Unrecht, das ihm geschah, kläglich schrie, und auf keine Art darein willigte, so sagte Josephe lächelnd, daß sie ihn nur behalten wolle, und küßte ihn wieder still.",
+    "got_span": [
+      23523,
+      23942
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Beide ziehen zusammen zum Gottesdienst auf.",
+    "expected_text": "Sie bestand darauf, daß man die Messe hören sollte, und rief Don Fernando auf, die Gesellschaft zu führen, worauf sich alles, Donna Elisabeth auch, von den Sitzen erhob",
+    "expected_spans": [
+      [
+        23025,
+        23193
+      ]
+    ],
+    "got": "Das Volk brach schon aus allen Gegenden auf, und eilte in Strömen zur Stadt. In Don Fernandos Gesellschaft ward die Frage aufgeworfen, ob man nicht auch an dieser Feierlichkeit teilnehmen, und sich dem allgemeinen Zuge anschließen solle? Donna Elisabeth erinnerte, mit einiger Beklemmung, was für ein Unheil gestern in der Kirche vorgefallen sei; daß solche Dankfeste ja wiederholt werden würden, und daß man sich der Empfindung alsdann, weil die Gefahr schon mehr vorüber wäre, mit desto größerer Heiterkeit und Ruhe überlassen könnte.",
+    "got_span": [
+      22168,
+      22704
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Entlassung Jeronimos.",
+    "expected_text": "Don Henrico Asteron\n, einer der reichsten Edelleute der Stadt, hatte ihn ungefähr ein Jahr zuvor aus seinem Hause, wo er als Lehrer angestellt war, entfernt",
+    "expected_spans": [
+      [
+        384,
+        540
+      ]
+    ],
+    "got": "Josephe raffte alle ihre Kräfte zusammen, sich zu halten. Sie schritt, den Jammer von ihrer Brust entfernend, mutig mit ihrer Beute von Straße zu Straße, und war schon dem Tore nah, als sie auch das Gefängnis, in welchem Jeronimo geseufzt hatte, in Trümmern sah.",
+    "got_span": [
+      11385,
+      11647
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Skandal.",
+    "expected_text": "Es war am Fronleichnamsfeste, und die feierliche Prozession der Nonnen, welchen die Novizen folgten, nahm eben ihren Anfang, als die unglückliche Josephe, bei dem Anklange der Glocken, in Mutterwehen auf den Stufen der Kathedrale niedersank. Dieser Vorfall machte außerordentliches Aufsehn",
+    "expected_spans": [
+      [
+        1136,
+        1425
+      ]
+    ],
+    "got": "Und als eine andere Stimme schreckenvoll, indessen sich ein weiter Kreis des Entsetzens um sie bildete, fragte: wo? hier! versetzte ein Dritter, und zog, heiliger Ruchlosigkeit voll, Josephen bei den Haaren nieder, daß sie mit Don Fernandos Sohne zu Boden getaumelt wäre, wenn dieser sie nicht gehalten hätte. Seid ihr wahnsinnig? rief der Jüngling, und schlug den Arm um Josephen: »ich bin Don Fernando Ormez, Sohn des Commendanten der Stadt, den ihr alle kennt.« Don Fernando Ormez? rief, dicht vor ihn hingestellt, ein Schuhflicker, der für Josephen gearbeitet hatte, und diese wenigstens so genau kannte, als ihre kleinen Füße.",
+    "got_span": [
+      28048,
+      28679
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Sie treffen sich außerhalb der Stadt.",
+    "expected_text": "O Mutter Gottes, du Heilige! und erkannte Josephen, als sie sich bei dem Geräusche schüchtern umsah",
+    "expected_spans": [
+      [
+        9402,
+        9501
+      ]
+    ],
+    "got": "Das Volk brach schon aus allen Gegenden auf, und eilte in Strömen zur Stadt. In Don Fernandos Gesellschaft ward die Frage aufgeworfen, ob man nicht auch an dieser Feierlichkeit teilnehmen, und sich dem allgemeinen Zuge anschließen solle? Donna Elisabeth erinnerte, mit einiger Beklemmung, was für ein Unheil gestern in der Kirche vorgefallen sei; daß solche Dankfeste ja wiederholt werden würden, und daß man sich der Empfindung alsdann, weil die Gefahr schon mehr vorüber wäre, mit desto größerer Heiterkeit und Ruhe überlassen könnte.",
+    "got_span": [
+      22168,
+      22704
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Josephe und Jeronimo werden in dem Durcheinander getötet.",
+    "expected_text": "Don Fernando, dieser göttliche Held, stand jetzt, den Rücken an die Kirche gelehnt; in der Linken hielt er die Kinder, in der Rechten das Schwert. Mit jedem Hiebe wetterstrahlte er einen zu Boden; ein Löwe wehrt sich nicht besser. Sieben Bluthunde lagen tot vor ihm, der Fürst der satanischen Rotte selbst war verwundet. Doch Meister Pedrillo ruhte nicht eher, als bis er der Kinder eines bei den Beinen von seiner Brust gerissen, und, hochher im Kreise geschwungen, an eines Kirchpfeilers Ecke zerschmettert hatte. Hierauf ward es still, und alles entfernte sich",
+    "expected_spans": [
+      [
+        33029,
+        33592
+      ]
+    ],
+    "got": "Hier ließ sich Jeronimo am Stamme nieder, und Josephe in seinem, Philipp in Josephens Schoß, saßen sie, von seinem Mantel bedeckt, und ruhten. Der Baumschatten zog, mit seinen verstreuten Lichtern, über sie hinweg, und der Mond erblaßte schon wieder vor der Morgenröte, ehe sie einschliefen. Denn Unendliches hatten sie zu schwatzen vom Klostergarten und den Gefängnissen, und was sie umeinander gelitten hätten; und waren sehr gerührt, wenn sie dachten, wie viel Elend über die Welt kommen mußte, damit sie glücklich würden!",
+    "got_span": [
+      13775,
+      14300
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Er führt eine heimliche Beziehung mit Donna Josephe.",
+    "expected_text": "weil er sich mit\nDonna Josephe\n, seiner einzigen Tochter, in einem zärtlichen Einverständnis befunden hatte",
+    "expected_spans": [
+      [
+        542,
+        649
+      ]
+    ],
+    "got": "Und da Josephe ihr, mit beklemmtem Herzen, einige Hauptzüge davon angab, so ward ihr die Wollust, Tränen in die Augen dieser Dame treten zu sehen; Donna Elvire ergriff ihre Hand, und drückte sie, und winkte ihr, zu schweigen. Josephe dünkte sich unter den Seligen. Ein Gefühl, das sie nicht unterdrücken konnte, nannte den verfloßnen Tag, soviel Elend er auch über die Welt gebracht hatte, eine Wohltat, wie der Himmel noch keine über sie verhängt hatte.",
+    "got_span": [
+      18364,
+      18818
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Beide treffen sich heimlich. -- Josephe wird schwanger.",
+    "expected_text": "Durch einen glücklichen Zufall hatte Jeronimo hier die Verbindung von neuem anzuknüpfen gewußt, und in einer verschwiegenen Nacht den Klostergarten zum Schauplatze seines vollen Glückes gemacht",
+    "expected_spans": [
+      [
+        941,
+        1134
+      ]
+    ],
+    "got": "Es war, als ob die Gemüter, seit dem fürchterlichen Schlage, der sie durchdröhnt hatte, alle versöhnt wären. Sie konnten in der Erinnerung gar nicht weiter, als bis auf ihn, zurückgehen. Nur Donna Elisabeth, welche bei einer Freundin, auf das Schauspiel des gestrigen Morgens, eingeladen worden war, die Einladung aber nicht angenommen hatte, ruhte zuweilen mit träumerischem Blicke auf Josephen; doch der Bericht, der über irgendein neues gräßliches Unglück erstattet ward, riß ihre, der Gegenwart kaum entflohene Seele schon wieder in dieselbe zurück.",
+    "got_span": [
+      16850,
+      17403
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Währenddessen kommt es zu einem Erdbeben in Santiago",
+    "expected_text": "Eben stand er, wie schon gesagt, an einem Wandpfeiler, und befestigte den Strick, der ihn dieser jammervollen Welt entreißen sollte, an eine Eisenklammer, die an dem Gesimse derselben eingefügt war; als plötzlich der größte Teil der Stadt, mit einem Gekrache, als ob das Firmament einstürzte, versank, und alles, was Leben atmete, unter seinen Trümmern begrub",
+    "expected_spans": [
+      [
+        3531,
+        3890
+      ]
+    ],
+    "got": "Man erzählte, wie die Stadt gleich nach der ersten Haupterschütterung von Weibern ganz voll gewesen, die vor den Augen aller Männer niedergekommen seien; wie die Mönche darin, mit dem Kruzifix in der Hand, umhergelaufen wären, und geschrien hätten: das Ende der Welt sei da! wie man einer Wache, die auf Befehl des Vizekönigs verlangte, eine Kirche zu räumen, geantwortet hätte: es gäbe keinen Vizekönig von Chili mehr!",
+    "got_span": [
+      17404,
+      17823
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Nachdem beide von der Bevölkerung wieder erkannt werden.",
+    "expected_text": "Doch, ehe Donna Constanze diese sinnreiche zur Rettung erfundene Maßregel noch ausgeführt hatte, rief schon eine Stimme, des Chorherrn Predigt laut unterbrechend, aus: Weichet fern hinweg, ihr Bürger von St. Jago, hier stehen diese gottlosen Menschen",
+    "expected_spans": [
+      [
+        27796,
+        28046
+      ]
+    ],
+    "got": "Das Volk brach schon aus allen Gegenden auf, und eilte in Strömen zur Stadt. In Don Fernandos Gesellschaft ward die Frage aufgeworfen, ob man nicht auch an dieser Feierlichkeit teilnehmen, und sich dem allgemeinen Zuge anschließen solle? Donna Elisabeth erinnerte, mit einiger Beklemmung, was für ein Unheil gestern in der Kirche vorgefallen sei; daß solche Dankfeste ja wiederholt werden würden, und daß man sich der Empfindung alsdann, weil die Gefahr schon mehr vorüber wäre, mit desto größerer Heiterkeit und Ruhe überlassen könnte.",
+    "got_span": [
+      22168,
+      22704
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Der Bruder von Donna Josephe verpetze beide beim Vater.",
+    "expected_text": "Eine geheime Bestellung, die dem alten Don, nachdem er die Tochter nachdrücklich gewarnt hatte, durch die hämische Aufmerksamkeit seines stolzen Sohnes verraten worden war",
+    "expected_spans": [
+      [
+        651,
+        822
+      ]
+    ],
+    "got": "Es war, als ob die Gemüter, seit dem fürchterlichen Schlage, der sie durchdröhnt hatte, alle versöhnt wären. Sie konnten in der Erinnerung gar nicht weiter, als bis auf ihn, zurückgehen. Nur Donna Elisabeth, welche bei einer Freundin, auf das Schauspiel des gestrigen Morgens, eingeladen worden war, die Einladung aber nicht angenommen hatte, ruhte zuweilen mit träumerischem Blicke auf Josephen; doch der Bericht, der über irgendein neues gräßliches Unglück erstattet ward, riß ihre, der Gegenwart kaum entflohene Seele schon wieder in dieselbe zurück.",
+    "got_span": [
+      16850,
+      17403
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Dort bekommt Donna Josephe ein uneheliches Kind.",
+    "expected_text": "Es war am Fronleichnamsfeste, und die feierliche Prozession der Nonnen, welchen die Novizen folgten, nahm eben ihren Anfang, als die unglückliche Josephe, bei dem Anklange der Glocken, in Mutterwehen auf den Stufen der Kathedrale niedersank",
+    "expected_spans": [
+      [
+        1136,
+        1376
+      ]
+    ],
+    "got": "Josephe sagte: so werden Sie mir wohl, Donna Elisabeth, diesen kleinen Liebling abnehmen, der sich schon wieder, wie Sie sehen, bei mir eingefunden hat. Sehr gern, antwortete Donna Elisabeth, und machte Anstalten ihn zu ergreifen; doch da dieser über das Unrecht, das ihm geschah, kläglich schrie, und auf keine Art darein willigte, so sagte Josephe lächelnd, daß sie ihn nur behalten wolle, und küßte ihn wieder still.",
+    "got_span": [
+      23523,
+      23942
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Die Gruppe zieht zum Beten in die einzige noch stehende Kirche in die Stadt.",
+    "expected_text": "Donna Elvire erklärte sich mit Lebhaftigkeit für Josephens Meinung. Sie bestand darauf, daß man die Messe hören sollte, und rief Don Fernando auf, die Gesellschaft zu führen, worauf sich alles, Donna Elisabeth auch, von den Sitzen erhob",
+    "expected_spans": [
+      [
+        22957,
+        23193
+      ]
+    ],
+    "got": "Nach einer kurzen Überlegung gab Jeronimo der Klugheit dieser Maßregel seinen Beifall, führte sie noch ein wenig, die heitern Momente der Zukunft überfliegend, in den Gängen umher, und kehrte mit ihr zur Gesellschaft zurück.\nInzwischen war der Nachmittag herangekommen, und die Gemüter der herumschwärmenden Flüchtlinge hatten sich, da die Erdstöße nachließen, nur kaum wieder ein wenig beruhigt, als sich schon die Nach richt verbreitete, daß in der Dominikanerkirche, der einzigen, welche das Erdbeben verschont hatte, eine feierliche Messe von dem Prälaten des Klosters selbst gelesen werden würde, den Himmel um Verhütung ferneren Unglücks anzuflehen.",
+    "got_span": [
+      21512,
+      22167
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Erst dann ist die wütende Masse befriedigt.",
+    "expected_text": "Hierauf ward es still, und alles entfernte sich",
+    "expected_spans": [
+      [
+        33545,
+        33592
+      ]
+    ],
+    "got": "Das Volk brach schon aus allen Gegenden auf, und eilte in Strömen zur Stadt. In Don Fernandos Gesellschaft ward die Frage aufgeworfen, ob man nicht auch an dieser Feierlichkeit teilnehmen, und sich dem allgemeinen Zuge anschließen solle? Donna Elisabeth erinnerte, mit einiger Beklemmung, was für ein Unheil gestern in der Kirche vorgefallen sei; daß solche Dankfeste ja wiederholt werden würden, und daß man sich der Empfindung alsdann, weil die Gefahr schon mehr vorüber wäre, mit desto größerer Heiterkeit und Ruhe überlassen könnte.",
+    "got_span": [
+      22168,
+      22704
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Beide führen eine aus religiösen Gründen verbotene Beziehung.",
+    "expected_text": "Don Henrico Asteron\n, einer der reichsten Edelleute der Stadt, hatte ihn ungefähr ein Jahr zuvor aus seinem Hause, wo er als Lehrer angestellt war, entfernt, weil er sich mit\nDonna Josephe\n, seiner einzigen Tochter, in einem zärtlichen Einverständnis befunden hatte",
+    "expected_spans": [
+      [
+        384,
+        649
+      ]
+    ],
+    "got": "Doch dieser antwortete so nachdrücklich und doch so heimlich, wie sich beides verbinden ließ: »Sie schweigen, Donna, Sie rühren auch den Augapfel nicht, und tun, als ob Sie in eine Ohnmacht versänken; worauf wir die Kirche verlassen.« Doch, ehe Donna Constanze diese sinnreiche zur Rettung erfundene Maßregel noch ausgeführt hatte, rief schon eine Stimme, des Chorherrn Predigt laut unterbrechend, aus: Weichet fern hinweg, ihr Bürger von St. Jago, hier stehen diese gottlosen Menschen! Und als eine andere Stimme schreckenvoll, indessen sich ein weiter Kreis des Entsetzens um sie bildete, fragte: wo? hier!",
+    "got_span": [
+      27561,
+      28169
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Mit der Gruppe begibt sich das Paar zu einem Gottesdienst.",
+    "expected_text": "Donna Elvire erklärte sich mit Lebhaftigkeit für Josephens Meinung. Sie bestand darauf, daß man die Messe hören sollte, und rief Don Fernando auf, die Gesellschaft zu führen, worauf sich alles, Donna Elisabeth auch, von den Sitzen erhob",
+    "expected_spans": [
+      [
+        22957,
+        23193
+      ]
+    ],
+    "got": "In Don Fernandos Gesellschaft ward die Frage aufgeworfen, ob man nicht auch an dieser Feierlichkeit teilnehmen, und sich dem allgemeinen Zuge anschließen solle? Donna Elisabeth erinnerte, mit einiger Beklemmung, was für ein Unheil gestern in der Kirche vorgefallen sei; daß solche Dankfeste ja wiederholt werden würden, und daß man sich der Empfindung alsdann, weil die Gefahr schon mehr vorüber wäre, mit desto größerer Heiterkeit und Ruhe überlassen könnte.",
+    "got_span": [
+      22245,
+      22704
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Der Vater von Josephe kam dahinter.",
+    "expected_text": "Eine geheime Bestellung, die dem alten Don, nachdem er die Tochter nachdrücklich gewarnt hatte, durch die hämische Aufmerksamkeit seines stolzen Sohnes verraten worden war",
+    "expected_spans": [
+      [
+        651,
+        822
+      ]
+    ],
+    "got": "Josephe antwortete, daß ähnliche Gedanken in ihr aufgestiegen wären; daß auch sie nicht mehr, falls ihr Vater nur noch am Leben sei, ihn zu versöhnen zweifle; daß sie aber statt des Fußfalles lieber nach La Conception zu gehen, und von dort aus schriftlich das Versöhnungsgeschäft mit dem Vizekönig zu betreiben rate, wo man auf jeden Fall in der Nähe des Hafens wäre, und für den besten, wenn das Geschäft die erwünschte Wendung nähme, ja leicht wieder nach St. Jago zurückkehren könnte.",
+    "got_span": [
+      21023,
+      21511
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Es passierte nichts.",
+    "expected_text": "Doch der gefürchtete Tag erschien, und mit ihm in seiner Brust die Überzeugung von der völligen Hoffnungslosigkeit seiner Lage",
+    "expected_spans": [
+      [
+        3162,
+        3288
+      ]
+    ],
+    "got": "Hierauf ward es still, und alles entfernte sich. Don Fernando, als er seinen kleinen Juan vor sich liegen sah, mit aus dem Hirne vorquellenden Mark, hob, voll namenlosen Schmerzes, seine Augen gen Himmel. Der Marineoffizier fand sich wieder bei ihm ein, suchte ihn zu trösten, und versicherte ihn, daß seine Untätigkeit bei diesem Unglück, obschon durch mehrere Umstände gerechtfertigt, ihn reue; doch Don Fernando sagte, daß ihm nichts vorzuwerfen sei, und bat ihn nur, die Leichname jetzt fortschaffen zu helfen.",
+    "got_span": [
+      33545,
+      34059
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Kurz davor kam es zu einem schweren Erdbeben.",
+    "expected_text": "Eben stand er, wie schon gesagt, an einem Wandpfeiler, und befestigte den Strick, der ihn dieser jammervollen Welt entreißen sollte, an eine Eisenklammer, die an dem Gesimse derselben eingefügt war; als plötzlich der größte Teil der Stadt, mit einem Gekrache, als ob das Firmament einstürzte, versank, und alles, was Leben atmete, unter seinen Trümmern begrub",
+    "expected_spans": [
+      [
+        3531,
+        3890
+      ]
+    ],
+    "got": "Man erzählte, wie die Stadt gleich nach der ersten Haupterschütterung von Weibern ganz voll gewesen, die vor den Augen aller Männer niedergekommen seien; wie die Mönche darin, mit dem Kruzifix in der Hand, umhergelaufen wären, und geschrien hätten: das Ende der Welt sei da! wie man einer Wache, die auf Befehl des Vizekönigs verlangte, eine Kirche zu räumen, geantwortet hätte: es gäbe keinen Vizekönig von Chili mehr!",
+    "got_span": [
+      17404,
+      17823
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Am nächsten Tag gingen sie zum Gottesdienst.",
+    "expected_text": "Sie bestand darauf, daß man die Messe hören sollte, und rief Don Fernando auf, die Gesellschaft zu führen, worauf sich alles, Donna Elisabeth auch, von den Sitzen erhob",
+    "expected_spans": [
+      [
+        23025,
+        23193
+      ]
+    ],
+    "got": "In Don Fernandos Gesellschaft ward die Frage aufgeworfen, ob man nicht auch an dieser Feierlichkeit teilnehmen, und sich dem allgemeinen Zuge anschließen solle? Donna Elisabeth erinnerte, mit einiger Beklemmung, was für ein Unheil gestern in der Kirche vorgefallen sei; daß solche Dankfeste ja wiederholt werden würden, und daß man sich der Empfindung alsdann, weil die Gefahr schon mehr vorüber wäre, mit desto größerer Heiterkeit und Ruhe überlassen könnte.",
+    "got_span": [
+      22245,
+      22704
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Man erkannte beide und ihre Schandtat.",
+    "expected_text": "Doch, ehe Donna Constanze diese sinnreiche zur Rettung erfundene Maßregel noch ausgeführt hatte, rief schon eine Stimme, des Chorherrn Predigt laut unterbrechend, aus: Weichet fern hinweg, ihr Bürger von St. Jago, hier stehen diese gottlosen Menschen",
+    "expected_spans": [
+      [
+        27796,
+        28046
+      ]
+    ],
+    "got": "Aber wie dem Dolche gleich fuhr es durch die von dieser Predigt schon ganz zerrissenen Herzen unserer beiden Unglücklichen, als der Chorherr bei dieser Gelegenheit umständlich des Frevels erwähnte, der in dem Klostergarten der Karmeliterinnen verübt worden war; die Schonung, die er bei der Welt gefunden hatte, gottlos nannte, und in einer von Verwünschungen erfüllten Seitenwendung, die Seelen der Täter, wörtlich genannt, allen Fürsten der Hölle über gab! Donna Constanze rief, indem sie an Jeronimos Arm zuckte: Don Fernando!",
+    "got_span": [
+      27031,
+      27560
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Ausgerechnet in dem Moment [siehe Satz ID 1] hält eine Naturkatastrophe ihn nicht nur von seinem Vorhaben ab,",
+    "expected_text": "In St. Jago, der Hauptstadt des Königreichs Chili, stand gerade in dem Augenblicke der großen Erderschütterung vom Jahre 1647, bei welcher viele tausend Menschen ihren Untergang fanden",
+    "expected_spans": [
+      [
+        22,
+        206
+      ]
+    ],
+    "got": "Kaum befand er sich im Freien, als die ganze, schon erschütterte Straße auf eine zweite Bewegung der Erde völlig zusammenfiel. Besinnungslos, wie er sich aus diesem allgemeinen Verderben retten würde, eilte er, über Schutt und Gebälk hinweg, indessen der Tod von allen Seiten Angriffe auf ihn machte, nach einem der nächsten Tore der Stadt.",
+    "got_span": [
+      4638,
+      4978
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Der Hauslehrer Jeronimo verliebt sich in seine Schülerin Josephe. -- und beide befinden sich in einem „zärtlichen Einverständnis“.",
+    "expected_text": "Don Henrico Asteron\n, einer der reichsten Edelleute der Stadt, hatte ihn ungefähr ein Jahr zuvor aus seinem Hause, wo er als Lehrer angestellt war, entfernt, weil er sich mit\nDonna Josephe\n, seiner einzigen Tochter, in einem zärtlichen Einverständnis befunden hatte.",
+    "expected_spans": [
+      [
+        384,
+        650
+      ]
+    ],
+    "got": "Hierauf, unter vielen Küssen, schliefen sie ein.\nAls sie erwachten, stand die Sonne schon hoch am Himmel, und sie bemerkten in ihrer Nähe mehrere Familien, beschäftigt, sich am Feuer ein kleines Morgenbrot zu bereiten. Jeronimo dachte eben auch, wie er Nahrung für die Seinigen herbeischaffen sollte, als ein junger wohlgekleideter Mann, mit einem Kinde auf dem Arm, zu Josephen trat, und sie mit Beschei denheit fragte: ob sie diesem armen Wurme, dessen Mutter dort unter den Bäumen beschädigt liege, nicht auf kurze Zeit ihre Brust reichen wolle?",
+    "got_span": [
+      14645,
+      15193
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "bricht er den Kontakt zu Josephe nicht ab",
+    "expected_text": "Durch einen glücklichen Zufall hatte Jeronimo hier die Verbindung von neuem anzuknüpfen gewußt",
+    "expected_spans": [
+      [
+        941,
+        1035
+      ]
+    ],
+    "got": "Josephe antwortete, daß ähnliche Gedanken in ihr aufgestiegen wären; daß auch sie nicht mehr, falls ihr Vater nur noch am Leben sei, ihn zu versöhnen zweifle; daß sie aber statt des Fußfalles lieber nach La Conception zu gehen, und von dort aus schriftlich das Versöhnungsgeschäft mit dem Vizekönig zu betreiben rate, wo man auf jeden Fall in der Nähe des Hafens wäre, und für den besten, wenn das Geschäft die erwünschte Wendung nähme, ja leicht wieder nach St. Jago zurückkehren könnte.",
+    "got_span": [
+      21023,
+      21511
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Josephe erfüllt den Wunsch,",
+    "expected_text": "und nahm den kleinen Fremdling, indem sie ihr eigenes Kind dem Vater gab, und legte ihn an ihre Brust.",
+    "expected_spans": [
+      [
+        15641,
+        15743
+      ]
+    ],
+    "got": "Josephe antwortete, daß ähnliche Gedanken in ihr aufgestiegen wären; daß auch sie nicht mehr, falls ihr Vater nur noch am Leben sei, ihn zu versöhnen zweifle; daß sie aber statt des Fußfalles lieber nach La Conception zu gehen, und von dort aus schriftlich das Versöhnungsgeschäft mit dem Vizekönig zu betreiben rate, wo man auf jeden Fall in der Nähe des Hafens wäre, und für den besten, wenn das Geschäft die erwünschte Wendung nähme, ja leicht wieder nach St. Jago zurückkehren könnte.",
+    "got_span": [
+      21023,
+      21511
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "sein Tod wird gefordert.",
+    "expected_text": "eine dritte; und: steinigt sie! steinigt sie!",
+    "expected_spans": [
+      [
+        29646,
+        29691
+      ]
+    ],
+    "got": "Warum belogen sie uns! antwortete der Schuster; sucht die rechte auf, und bringt sie um! Don Fernando, als er Constanzens Leichnam erblickte, glühte vor Zorn; er zog und schwang das Schwert, und hieb, daß er ihn gespalten hätte, den fanatischen Mordknecht, der diese Greuel veranlaßte, wenn derselbe nicht, durch eine Wendung, dem wütenden Schlag entwichen wäre. Doch da er die Menge, die auf ihn eindrang, nicht überwältigen konnte: leben Sie wohl, Don Fernando mit den Kindern! rief Josephe – und: hier mordet mich, ihr blutdürstenden Tiger! und stürzte sich freiwillig unter sie, um dem Kampf ein Ende zu machen.",
+    "got_span": [
+      32216,
+      32831
+    ]
+  },
+  {
+    "book": "erdbeben",
+    "query": "Doch davor wartet bereits der Mob,",
+    "expected_text": "Doch kaum waren sie auf den von Menschen gleichfalls erfüllten Vorplatz derselben getreten",
+    "expected_spans": [
+      [
+        31628,
+        31718
+      ]
+    ],
+    "got": "– Als sie in der Kirche der Dominikaner ankamen, ließ sich die Orgel schon mit musikalischer Pracht hören, und eine unermeßliche Menschenmenge wogte darin. Das Gedränge erstreckte sich bis weit vor den Portalen auf den Vorplatz der Kirche hinaus, und an den Wänden hoch, in den Rahmen der Gemälde, hingen Knaben, und hielten mit erwartungsvollen Blicken ihre Mützen in der Hand.",
+    "got_span": [
+      25122,
+      25500
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Friedrich wird beschuldigt und er rennt weg.",
+    "expected_text": "In derselben Nacht noch wurden die Schützen aufgeboten, um Friedrich zu verhaften. Der Anklage bedurfte es nicht, da Herr von S. selbst Zeuge eines Auftritts gewesen war, der den dringendsten Verdacht auf ihn werfen mußte; zudem die Gespenstergeschichte von jenem Abende, das Aneinanderschlagen der Stäbe im Brederholz, der Schrei aus der Höhe. Da der Amtsschreiber gerade abwesend war, so betrieb Herr von S. selbst alles rascher, als sonst geschehen wäre. Dennoch begann die Dämmerung bereits anzubrechen, bevor die Schützen so geräuschlos wie möglich das Haus der armen Margreth umstellt hatten. Der Gutsherr selber pochte an; es währte kaum eine Minute, bis geöffnet ward und Margreth völlig gekleidet in der Türe erschien. Herr von S. fuhr zurück; er hätte sie fast nicht erkannt, so blaß und steinern sah sie aus.\n»Wo ist Friedrich?« fragte er mit unsicherer Stimme. – »Sucht ihn,« antwortete sie und setzte sich auf einen Stuhl. Der Gutsherr zögerte noch einen Augenblick. »Herein, herein!« sagte er dann barsch; »worauf warten wir?« Man trat in Friedrichs Kammer. Er war nicht da, aber das Bett noch warm. Man stieg auf den Söller, in den Keller, stieß ins Stroh, schaute hinter jedes Faß, sogar in den Backofen; er war nicht da. Einige gingen in den Garten, sahen hinter den Zaun und in die Apfelbäume hinauf; er war nicht zu finden. – »Entwischt!« sagte der Gutsherr mit sehr gemischten Gefühlen",
+    "expected_spans": [
+      [
+        73995,
+        75400
+      ]
+    ],
+    "got": "– »Aber warum lief der dumme Junge denn? Du weißt doch, daß er unschuldig war?« – Johannes sah vor sich nieder: »Ich weiß nicht recht, mich dünkt, es war wegen Holzgeschichten. Simon hatte so allerlei Geschäfte; mir sagte man nichts davon, aber ich glaube nicht, daß alles war, wie es sein sollte.« – »Was hat denn Friedrich dir gesagt?« – »Nichts, als daß wir laufen müßten, sie wären hinter uns her.",
+    "got_span": [
+      89859,
+      90260
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Gesetze werden in der Gemeinde, in der er lebt, nicht respektiert.",
+    "expected_text": "Unter höchst einfachen und häufig unzulänglichen Gesetzen waren die Begriffe der Einwohner von Recht und Unrecht einigermaßen in Verwirrung geraten, oder vielmehr, es hatte sich neben dem gesetzlichen ein zweites Recht gebildet, ein Recht der öffentlichen Meinung, der Gewohnheit und der durch Vernachlässigung entstandenen Verjährung",
+    "expected_spans": [
+      [
+        1397,
+        1731
+      ]
+    ],
+    "got": "So gewöhnte man sich daran, ihn bald geputzt und fröhlich als anerkannten Dorfelegant an der Spitze des jungen Volks zu sehen, bald wieder als zerlumpten Hirtenbuben einsam und träumerisch hinter den Kühen herschleichend, oder in einer Waldlichtung liegend, scheinbar gedankenlos und das Moos von den Bäumen rupfend.\nUm diese Zeit wurden die schlummernden Gesetze doch einigermaßen aufgerüttelt durch eine Bande von Holzfrevlern, die unter dem Namen der Blaukittel alle ihre Vorgänger so weit an List und Frechheit übertraf, daß es dem Langmütigsten zuviel werden mußte.",
+    "got_span": [
+      35763,
+      36333
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Die Einwohner stehlen und diejenigen, die die Gerechtigkeit verteidigen, werden nicht akzeptiert.",
+    "expected_text": "Die Gutsbesitzer, denen die niedere Gerichtsbarkeit zustand, straften und belohnten nach ihrer in den meisten Fällen redlichen Einsicht; der Untergebene tat, was ihm ausführbar und mit einem etwas weiten Gewissen verträglich schien, und nur dem Verlierenden fiel es zuweilen ein, in alten staubichten Urkunden nachzuschlagen",
+    "expected_spans": [
+      [
+        1733,
+        2057
+      ]
+    ],
+    "got": "Es ist, als ob ihnen andrer Leute Schaden ebenso lieb wäre wie ihr Profit!« – »Es ist schade!« sagte Margreth.\nDer Amtsschreiber hatte getrunken und ging noch immer nicht. Er schien etwas auf dem Herzen zu haben. »Habt Ihr nichts von Brandis gehört?« fragte er plötzlich. – »Nichts; er kommt niemals hier ins Haus.« – »So wißt Ihr nicht, was ihm begegnet ist?« – »Was denn?« fragte Margreth gespannt. – »Er ist tot!« – »Tot!« rief sie, »was, tot? Um Gotteswillen!",
+    "got_span": [
+      47405,
+      47868
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Friedrichs Vater Hermann ist ein sehr gewalttätiger Bauer, vor allem gegenüber seiner Frau.",
+    "expected_text": "aber am nächsten Sonntage sah man die junge Frau schreiend und blutrünstig durchs Dorf zu den Ihrigen rennen, alle ihre guten Kleider und neues Hausgerät im Stich lassend. Das war freilich ein großer Skandal und Ärger für Mergel, der allerdings Trostes bedurfte. So war denn auch am Nachmittage keine Scheibe an seinem Hause mehr ganz, und man sah ihn noch bis spät in die Nacht vor der Türschwelle liegen, einen abgebrochenen Flaschenhals von Zeit zu Zeit zum Munde führend und sich Gesicht und Hände jämmerlich zerschneidend. Die junge Frau blieb bei ihren Eltern, wo sie bald verkümmerte und starb. Ob nun den Mergel Reue quälte oder Scham, genug, er schien der Trostmittel immer bedürftiger und fing bald an, den gänzlich verkommenen Subjekten zugezählt zu werden.\nDie Wirtschaft verfiel; fremde Mägde brachten Schimpf und Schaden; so verging Jahr auf Jahr. Mergel war und blieb ein verlegener und zuletzt ziemlich armseliger Witwer, bis er mit einemmale wieder als Bräutigam auftrat. War die Sache an und für sich unerwartet, so trug die Persönlichkeit der Braut noch dazu bei, die Verwunderung zu erhöhen. Margareth Semmler war eine brave, anständige Person, so in den Vierzigen, in ihrer Jugend eine Dorfschönheit und noch jetzt als sehr klug und wirtlich geachtet, dabei nicht unvermögend; und so mußte es jedem unbegreiflich sein, was sie zu diesem Schritte getrieben. Wir glauben den Grund eben in dieser ihrer selbstbewußten Vollkommenheit zu finden. Am Abend vor der Hochzeit soll sie gesagt haben: »Eine Frau, die von ihrem Manne übel behandelt wird, ist dumm oder taugt nicht: wenn's mir schlecht geht, so sagt, es liege an mir.« Der Erfolg zeigte leider, daß sie ihre Kräfte überschätzt hatte. Anfangs imponierte sie ihrem Manne; er kam nicht nach Haus oder kroch in die Scheune, wenn er sich übernommen hatte; aber das Joch war zu drückend, um lange getragen zu werden, und bald sah man ihn oft genug quer über die Gasse ins Haus taumeln, hörte drinnen sein wüstes Lärmen und sah Margreth eilends Tür und Fenster schließen",
+    "expected_spans": [
+      [
+        6007,
+        8045
+      ]
+    ],
+    "got": "Ohne zu antworten, brach sie einen Zweig von der nächsten Hecke und ging ihrem Sohne entgegen, scheinbar, eine träge Kuh anzutreiben, im Grunde aber, ihm einige rasche, halbdrohende Worte zuzuraunen; denn sie kannte seine störrische Natur, und Simons Weise war ihr heute einschüchternder vorgekommen als je. Doch ging alles über Erwarten gut; Friedrich zeigte sich weder verstockt, noch frech, vielmehr etwas blöde und sehr bemüht, dem Ohm zu gefallen.",
+    "got_span": [
+      19497,
+      19949
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Friedrich leidet unter dieser Situation.",
+    "expected_text": "»Hör mal an, feins Lieseken,« und ein unprivilegierter Holzhauer, der unter der breiten Eiche eingeschlafen und dem es darüber Nacht geworden war, hatte beim Erwachen sein geschwollenes blaues Gesicht durch die Zweige lauschen sehen. Friedrich mußte von andern Knaben vieles darüber hören; dann heulte er, schlug um sich, stach auch einmal mit seinem Messerchen und wurde bei dieser Gelegenheit jämmerlich geprügelt",
+    "expected_spans": [
+      [
+        15900,
+        16315
+      ]
+    ],
+    "got": "Aber während sie flüsterten, hatte der Himmel sich bewölkt.\n»Ich habe schwere Schuld,« seufzte Friedrich, »daß ich ihn den unrechten Weg geschickt – obgleich – doch, dies hab' ich nicht gedacht, nein, gewiß nicht.",
+    "got_span": [
+      58999,
+      59212
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Während der Geschichte sterben viele Menschen, alle im Wald.",
+    "expected_text": "Er ist tot,« wiederholte der Schreiber, sie scharf fixierend; »von den Blaukitteln erschlagen",
+    "expected_spans": [
+      [
+        47958,
+        48051
+      ]
+    ],
+    "got": "Die Zurückgebliebenen horchten sorglos dem allmähligen Verhallen des Knarrens und Stoßens der Räder in den Hohlwegen und schliefen sacht weiter. Ein gelegentlicher Schuß, ein schwacher Schrei ließen wohl einmal eine junge Frau oder Braut auffahren; kein anderer achtete darauf. Beim ersten Morgengrau kehrte der Zug ebenso schweigend heim, die Gesichter glühend wie Erz, hier und dort einer mit verbundenem Kopf, was weiter nicht in Betracht kam, und nach ein paar Stunden war die Umgegend voll von dem Mißgeschick eines oder mehrerer Forstbeamten, die aus dem Walde getragen wurden, zerschlagen, mit Schnupftabak geblendet und für einige Zeit unfähig, ihrem Berufe nachzukommen.",
+    "got_span": [
+      4169,
+      4848
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Am folgenden Mittag verbreitet sich im Dorf B. die Nachricht von der Ermordung des Oberförsters Brandis im Brederwald.",
+    "expected_text": "»Habt Ihr nichts von Brandis gehört?« fragte er plötzlich. – »Nichts; er kommt niemals hier ins Haus.« – »So wißt Ihr nicht, was ihm begegnet ist?« – »Was denn?« fragte Margreth gespannt. – »Er ist tot!« – »Tot!« rief sie, »was, tot? Um Gotteswillen! Er ging ja noch heute morgen ganz gesund hier vorüber mit der Flinte auf dem Rücken!« – »Er ist tot,« wiederholte der Schreiber, sie scharf fixierend; »von den Blaukitteln erschlagen",
+    "expected_spans": [
+      [
+        47618,
+        48051
+      ]
+    ],
+    "got": "Am Abend, als es dunkel geworden war und der Mond schien, sah man ihn im Schnee auf dem Kirchhofe umherhumpeln; er betete bei keinem Grabe, ging auch an keines dicht hinan, aber auf einige schien er aus der Ferne starre Blicke zu heften. So fand ihn der Förster Brandis, der Sohn des Erschlagenen, den die Gutsherrschaft abgeschickt hatte, ihn ins Schloß zu holen.",
+    "got_span": [
+      88894,
+      89258
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Die Novelle spielt in einem kleinen Dorf mit eigenen Regeln und Justiz im 18. Jahrhundert.",
+    "expected_text": "Unter höchst einfachen und häufig unzulänglichen Gesetzen waren die Begriffe der Einwohner von Recht und Unrecht einigermaßen in Verwirrung geraten, oder vielmehr, es hatte sich neben dem gesetzlichen ein zweites Recht gebildet, ein Recht der öffentlichen Meinung, der Gewohnheit und der durch Vernachlässigung entstandenen Verjährung. Die Gutsbesitzer, denen die niedere Gerichtsbarkeit zustand, straften und belohnten nach ihrer in den meisten Fällen redlichen Einsicht; der Untergebene tat, was ihm ausführbar und mit einem etwas weiten Gewissen verträglich schien, und nur dem Verlierenden fiel es zuweilen ein, in alten staubichten Urkunden nachzuschlagen",
+    "expected_spans": [
+      [
+        1397,
+        2057
+      ]
+    ],
+    "got": "Eine\nSpur schien Licht geben wollen: doch rechnete man aus Gründen wenig darauf. Die Abwesenheit des Gutsherrn hatte den Gerichtschreiber genötigt, auf eigene Hand die Sache einzuleiten. Er saß am Tische; die Stube war gedrängt voll von Bauern, teils neugierigen, teils solchen, von denen man in Ermangelung eigentlicher Zeugen einigen Aufschluß zu erhalten hoffte. Hirten, die in derselben Nacht gehütet, Knechte, die den Acker in der Nähe bestellt, alle standen stramm und fest, die Hände in den Taschen, gleichsam als stillschweigende Erklärung, daß sie nicht einzuschreiten gesonnen seien. Acht Forstbeamte wurden vernommen.",
+    "got_span": [
+      51083,
+      51711
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "In diesem Dorf heiratet ein verwitweter Trinker eine schöne Frau und zeugt einen Sohn mit ihr.",
+    "expected_text": "Friedrichs Vater, der alte Hermann Mergel, war in seinem Junggesellenstande ein sogenannter ordentlicher Säufer [...] Margareth Semmler war eine brave, anständige Person, so in den Vierzigen, in ihrer Jugend eine Dorfschönheit [...] Das zweite Jahr dieser unglücklichen Ehe ward mit einem Sohne",
+    "expected_spans": [
+      [
+        5547,
+        5658
+      ],
+      [
+        7119,
+        7227
+      ],
+      [
+        8546,
+        8607
+      ]
+    ],
+    "got": "Überall gab's Lustbarkeiten; der blaue Montag kam in Aufnahme, und wer ein paar Taler erübrigt hatte, wollte gleich eine Frau dazu, die ihm heute essen und morgen hungern helfen könne. Da gab es im Dorfe eine tüchtige, solide Hochzeit, und die Gäste durften mehr erwarten, als eine verstimmte Geige, ein Glas Branntwein und was sie an guter Laune selber mitbrachten. Seit früh war alles auf den Beinen; vor jeder Tür wurden Kleider gelüftet, und B. glich den ganzen Tag einer Trödelbude. Da viele Auswärtige erwartet wurden, wollte jeder gern die Ehre des Dorfes oben halten.",
+    "got_span": [
+      62097,
+      62672
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Die Dorfbewohner versuchen den Dieben auf die Spur zu kommen.",
+    "expected_text": "Ganz gegen den gewöhnlichen Stand der Dinge, wo man die stärksten Böcke der Herde mit dem Finger bezeichnen konnte, war es hier trotz aller Wachsamkeit bisher nicht möglich gewesen, auch nur ein Individuum namhaft zu machen",
+    "expected_spans": [
+      [
+        36334,
+        36557
+      ]
+    ],
+    "got": "Eine\nSpur schien Licht geben wollen: doch rechnete man aus Gründen wenig darauf. Die Abwesenheit des Gutsherrn hatte den Gerichtschreiber genötigt, auf eigene Hand die Sache einzuleiten. Er saß am Tische; die Stube war gedrängt voll von Bauern, teils neugierigen, teils solchen, von denen man in Ermangelung eigentlicher Zeugen einigen Aufschluß zu erhalten hoffte. Hirten, die in derselben Nacht gehütet, Knechte, die den Acker in der Nähe bestellt, alle standen stramm und fest, die Hände in den Taschen, gleichsam als stillschweigende Erklärung, daß sie nicht einzuschreiten gesonnen seien. Acht Forstbeamte wurden vernommen.",
+    "got_span": [
+      51083,
+      51711
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Friedrich Mergel hat die Aufgabe die Kühe zu hüten.",
+    "expected_text": "Friedrich lag im Grase, nach seiner gewohnten Weise",
+    "expected_spans": [
+      [
+        38743,
+        38794
+      ]
+    ],
+    "got": "Sie war ärgerlich und ängstlich und wußte, daß sie beides ohne Grund war. Die Uhr im Turm schlug sieben, das Vieh kehrte heim; er war noch immer nicht da und sie mußte aufstehen, um nach den Kühen zu schauen. Als sie wieder in die dunkle Küche trat, stand Friedrich am Herde; er hatte sich vornübergebeugt und wärmte die Hände an den Kohlen. Der Schein spielte auf seinen Zügen und gab ihnen ein widriges Ansehen von Magerkeit und ängstlichem Zucken. Margreth blieb in der Tennentür stehen, so seltsam verändert kam ihr das Kind vor.",
+    "got_span": [
+      26226,
+      26759
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Im Wald wurde der Oberförster ermordet aufgefunden.",
+    "expected_text": "Er ist tot,« wiederholte der Schreiber, sie scharf fixierend; »von den Blaukitteln erschlagen",
+    "expected_spans": [
+      [
+        47958,
+        48051
+      ]
+    ],
+    "got": "Das Verhör währte ziemlich lange und die Fragen waren mitunter ziemlich schlau gestellt; er beantwortete sie jedoch alle offen und bestimmt und erzählte den Vorgang zwischen ihm und dem Oberförster ziemlich der Wahrheit gemäß, bis auf das Ende, das er geratener fand, für sich zu behalten. Sein Alibi zur Zeit des Mordes war leicht erwiesen. Der Förster lag am Ausgange des Masterholzes; über dreiviertel Stunden Weges von der Schlucht, in der er Friedrich um vier Uhr angeredet und aus der dieser seine Herde schon zehn Minuten später ins Dorf getrieben.",
+    "got_span": [
+      54482,
+      55037
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Als dieser festgenommen werden soll entrinnt er mit dem Jungen Johannes.",
+    "expected_text": "»Wo ist Friedrich?« fragte er mit unsicherer Stimme. – »Sucht ihn,« antwortete sie und setzte sich auf einen Stuhl. Der Gutsherr zögerte noch einen Augenblick. »Herein, herein!« sagte er dann barsch; »worauf warten wir?« Man trat in Friedrichs Kammer. Er war nicht da, aber das Bett noch warm. Man stieg auf den Söller, in den Keller, stieß ins Stroh, schaute hinter jedes Faß, sogar in den Backofen; er war nicht da. Einige gingen in den Garten, sahen hinter den Zaun und in die Apfelbäume hinauf; er war nicht zu finden. – »Entwischt [...] Friedrich war hin, verschwunden und – Johannes Niemand, der arme, unbeachtete Johannes, am gleichen Tage mit ihm",
+    "expected_spans": [
+      [
+        74815,
+        75350
+      ],
+      [
+        82858,
+        82970
+      ]
+    ],
+    "got": "– »Was fällt dir ein?« rief sie, »du kannst, du sollst nicht gehen!« – »Was sein muß, schickt sich wohl,« versetzte er und war schon zur Türe hinaus mit Johannes. – »Ach Gott,« seufzte die Mutter, »wenn die Kinder klein sind, treten sie uns in den Schoß, und wenn sie groß sind, ins Herz!«\nDie gerichtliche Untersuchung hatte ihren Anfang genommen, die Tat lag klar am Tage; über den Täter aber waren die Anzeigen so schwach, daß, obschon alle Umstände die Blaukittel dringend verdächtigten, man doch nicht mehr als Mutmaßungen wagen konnte.",
+    "got_span": [
+      50541,
+      51082
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "F. Mergel verschwindet nach dem Tod des Juden Aaron für lange Zeit.",
+    "expected_text": "Man trat in Friedrichs Kammer. Er war nicht da, aber das Bett noch warm. Man stieg auf den Söller, in den Keller, stieß ins Stroh, schaute hinter jedes Faß, sogar in den Backofen; er war nicht da. Einige gingen in den Garten, sahen hinter den Zaun und in die Apfelbäume hinauf; er war nicht zu finden. – »Entwischt!« sagte der Gutsherr mit sehr gemischten Gefühlen",
+    "expected_spans": [
+      [
+        75036,
+        75400
+      ]
+    ],
+    "got": "Leider ward das Verhör durch die Mittagsstunde unterbrochen, und während wir tafelten, hat sich der Hund von einem Juden an seinem Strumpfband erhängt. Was sagen Sie dazu? Aaron ist zwar ein verbreiteter Name usw.‹ – Was sagen Sie dazu?« wiederholte der Gutsherr; »und weshalb wäre der Esel von einem Burschen denn gelaufen?« – Der Amtsschreiber dachte nach. – »Nun, vielleicht der Holzfrevel wegen, mit denen wir ja gerade in Untersuchung waren. Heißt es nicht: der Böse läuft vor seinem eigenen Schatten? Mergels Gewissen war schmutzig genug auch ohne diesen Flecken.«\nDabei beruhigte man sich.",
+    "got_span": [
+      82261,
+      82857
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Nach einer Hochzeit findet man den Ehemann tot im Unterholz.",
+    "expected_text": "daß der Vater vom Ohm Franz Semmler und dem Hülsmeyer tot im Holze gefunden sei",
+    "expected_spans": [
+      [
+        12685,
+        12764
+      ]
+    ],
+    "got": "In ihrem Hause wohnte jetzt der Sohn des ehemaligen Schweinehirten, der an jenem unglücklichen Abende Friedrichs Uhr so sehr bewundert hatte. – »Alles hin, alles tot!« seufzte Johannes.\nAm Abend, als es dunkel geworden war und der Mond schien, sah man ihn im Schnee auf dem Kirchhofe umherhumpeln; er betete bei keinem Grabe, ging auch an keines dicht hinan, aber auf einige schien er aus der Ferne starre Blicke zu heften. So fand ihn der Förster Brandis, der Sohn des Erschlagenen, den die Gutsherrschaft abgeschickt hatte, ihn ins Schloß zu holen.",
+    "got_span": [
+      88708,
+      89258
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Nach der Beisetzung des Ehemannes klopft Magrets Bruder an die Haustür und spricht mit seiner Schwester über ihr Leben und ihr Kind.",
+    "expected_text": "als seine Mutter einen Besuch von ihrem jüngern Bruder erhielt",
+    "expected_spans": [
+      [
+        16521,
+        16583
+      ]
+    ],
+    "got": "Wer weiß, ob wir bei dem Betteln vorbeikommen!« – »Ich soll Montag wieder zum Ohm und ihm bei der Einsaat helfen.« – »Du wieder zu ihm? Nein, nein, nimmermehr!« – Sie umfaßte ihr Kind mit Heftigkeit. – »Doch,« fügte sie hinzu, und ein Tränenstrom stürzte ihr plötzlich über die eingefallenen Wangen; »geh, er ist mein einziger Bruder, und die Verleumdung ist groß! Aber halt Gott vor Augen und vergiß das tägliche Gebet nicht!«\nMargreth legte das Gesicht an die Mauer und weinte laut.",
+    "got_span": [
+      32263,
+      32747
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Der Geflohene ist nicht Johannes Niemand sondern Friedrich.",
+    "expected_text": "Wirklich, dem war so: der Gutsherr erkannte seine eigenen abgetragenen Schuhe. – »Gott, es ist Johannes! – Setzt die Leiter an! – So – nun herunter! – Sacht, sacht! Laßt ihn nicht fallen! – Lieber Himmel, die Würmer sind schon daran! Macht dennoch die Schlinge auf und die Halsbinde.« – Eine breite Narbe ward sichtbar; der Gutsherr fuhr zurück. – »Mein Gott!« sagte er; er beugte sich wieder über die Leiche, betrachtete die Narbe mit großer Aufmerksamkeit und schwieg eine Weile in tiefer Erschütterung. Dann wandte er sich zu den Förstern: »Es ist nicht recht, daß der Unschuldige für den Schuldigen leide; sagt es nur allen Leuten: der da« – er deutete auf den Toten – »war Friedrich Mergel.",
+    "expected_spans": [
+      [
+        101560,
+        102255
+      ]
+    ],
+    "got": "Heißt es nicht: der Böse läuft vor seinem eigenen Schatten? Mergels Gewissen war schmutzig genug auch ohne diesen Flecken.«\nDabei beruhigte man sich. Friedrich war hin, verschwunden und – Johannes Niemand, der arme, unbeachtete Johannes, am gleichen Tage mit ihm.\nEine schöne, lange Zeit war verflossen, achtundzwanzig Jahre, fast die Hälfte eines Menschenlebens; der Gutsherr war sehr alt und grau geworden, sein gutmütiger Gehülfe Kapp längst begraben. Menschen, Tiere und Pflanzen waren entstanden, gereift, vergangen, nur Schloß B.",
+    "got_span": [
+      82708,
+      83243
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "kann er des Mordes nicht überführt werden,",
+    "expected_text": "»Wo ist Friedrich?« fragte er mit unsicherer Stimme. – »Sucht ihn,« antwortete sie und setzte sich auf einen Stuhl. Der Gutsherr zögerte noch einen Augenblick. »Herein, herein!« sagte er dann barsch; »worauf warten wir?« Man trat in Friedrichs Kammer. Er war nicht da, aber das Bett noch warm. Man stieg auf den Söller, in den Keller, stieß ins Stroh, schaute hinter jedes Faß, sogar in den Backofen; er war nicht da. Einige gingen in den Garten, sahen hinter den Zaun und in die Apfelbäume hinauf; er war nicht zu finden. – »Entwischt!« sagte der Gutsherr mit sehr gemischten Gefühlen",
+    "expected_spans": [
+      [
+        74815,
+        75400
+      ]
+    ],
+    "got": "Ein Mitglied der Schlemmingschen Bande (die wir jetzt, nebenbei gesagt, größtenteils unter Schloß und Riegel haben), Lumpenmoises genannt, hat im letzten Verhöre ausgesagt, daß ihn nichts so sehr gereue, als der Mord eines Glaubensgenossen, Aaron, den er im Walde erschlagen und doch nur sechs Groschen bei ihm gefunden habe. Leider ward das Verhör durch die Mittagsstunde unterbrochen, und während wir tafelten, hat sich der Hund von einem Juden an seinem Strumpfband erhängt. Was sagen Sie dazu?",
+    "got_span": [
+      81935,
+      82432
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "obwohl sie dies vor der Dorfgemeinschaft zu verbergen versucht.",
+    "expected_text": "Es hieß, an diesem Tage habe Mergel zuerst Hand an sie gelegt, obwohl das Bekenntnis nie über ihre Lippen kam.",
+    "expected_spans": [
+      [
+        8435,
+        8545
+      ]
+    ],
+    "got": "Sie wurde scheu, saumselig, sogar unordentlich, und manche meinten, ihr Kopf habe gelitten. Friedrich ward desto lauter; er versäumte keine Kirchweih oder Hochzeit, und da ein sehr empfindliches Ehrgefühl ihn die geheime Mißbilligung mancher nicht übersehen ließ, war er gleichsam immer unter Waffen, der öffentlichen Meinung nicht sowohl Trotz zu bieten, als sie den Weg zu leiten, der ihm gefiel.",
+    "got_span": [
+      60645,
+      61043
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Dadurch sinkt Friedrichs ohnehin ramponiertes soziales Ansehen im Dorf noch tiefer.",
+    "expected_text": "Friedrich mußte von andern Knaben vieles darüber hören; dann heulte er, schlug um sich, stach auch einmal mit seinem Messerchen und wurde bei dieser Gelegenheit jämmerlich geprügelt.",
+    "expected_spans": [
+      [
+        16134,
+        16316
+      ]
+    ],
+    "got": "Sie wurde scheu, saumselig, sogar unordentlich, und manche meinten, ihr Kopf habe gelitten. Friedrich ward desto lauter; er versäumte keine Kirchweih oder Hochzeit, und da ein sehr empfindliches Ehrgefühl ihn die geheime Mißbilligung mancher nicht übersehen ließ, war er gleichsam immer unter Waffen, der öffentlichen Meinung nicht sowohl Trotz zu bieten, als sie den Weg zu leiten, der ihm gefiel.",
+    "got_span": [
+      60645,
+      61043
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "können aber die Diebe dennoch nicht auf frischer Tat ertappen.",
+    "expected_text": "Dennoch war der Erfolg nur gering und die Wächter hatten oft kaum das eine Ende des Forstes verlassen, wenn die Blaukittel schon zum andern einzogen.",
+    "expected_spans": [
+      [
+        38159,
+        38308
+      ]
+    ],
+    "got": "Denjenigen, die vielleicht auf den Ausgang dieser Begebenheit gespannt sind, muß ich sagen, daß diese Geschichte nie aufgeklärt wurde, obwohl noch viel dafür geschah und diesem Verhöre mehrere folgten. Den Blaukitteln schien durch das Aufsehen, das der Vorgang gemacht und die darauf folgenden geschärften Maßregeln der Mut genommen; sie waren von nun an wie verschwunden, und obgleich späterhin noch mancher Holzfrevler erwischt wurde, fand man doch nie Anlaß, ihn der berüchtigten Bande zuzuschreiben. Die Axt lag zwanzig Jahre nachher als unnützes Corpus delicti im Gerichtsarchiv, wo sie wohl noch jetzt ruhen mag mit ihren Rostflecken.",
+    "got_span": [
+      56246,
+      56886
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "und man ihm nichts beweisen kann,",
+    "expected_text": "Sein Alibi zur Zeit des Mordes war leicht erwiesen.",
+    "expected_spans": [
+      [
+        54772,
+        54823
+      ]
+    ],
+    "got": "Ohne Beichte und Absolution!« – »Mutter, Mutter, um Gottes willen laß mich schlafen; ich kann nicht mehr!«\nIn diesem Augenblick trat Johannes Niemand in die Kammer; dünn und lang wie eine Hopfenstange, aber zerlumpt und scheu wie wir ihn vor fünf Jahren gesehen. Sein Gesicht war noch bleicher als gewöhnlich. »Friedrich,« stotterte er, »du sollst sogleich zum Ohm kommen; er hat Arbeit für dich; aber sogleich.« – Friedrich drehte sich gegen die Wand.",
+    "got_span": [
+      49710,
+      50162
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "obwohl er vor Gericht alles ableugnet",
+    "expected_text": "»Ich kenne sie nicht.«",
+    "expected_spans": [
+      [
+        56013,
+        56035
+      ]
+    ],
+    "got": "Etwa ein halbes Jahr nachher las der Gutsherr einige eben erhaltene Briefe in Gegenwart des Amtsschreibers. – »Sonderbar, sonderbar!« sagte er. »Denken Sie sich, Kapp, der Mergel ist vielleicht unschuldig an dem Morde. Soeben schreibt mir der Präsident des Gerichtes zu P.: ›Le vrai n'est pas toujours vraisemblable; das erfahre ich oft in meinem Berufe und jetzt neuerdings. Wissen Sie wohl, daß Ihr lieber Getreuer, Friedrich Mergel, den Juden mag ebensowenig erschlagen haben, als ich oder Sie? Leider fehlen die Beweise, aber die Wahrscheinlichkeit ist groß.",
+    "got_span": [
+      81372,
+      81934
+    ]
+  },
+  {
+    "book": "judenbuche",
+    "query": "Als man sein Haus umzingelt,",
+    "expected_text": "Dennoch begann die Dämmerung bereits anzubrechen, bevor die Schützen so geräuschlos wie möglich das Haus der armen Margreth umstellt hatten.",
+    "expected_spans": [
+      [
+        74453,
+        74593
+      ]
+    ],
+    "got": "Anfangs imponierte sie ihrem Manne; er kam nicht nach Haus oder kroch in die Scheune, wenn er sich übernommen hatte; aber das Joch war zu drückend, um lange getragen zu werden, und bald sah man ihn oft genug quer über die Gasse ins Haus taumeln, hörte drinnen sein wüstes Lärmen und sah Margreth eilends Tür und Fenster schließen.",
+    "got_span": [
+      7716,
+      8046
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Doch Krambambuli wehrt sich zunächst gegen das Verlassen seines alten Herrn.",
+    "expected_text": "Ja, er konnte lange rufen, pfeifen, zerren – der Hund gehorchte ihm nicht, wandte den Kopf demjenigen zu, den er noch für seinen Herrn hielt, heulte, als dieser ihm zuschrie: »Marsch!« und den Befehl mit einem tüchtigen Fußtritt begleitete, suchte sich aber immer wieder an ihn heranzudrängen",
+    "expected_spans": [
+      [
+        3444,
+        3736
+      ]
+    ],
+    "got": "»Weißt du, für wen das Blei gehört?«\n\n»Ich kann es mir denken.«\n\n»Deserteur, Kalfakter, pflicht- und treuvergessene Kanaille!«\n\n»Ja, Herr, jawohl«\n\n»Du warst meine Freude. Jetzt ist's vorbei. Ich habe keine Freude mehr an dir.«\n\n»Begreiflich, Herr«, und Krambambuli legte sich hin, drückte den Kopf auf die ausgestreckten Vorderpfoten und sah den Jäger an.\n\nJa, hätte das verdammte Vieh ihn nur nicht angesehen! Da würde er ein rasches Ende gemacht und sich und dem Hunde viel Pein erspart haben. Aber so geht's nicht! Wer könnte ein Geschöpf niederknallen, das einen so ansieht?",
+    "got_span": [
+      20124,
+      20703
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Sorgen und Probleme bespricht Hopp mit seinem Hund.",
+    "expected_text": "sein Herr zum mindesten pflog lange Unterredungen mit ihm",
+    "expected_spans": [
+      [
+        4594,
+        4651
+      ]
+    ],
+    "got": "Zu seiner Ehre muß man gestehen: nicht leicht. Die Hände zitterten ihm so sehr, als er dem Tiere die Leine um den Hals legte, daß es schien, er werde mit dieser Manipulation nimmermehr zurechtkommen. Hopp wartete geduldig und bewunderte im stillen den trotz der schlechten Kondition, in welcher er sich befand, wundervollen Hund. Höchstens zwei Jahre mochte er alt sein, und in der Farbe glich er dem Lumpen, der ihn hergab, doch war die seine um ein paar Schattierungen dunkler.",
+    "got_span": [
+      1925,
+      2404
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Dieser will nichts mehr von Krambambuli wissen und verschließt Tür und Fenster.",
+    "expected_text": "Der Jäger schlug den Laden zu und ging zu Bette",
+    "expected_spans": [
+      [
+        22808,
+        22855
+      ]
+    ],
+    "got": "»Weißt du, für wen das Blei gehört?«\n\n»Ich kann es mir denken.«\n\n»Deserteur, Kalfakter, pflicht- und treuvergessene Kanaille!«\n\n»Ja, Herr, jawohl«\n\n»Du warst meine Freude. Jetzt ist's vorbei. Ich habe keine Freude mehr an dir.«\n\n»Begreiflich, Herr«, und Krambambuli legte sich hin, drückte den Kopf auf die ausgestreckten Vorderpfoten und sah den Jäger an.\n\nJa, hätte das verdammte Vieh ihn nur nicht angesehen! Da würde er ein rasches Ende gemacht und sich und dem Hunde viel Pein erspart haben. Aber so geht's nicht! Wer könnte ein Geschöpf niederknallen, das einen so ansieht?",
+    "got_span": [
+      20124,
+      20703
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Der Revierjäger Hopp geht ein Tauschgeschäft ein.",
+    "expected_text": "Er hatte ihn im Wirtshause Zum Löwen in Wischau von einem vazierenden Forstgehilfen gekauft oder eigentlich eingetauscht",
+    "expected_spans": [
+      [
+        352,
+        472
+      ]
+    ],
+    "got": "Der Jägerrock, vermutlich ein Überrest aus der vergangenen Herrlichkeit des letzten Dienstes, trug die Spuren einer im nassen Straßengraben zugebrachten Nacht. Obwohl sich Hopp ungern in schlechte Gesellschaft begab, nahm er trotzdem Platz neben dem Burschen und begann sogleich ein Gespräch mit ihm. Da bekam er es denn bald heraus, daß der Nichtsnutz den Stutzen und die Jagdtasche dem Wirt bereits als Pfänder ausgeliefert hatte und daß er jetzt auch den Hund als solches hergeben möchte; der Wirt jedoch, der schmutzige Leuteschinder, wollte von einem Pfand, das gefüttert werden muß, nichts hören.",
+    "got_span": [
+      917,
+      1519
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Der Revierjäger trifft den alten Besitzer Krambambulis.",
+    "expected_text": "Wie er nun mit seiner Arbeit fertig ist, hängt er die Flinte wieder um und schlägt den kürzesten Weg ein, quer durch den Wald gegen die Kulturen in der Nähe des Lindenrondells. Im Augenblick, in dem er auf den Fußsteig treten will, der längs des Buchenzaunes läuft, ist ihm, als höre er etwas im Laube rascheln. Gleich darauf herrscht jedoch tiefe Stille, tiefe, anhaltende Stille. Fast hätte er gemeint, es sei nichts Bemerkenswertes gewesen, wenn nicht der Hund so merkwürdig dreingeschaut hätte. Der stand mit gesträubtem Haar, den Hals vorgestreckt, den Schwanz aufrecht, und glotzte eine Stelle des Zaunes an. Oho! dachte Hopp, wart, Kerl, wenn du's bist; trat hinter einen Baum und spannte den Hahn seiner Flinte. Wie rasend pochte ihm das Herz, und der ohnehin kurze Atem wollte ihm völlig versagen, als jetzt plötzlich, Gottes Wunder!\n– durch den Zaun der »Gelbe« auf den Fußsteig trat. Zwei junge Hasen hängen an seiner Waidtasche, und auf seiner Schulter, am wohlbekannten Juchtenriemen, der Hinterlader des Oberförsters",
+    "expected_spans": [
+      [
+        16243,
+        17273
+      ]
+    ],
+    "got": "»Weißt du, für wen das Blei gehört?«\n\n»Ich kann es mir denken.«\n\n»Deserteur, Kalfakter, pflicht- und treuvergessene Kanaille!«\n\n»Ja, Herr, jawohl«\n\n»Du warst meine Freude. Jetzt ist's vorbei. Ich habe keine Freude mehr an dir.«\n\n»Begreiflich, Herr«, und Krambambuli legte sich hin, drückte den Kopf auf die ausgestreckten Vorderpfoten und sah den Jäger an.\n\nJa, hätte das verdammte Vieh ihn nur nicht angesehen! Da würde er ein rasches Ende gemacht und sich und dem Hunde viel Pein erspart haben. Aber so geht's nicht! Wer könnte ein Geschöpf niederknallen, das einen so ansieht?",
+    "got_span": [
+      20124,
+      20703
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Der Hund verhungert deshalb.",
+    "expected_text": "Verwildert, zum Skelett abgemagert, umschlich er einmal die armen Wohnungen der Häusler am Ende des Dorfes",
+    "expected_spans": [
+      [
+        22115,
+        22221
+      ]
+    ],
+    "got": "Du hast genug, denkt er, um jedes Schrotkorn wär's schad bei dir. Trotzdem stellt er die Flinte auf den Boden und lädt von neuem. Der Hund sitzt aufrecht vor ihm, läßt die Zunge heraushängen, keucht kurz und laut und sieht ihm zu. Und als der Jäger fertig ist und die Flinte wieder zur Hand nimmt, halten sie ein Gespräch, von dem kein Zeuge ein Wort vernommen hätte, wenn es auch statt eines toten ein lebendiger gewesen wäre.",
+    "got_span": [
+      19695,
+      20122
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Lange läuft der Hund alleine draußen herum.",
+    "expected_text": "Verwildert, zum Skelett abgemagert, umschlich er einmal die armen Wohnungen der Häusler am Ende des Dorfes. Plötzlich stürzte er auf ein Kind los, das vor der letzten Hütte stand, und entriß ihm gierig das Stück Brot, von dem es aß. Das Kind blieb starr vor Schrecken, aber ein kleiner Spitz sprang aus dem Hause und bellte den Räuber an. Dieser ließ sogleich seine Beute fahren und entfloh",
+    "expected_spans": [
+      [
+        22115,
+        22505
+      ]
+    ],
+    "got": "Zu seiner Ehre muß man gestehen: nicht leicht. Die Hände zitterten ihm so sehr, als er dem Tiere die Leine um den Hals legte, daß es schien, er werde mit dieser Manipulation nimmermehr zurechtkommen. Hopp wartete geduldig und bewunderte im stillen den trotz der schlechten Kondition, in welcher er sich befand, wundervollen Hund. Höchstens zwei Jahre mochte er alt sein, und in der Farbe glich er dem Lumpen, der ihn hergab, doch war die seine um ein paar Schattierungen dunkler.",
+    "got_span": [
+      1925,
+      2404
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Er hat nun keinen Herren mehr der ihn versorgt und verelendet.",
+    "expected_text": "Krambambuli fletschte die Zähne gegen ihn und lief davon; wie der Mann meinte, in der Richtung des Jägerhauses. Aber dorthin kam er nicht, sondern führte ein elendes Vagabundenleben.\n\nVerwildert, zum Skelett abgemagert, umschlich er einmal die armen Wohnungen der Häusler am Ende des Dorfes. Plötzlich stürzte er auf ein Kind los, das vor der letzten Hütte stand, und entriß ihm gierig das Stück Brot, von dem es aß. Das Kind blieb starr vor Schrecken, aber ein kleiner Spitz sprang aus dem Hause und bellte den Räuber an. Dieser ließ sogleich seine Beute fahren und entfloh",
+    "expected_spans": [
+      [
+        21931,
+        22505
+      ]
+    ],
+    "got": "Der Befehl, den ihm damals der Oberförster zurief, wild wie ein Teufel in der Hölle und wie ein solcher umringt von jammernden und gepeinigten Sündern, ist der letzte gewesen, den der Revierjäger im Leben von ihm erhalten hat. Eine Woche später traf er ihn wieder im Lindenrondell – tot. Aus dem Zustande, in dem die Leiche sich befand, war zu ersehen, daß sie hierher, und zwar durch Sumpf und Gerölle, geschleppt worden war, um an dieser Stelle aufgebahrt zu werden.",
+    "got_span": [
+      12040,
+      12508
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Der Jäger wurde gezwungen den Hund als Geschenk an seinen Brotherrn zu geben.",
+    "expected_text": "»Morgen, lieber Hopp, ist der\nGeburtstag des Grafen…« setzte er ruhig und schmunzelnd fort: »Und da möchten Hochgräfliche Gnaden dem Herrn Grafen ein Geschenk machen und sind überzeugt, mit nichts anderem soviel Ehre einlegen zu können als mit dem Krambambuli.« – »Ja, ja, lieber Hopp…« Die Gräfin errötete vor Vergnügen über dieses freundliche Entgegenkommen und sprach gleich von Dankbarkeit und bat, den Preis nur zu nennen, der für den Hund zu entrichten wäre",
+    "expected_spans": [
+      [
+        6075,
+        6538
+      ]
+    ],
+    "got": "Hopp fand zuletzt einen Ausweg aus diesem Dilemma; statt mit dem Krambambuli sprach er von dem Krambambuli, von den Triumphen, die er allenthalben mit ihm feierte, von dem Neide, den sein Besitz erregte, von den lächerlich hohen Summen, die ihm für den Hund geboten wurden und die er verächtlich von der Hand wies.\n\nZwei Jahre waren so vergangen, da erschien eines Tages die Gräfin, die Frau seines Brotherrn, im Hause des Jägers.",
+    "got_span": [
+      5555,
+      5985
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Im Haus des Brotherrn hat der Hund weder gegessen noch gehorcht.",
+    "expected_text": "Die Probe wurde gemacht, aber zum Erwürgen kam es nicht, denn der Graf verlor früher die Freude an dem eigensinnigen Tiere. Vergeblich hatte man es durch Liebe zu gewinnen, mit Strenge zu bändigen gesucht. Es biß jeden, der sich ihm näherte, versagte das Futter und – viel hat der Hund eines Jägers ohnehin nicht zuzusetzen – kam ganz herunter",
+    "expected_spans": [
+      [
+        6931,
+        7274
+      ]
+    ],
+    "got": "Dann aber, als seine Unterwerfung vollständig geworden war, was für ein Hund wurde er da! Keine Zunge schildert, kein Wort ermißt die Höhe der Vollendung, die er erreichte, nicht nur in der Ausübung seines Berufes, sondern auch im täglichen Leben als eifriger Diener, guter Kamerad und treuer Freund und Hüter. »Dem fehlt nur die Sprache«, heißt es von anderen intelligenten Hunden – dem Krambambuli fehlte sie nicht; sein Herr zum mindesten pflog lange Unterredungen mit ihm. Die Frau des Revierjägers wurde ordentlich eifersüchtig auf den »Buli«, wie sie ihn geringschätzig nannte. Manchmal machte sie ihrem Manne Vorwürfe.",
+    "got_span": [
+      4176,
+      4801
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Der Hund lebte infolgedessen herrenlos auf der Stra§e.",
+    "expected_text": "Aber dorthin kam er nicht, sondern führte ein elendes Vagabundenleben.\n\nVerwildert, zum Skelett abgemagert, umschlich er einmal die armen Wohnungen der Häusler am Ende des Dorfes",
+    "expected_spans": [
+      [
+        22043,
+        22221
+      ]
+    ],
+    "got": "Der Jägerrock, vermutlich ein Überrest aus der vergangenen Herrlichkeit des letzten Dienstes, trug die Spuren einer im nassen Straßengraben zugebrachten Nacht. Obwohl sich Hopp ungern in schlechte Gesellschaft begab, nahm er trotzdem Platz neben dem Burschen und begann sogleich ein Gespräch mit ihm. Da bekam er es denn bald heraus, daß der Nichtsnutz den Stutzen und die Jagdtasche dem Wirt bereits als Pfänder ausgeliefert hatte und daß er jetzt auch den Hund als solches hergeben möchte; der Wirt jedoch, der schmutzige Leuteschinder, wollte von einem Pfand, das gefüttert werden muß, nichts hören.",
+    "got_span": [
+      917,
+      1519
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Stattdessen hat er den Täter konfrontiert.",
+    "expected_text": "Mit einem Satze springt er hinter dem Baum hervor und auf den Fußsteig und schreit: »Gib dich, Vermaledeiter",
+    "expected_spans": [
+      [
+        17450,
+        17558
+      ]
+    ],
+    "got": "Dem Oberförster, gegen den der Haß sich zunächst wandte, kamen gutgemeinte Warnungen in Menge zu. Die Raubschützen, hieß es, hätten einen Eid darauf geschworen, bei der ersten Gelegenheit exemplarische Rache an ihm zu nehmen. Er, ein rascher, kühner Mann, schlug das Gerede in den Wind und sorgte mehr denn je dafür, daß weit und breit kund werde, wie er seinen Untergebenen die rücksichtsloseste Strenge anbefohlen und für etwaige schlimme Folgen die Verantwortung selbst übernommen habe.",
+    "got_span": [
+      9472,
+      9961
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Deswegen glaubte Hopp fest an Gelbes Schuld und er wollte ihn töten.",
+    "expected_text": "Mit einem Satze springt er hinter dem Baum hervor und auf den Fußsteig und schreit: »Gib dich, Vermaledeiter!« Und als der Wildschütz zur Antwort den Hinterlader von der Schulter reißt, gibt der Jäger Feuer",
+    "expected_spans": [
+      [
+        17450,
+        17656
+      ]
+    ],
+    "got": "In dem einen derselben erkannte Hopp die leichtfertige Dirne, die das Gerücht als die Geliebte des »Gelben« bezeichnete. Und als die Körbe und Tücher der Weiber und die Hüte der Buben in Pfand genommen wurden und Hopp den Auftrag bekam, sie aufs Gericht zu bringen, konnte er sich eines schlimmen Vorgefühls nicht erwehren.\n\nDer Befehl, den ihm damals der Oberförster zurief, wild wie ein Teufel in der Hölle und wie ein solcher umringt von jammernden und gepeinigten Sündern, ist der letzte gewesen, den der Revierjäger im Leben von ihm erhalten hat.",
+    "got_span": [
+      11715,
+      12266
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Fortan trägt auch der Hund diesen Namen.",
+    "expected_text": "Er heißt wie das, wofür Ihr ihn kriegt: Krambambuli",
+    "expected_spans": [
+      [
+        3308,
+        3359
+      ]
+    ],
+    "got": "Dann aber, als seine Unterwerfung vollständig geworden war, was für ein Hund wurde er da! Keine Zunge schildert, kein Wort ermißt die Höhe der Vollendung, die er erreichte, nicht nur in der Ausübung seines Berufes, sondern auch im täglichen Leben als eifriger Diener, guter Kamerad und treuer Freund und Hüter. »Dem fehlt nur die Sprache«, heißt es von anderen intelligenten Hunden – dem Krambambuli fehlte sie nicht; sein Herr zum mindesten pflog lange Unterredungen mit ihm. Die Frau des Revierjägers wurde ordentlich eifersüchtig auf den »Buli«, wie sie ihn geringschätzig nannte. Manchmal machte sie ihrem Manne Vorwürfe.",
+    "got_span": [
+      4176,
+      4801
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "und wird selbst tödlich von Hopp getroffen.",
+    "expected_text": "»Bestie!« zischt er noch, stürzt rücklings hin und rührt sich nicht mehr.",
+    "expected_spans": [
+      [
+        19569,
+        19642
+      ]
+    ],
+    "got": "Bellend, heulend, den Bauch am Boden, den Körper gespannt wie eine Sehne, den Kopf emporgehoben, als riefe es den Himmel zum Zeugen seines Seelenschmerzes an, kriecht es – seinem ersten Herrn zu.\n\nBei dem Anblick wird Hopp von Blutdurst gepackt. Mit zitternden Fingern hat er die neue Kapsel aufgesetzt – mit ruhiger Sicherheit legt er an. Auch »der Gelbe« hat den Lauf wieder auf ihn gerichtet. Diesmal gilt's! Das wissen die beiden, die einander auf dem Korn haben, und was auch in ihnen vorgehen möge, sie zielen so ruhig wie ein paar gemalte Schützen.\n\nZwei Schüsse fallen.",
+    "got_span": [
+      18838,
+      19415
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Nach einiger Zeit taucht er wieder auf, verwahrlost, verunsichert und aggressiv.",
+    "expected_text": "Verwildert, zum Skelett abgemagert, umschlich er einmal die armen Wohnungen der Häusler am Ende des Dorfes. Plötzlich stürzte er auf ein Kind los, das vor der letzten Hütte stand, und entriß ihm gierig das Stück Brot, von dem es aß. Das Kind blieb starr vor Schrecken, aber ein kleiner Spitz sprang aus dem Hause und bellte den Räuber an. Dieser ließ sogleich seine Beute fahren und entfloh.",
+    "expected_spans": [
+      [
+        22115,
+        22506
+      ]
+    ],
+    "got": "Der Befehl, den ihm damals der Oberförster zurief, wild wie ein Teufel in der Hölle und wie ein solcher umringt von jammernden und gepeinigten Sündern, ist der letzte gewesen, den der Revierjäger im Leben von ihm erhalten hat. Eine Woche später traf er ihn wieder im Lindenrondell – tot. Aus dem Zustande, in dem die Leiche sich befand, war zu ersehen, daß sie hierher, und zwar durch Sumpf und Gerölle, geschleppt worden war, um an dieser Stelle aufgebahrt zu werden.",
+    "got_span": [
+      12040,
+      12508
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "In einem Wirtshaus trifft der Jäger Hopp einen Landstreicher, genannt der Gelbe,",
+    "expected_text": "Er hatte ihn im Wirtshause Zum Löwen in Wischau von einem vazierenden Forstgehilfen gekauft oder eigentlich eingetauscht.",
+    "expected_spans": [
+      [
+        352,
+        473
+      ]
+    ],
+    "got": "Dem Herrn des schönen Tieres, der am Tische vor einem geleerten Branntweingläschen saß und über den Wirt schimpfte, weil dieser kein zweites umsonst hergeben wollte, sah der Lump aus den Augen. Ein kleiner Kerl, noch jung und doch so fahl wie ein abgestorbener Baum, mit gelbem Haar und gelbem spärlichem Barte. Der Jägerrock, vermutlich ein Überrest aus der vergangenen Herrlichkeit des letzten Dienstes, trug die Spuren einer im nassen Straßengraben zugebrachten Nacht. Obwohl sich Hopp ungern in schlechte Gesellschaft begab, nahm er trotzdem Platz neben dem Burschen und begann sogleich ein Gespräch mit ihm.",
+    "got_span": [
+      605,
+      1217
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "und jeden Menschen biss, der sich ihm näherte.",
+    "expected_text": "Es biß jeden, der sich ihm näherte",
+    "expected_spans": [
+      [
+        7137,
+        7171
+      ]
+    ],
+    "got": "Die Plage, die er einst mit ihm gehabt, hielt er heute noch für eine\nFreude, war stolz auf den ehemaligen Zögling und liebte ihn trotz der rauhen Behandlung, die er so gut wie jeder andere von ihm erfuhr.\n\nEines Junimorgens traf er ihn eben wieder bei einer Exekution.\n\nEs war im Lindenrondell, am Ende des herrschaftlichen Parks, der an den »Grafenwald« grenzte, und in der Nähe der Kulturen, die der Oberförster am liebsten mit Pulverminen umgeben hätte. Die Linden standen just in schönster Blüte, und über diese hatte ein Dutzend kleiner Jungen sich hergemacht.",
+    "got_span": [
+      10501,
+      11066
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "da dieser tatsächlich jedes Futter verschmähte",
+    "expected_text": "versagte das Futter",
+    "expected_spans": [
+      [
+        7173,
+        7192
+      ]
+    ],
+    "got": "Sei es, wie es sei! … Er hielt es nicht mehr aus ohne den Hund. – Ich hol ihn heim, dachte er, und fühlte sich wie neugeboren nach diesem Entschluß.\n\nBeim ersten Morgengrauen war er angekleidet, befahl seiner\nAlten, mit dem Mittagessen nicht auf ihn zu warten, und sputete sich hinweg. Wie er aber aus dem Hause trat, stieß sein Fuß an denjenigen, den er in der Ferne zu suchen ausging. Krambambuli lag verendet vor ihm, den Kopf an die Schwelle gepreßt, die zu überschreiten er nicht mehr gewagt hatte.\n\nDer Jäger verschmerzte ihn nie.",
+    "got_span": [
+      23048,
+      23584
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Vor lauter Zorn will Hopp auch den Hund töten,",
+    "expected_text": "Du hast genug, denkt er, um jedes Schrotkorn wär's schad bei dir. Trotzdem stellt er die Flinte auf den Boden und lädt von neuem. Der Hund sitzt aufrecht vor ihm, läßt die Zunge heraushängen, keucht kurz und laut und sieht ihm zu. Und als der Jäger fertig ist und die Flinte wieder zur Hand nimmt, halten sie ein Gespräch, von dem kein Zeuge ein Wort vernommen hätte, wenn es auch statt eines toten ein lebendiger gewesen wäre.",
+    "expected_spans": [
+      [
+        19695,
+        20122
+      ]
+    ],
+    "got": "Aber so geht's nicht! Wer könnte ein Geschöpf niederknallen, das einen so ansieht? Herr Hopp murmelt ein halbes Dutzend Flüche zwischen den Zähnen, einer gotteslästerlicher als der andere, hängt die Flinte wieder um, nimmt dem Raubschützen noch die jungen Hasen ab und geht.\n\nDer Hund folgte ihm mit den Augen, bis er zwischen den Bäumen verschwunden war, stand dann auf, und sein mark- und beinerschütterndes Wehgeheul durchdrang den Wald. Ein\npaarmal drehte er sich im Kreise und setzte sich wieder aufrecht neben den Toten hin.",
+    "got_span": [
+      20621,
+      21151
+    ]
+  },
+  {
+    "book": "krambambuli",
+    "query": "Hopp wird den Verlust nie verschmerzen.",
+    "expected_text": "Der Jäger verschmerzte ihn nie.",
+    "expected_spans": [
+      [
+        23553,
+        23584
+      ]
+    ],
+    "got": "Aber so geht's nicht! Wer könnte ein Geschöpf niederknallen, das einen so ansieht? Herr Hopp murmelt ein halbes Dutzend Flüche zwischen den Zähnen, einer gotteslästerlicher als der andere, hängt die Flinte wieder um, nimmt dem Raubschützen noch die jungen Hasen ab und geht.\n\nDer Hund folgte ihm mit den Augen, bis er zwischen den Bäumen verschwunden war, stand dann auf, und sein mark- und beinerschütterndes Wehgeheul durchdrang den Wald. Ein\npaarmal drehte er sich im Kreise und setzte sich wieder aufrecht neben den Toten hin.",
+    "got_span": [
+      20621,
+      21151
+    ]
+  }
+]

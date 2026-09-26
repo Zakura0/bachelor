@@ -12,7 +12,7 @@ from config import SEARCH_PIPELINE
 
 
 def run_search_interactive(chunks_path: str, emb_path: str,
-                           preset: str = SEARCH_PIPELINE,
+                           preset: int = SEARCH_PIPELINE,
                            top_k: int = 10):
     """Interaktive Suche mit konfigurierbarer Pipeline."""
     pipeline = SearchPipeline(chunks_path, emb_path, preset=preset)

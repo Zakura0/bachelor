@@ -33,7 +33,7 @@ _KNOWN_TITLES: dict[str, str] = {
 
 
 def migrate_add_title() -> None:
-    """Adds title column to books if missing and back-fills known titles."""
+    """Fügt Spalte 'title' zu books hinzu, falls nicht vorhanden, und füllt bekannte Titel nach."""
     with get_connection() as conn:
         cols = [r[1] for r in conn.execute("PRAGMA table_info(books)").fetchall()]
         if "title" not in cols:
@@ -91,7 +91,7 @@ def blob_to_vector(blob: bytes) -> np.ndarray:
 
 
 def migrate_add_cover() -> None:
-    """Adds cover_image and cover_mime columns to books if missing."""
+    """Fügt Spalten 'cover_image' und 'cover_mime' zu books hinzu, falls nicht vorhanden."""
     with get_connection() as conn:
         cols = [r[1] for r in conn.execute("PRAGMA table_info(books)").fetchall()]
         if "cover_image" not in cols:
@@ -105,7 +105,7 @@ def get_book_by_name(conn: sqlite3.Connection, name: str) -> sqlite3.Row | None:
 
 
 def get_all_books(conn: sqlite3.Connection) -> list[sqlite3.Row]:
-    """Only returns books that have at least one indexed embedding preset."""
+    """Gibt nur Bücher zurück, die mindestens ein indexiertes Embedding-Preset haben."""
     return conn.execute(
         """
         SELECT DISTINCT b.id, b.name, b.title,
@@ -134,7 +134,7 @@ def get_chunk_presets(conn: sqlite3.Connection, book_id: int) -> list[str]:
 
 
 def get_valid_presets(conn: sqlite3.Connection, book_id: int, model_name: str) -> list[str]:
-    """Only presets that have embeddings in the DB for the given model."""
+    """Nur Presets, die in der DB Embeddings für das gegebene Modell haben."""
     rows = conn.execute(
         """
         SELECT DISTINCT c.preset_name
@@ -151,7 +151,7 @@ def get_valid_presets(conn: sqlite3.Connection, book_id: int, model_name: str) -
 def get_chunks_with_embeddings(
     conn: sqlite3.Connection, book_id: int, preset_name: str, model_name: str
 ) -> tuple[list[dict], np.ndarray] | tuple[None, None]:
-    """Returns (chunks_list, embedding_matrix) loaded from DB, or (None, None) if not indexed."""
+    """Gibt (chunks_list, embedding_matrix) aus der DB geladen zurück, oder (None, None) falls nicht indexiert."""
     rows = conn.execute(
         """
         SELECT c.start_index, c.end_index, c.content, c.word_count, e.vector

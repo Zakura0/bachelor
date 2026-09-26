@@ -55,12 +55,12 @@ class NLIVerifier:
         """
         Bewertet die Entailment-Wahrscheinlichkeiten der Prämissen bezüglich der Hypothese.
         
-        :param hypothesis: Hypothese
-        :param premises: Prämissen
-        :param indices: Indizes
-        :param meta: Metadaten
-        :param batch_size: Batch-Größe
-        :return: Liste der NLI-Ergebnisse
+        :param hypothesis: Hypothese, gegen die alle Prämissen geprüft werden (z.B. Summary-Text)
+        :param premises: Kandidatentexte, die auf Entailment geprüft werden
+        :param indices: Optionale Indizes der Kandidaten im ursprünglichen Chunk-Array
+        :param meta: Optionale Metadaten zu den Kandidaten
+        :param batch_size: Batch-Größe für die Modell-Inferenz
+        :return: Liste der NLI-Ergebnisse, nach Entailment-Score absteigend sortiert
         """
         if indices is not None and len(indices) != len(premises):
             raise ValueError("indices muss die gleiche Länge wie premises haben.")

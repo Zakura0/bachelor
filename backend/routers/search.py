@@ -49,13 +49,13 @@ def _get_pipeline(book_id: int, book_name: str, preset_name: str, pipeline_prese
     cache_key = (book_id, preset_name, pipeline_preset, llm_prompt)
     if cache_key not in _pipeline_cache:
         prompt_template = _PROMPT_MAP.get(llm_prompt, PROMPT_RANK_ALL)
-        # DB-first: load chunks + embeddings from database
+        # DB-first: Chunks + Embeddings aus der Datenbank laden
         with get_connection() as conn:
             chunks, emb = get_chunks_with_embeddings(conn, book_id, preset_name, EMBEDDING_MODEL)
         if chunks is not None:
             _pipeline_cache[cache_key] = SearchPipeline.from_data(chunks, emb, pipeline_preset, llm_prompt=prompt_template)
         else:
-            # Fallback: load from files (legacy books)
+            # Fallback: aus Dateien laden (Legacy-Bücher)
             chunks_path = os.path.join(DIR_CHUNKS, book_name, f"{preset_name}.json")
             emb_path = os.path.join(DIR_EMBEDDINGS, book_name, f"{preset_name}.npy")
             if not os.path.exists(chunks_path) or not os.path.exists(emb_path):
@@ -129,7 +129,7 @@ def search(req: SearchRequest):
         raise HTTPException(status_code=404, detail="Buch nicht gefunden")
     book_name = book["name"]
     try:
-        pipeline = _get_pipeline(book_name, req.preset_name, req.pipeline)
+        pipeline = _get_pipeline(req.book_id, book_name, req.preset_name, req.pipeline)
     except (FileNotFoundError, ValueError) as e:
         raise HTTPException(status_code=422, detail=str(e))
     results = pipeline.search(req.query, top_k=req.top_k)

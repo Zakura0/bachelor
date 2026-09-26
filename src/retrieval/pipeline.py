@@ -84,7 +84,7 @@ class SearchPipeline:
       Cross-Encoder        →  K_RERANKER Kandidaten
       NLI / LLM            →  top_k Ergebnisse
 
-    preset: einer der Schlüssel aus PIPELINE_PRESETSw"
+    preset: einer der Schlüssel aus PIPELINE_PRESETS
     """
 
     def __init__(self, chunks_path: str, emb_path: str, preset: int, llm_prompt: str = _DEFAULT_LLM_PROMPT):

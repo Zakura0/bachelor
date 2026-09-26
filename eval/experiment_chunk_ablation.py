@@ -24,7 +24,7 @@ from src.preprocessing.chunk_presets import CHUNK_PRESETS
 from src.retrieval.pipeline import SearchPipeline
 from eval.eval_utils import make_run_dir, build_misses, save_misses
 
-PIPELINE_PRESET = 7  # TF-IDF + Embeddings + Reranker + LLM (beste Konfiguration, siehe EXPERIMENT_RESULTS.md)
+PIPELINE_PRESET = 7  # TF-IDF + Embeddings + Reranker + LLM (beste Konfiguration, siehe eval/results/)
 
 BASE_RESULTS_DIR = os.path.join(project_root, "eval", "results")
 

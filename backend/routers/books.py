@@ -75,7 +75,7 @@ class CreateAndIndexRequest(BaseModel):
 
 @router.post("/create-and-index")
 def create_and_index(req: CreateAndIndexRequest):
-    """Atomically create a book and index its first preset. Rolls back on error."""
+    """Erstellt ein Buch und indexiert dessen erstes Preset atomar. Macht bei Fehlern alles rückgängig."""
     with get_connection() as conn:
         if conn.execute("SELECT id FROM books WHERE name = ?", (req.name,)).fetchone():
             raise HTTPException(status_code=409, detail=f"Buch '{req.name}' existiert bereits")
@@ -131,7 +131,7 @@ def create_and_index(req: CreateAndIndexRequest):
             yield _sse({"type": "done", "chunk_count": len(chunks)})
 
         except Exception as e:
-            # Roll back: remove book and any partial chunks/embeddings
+            # Rückgängig machen: Buch und alle partiellen Chunks/Embeddings entfernen
             if book_id:
                 with get_connection() as conn:
                     conn.execute(

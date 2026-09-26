@@ -56,9 +56,9 @@ class EmbeddingRetriever:
         """
         Baut den Embedding-Index über den gegebenen Texten auf.
         
-        :param texts: Beschreibung der Texte
-        :param meta: Beschreibung der Metadaten
-        :param batch_size: Beschreibung der Batch-Größe
+        :param texts: Input-Texte bzw. Chunks
+        :param meta: Optionale Metadaten
+        :param batch_size: Batch-Größe für die Encoder-Inferenz
         :param show_progress_bar: Anzeige des Fortschrittsbalkens
         """
         texts = list(texts)

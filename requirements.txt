@@ -8,5 +8,6 @@ numpy
 openai
 bm25s
 fastapi
+pydantic
 python-multipart
 uvicorn

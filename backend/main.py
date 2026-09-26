@@ -12,7 +12,7 @@ logging.basicConfig(
         logging.StreamHandler(),
     ],
 )
-# Silence noisy third-party loggers
+# Lautstarke Third-Party-Logger stummschalten
 for _noisy in ("sentence_transformers", "httpx", "httpcore", "transformers", "huggingface_hub"):
     logging.getLogger(_noisy).setLevel(logging.WARNING)
 
@@ -43,7 +43,7 @@ def startup():
 app.include_router(books.router)
 app.include_router(search.router)
 
-# Serve built frontend — only active when dist/ exists
+# Gebautes Frontend ausliefern — nur aktiv wenn dist/ existiert
 _dist = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")
 if os.path.isdir(_dist):
     app.mount("/assets", StaticFiles(directory=os.path.join(_dist, "assets")), name="assets")
