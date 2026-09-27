@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 import logging
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -50,7 +51,17 @@ if os.path.isdir(_dist):
 
     @app.get("/{full_path:path}", include_in_schema=False)
     def spa_fallback(full_path: str):
-        return FileResponse(os.path.join(_dist, "index.html"))
+        index_path = os.path.join(_dist, "index.html")
+        # NFS liefert direkt nach einem Rebuild von dist/ gelegentlich kurzzeitig EACCES/ENOENT
+        for attempt in range(3):
+            try:
+                with open(index_path, "rb"):
+                    pass
+                return FileResponse(index_path)
+            except OSError:
+                if attempt == 2:
+                    raise
+                time.sleep(0.2 * (attempt + 1))
 
 
 @app.get("/")
