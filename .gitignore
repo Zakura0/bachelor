@@ -7,6 +7,9 @@ __pycache__/
 # Virtual environment
 .venv/
 
+# Docker secrets
+.env
+
 # Model downloads
 models/
 sentence-transformers/

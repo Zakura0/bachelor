@@ -1,0 +1,21 @@
+# Wird im Frontend-Build-Stage neu erzeugt
+frontend/dist
+frontend/node_modules
+
+# Python
+.venv
+__pycache__
+*.pyc
+
+# Git / IDE
+.git
+.vscode
+
+# Große, zur Laufzeit nicht benötigte Verzeichnisse
+eval/results
+
+# Secrets / Logs — nie in Image backen
+api.txt
+cli.txt
+*.log
+.env

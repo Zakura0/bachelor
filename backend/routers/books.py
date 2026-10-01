@@ -9,6 +9,9 @@ from db.database import get_connection, get_all_books, get_valid_presets, vector
 
 router = APIRouter(prefix="/api/books", tags=["books"])
 
+# Kernbücher der Thesis, dürfen über die Web-UI nicht gelöscht werden
+PROTECTED_BOOK_NAMES = {"erdbeben", "judenbuche", "krambambuli", "verwandlung", "harrypotter"}
+
 
 @router.get("/")
 def list_books():
@@ -193,6 +196,8 @@ def delete_book(book_id: int):
         book = conn.execute("SELECT id, name, title FROM books WHERE id = ?", (book_id,)).fetchone()
         if not book:
             raise HTTPException(status_code=404, detail="Buch nicht gefunden")
+        if book["name"] in PROTECTED_BOOK_NAMES:
+            raise HTTPException(status_code=403, detail=f"'{book['title']}' ist ein geschütztes Kernbuch und kann nicht gelöscht werden")
         conn.execute(
             "DELETE FROM embeddings WHERE chunk_id IN (SELECT id FROM chunks WHERE book_id = ?)",
             (book_id,),

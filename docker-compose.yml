@@ -1,0 +1,28 @@
+services:
+  backend:
+    build: .
+    image: bachelor-ssa:latest
+    restart: unless-stopped
+    ports:
+      - "8100:8100"
+    env_file:
+      - .env
+    environment:
+      - HF_HOME=/root/.cache/huggingface
+      - CUDA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["0"]
+              capabilities: ["gpu"]
+    volumes:
+      - app_data:/app/data
+      - app_db:/app/db
+      - hf_cache:/root/.cache/huggingface
+
+volumes:
+  app_data:
+  app_db:
+  hf_cache:
