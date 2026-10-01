@@ -20,9 +20,11 @@ services:
     volumes:
       - app_data:/app/data
       - app_db:/app/db
+      - app_logs:/app/logs
       - hf_cache:/root/.cache/huggingface
 
 volumes:
   app_data:
   app_db:
+  app_logs:
   hf_cache:

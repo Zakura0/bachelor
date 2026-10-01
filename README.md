@@ -55,6 +55,8 @@ bachelor/
 ├── config.py                   # All model names, pipeline parameters, experiment settings
 ├── main.py                     # Interactive CLI: search + run experiments
 ├── requirements.txt
+├── Dockerfile                  # Multi-stage build: frontend (node) + backend (python/GPU)
+├── docker-compose.yml          # GPU reservation, restart policy, persistent named volumes
 │
 ├── src/
 │   ├── preprocessing/
@@ -129,13 +131,34 @@ To populate `db/library.db` from existing file-based chunks/embeddings (optional
 python db/migrate.py
 ```
 
-### Frontend (optional Web-UI)
+### Frontend (optional Web-UI, dev mode)
 
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+
+### Docker deployment (recommended)
+
+Runs the backend (serving the pre-built frontend) as a GPU-enabled container that survives
+terminal/SSH session end and restarts automatically on crash or host reboot.
+
+```bash
+cp .env.example .env   # fill in OPENAI_API_KEY (and optionally HF_TOKEN)
+docker compose build
+docker compose up -d
+```
+
+- GPU: pinned to a single device via `device_ids: ["0"]` in `docker-compose.yml` (adjust if needed).
+- Persistent state lives in three named Docker volumes (on local disk, independent of any
+  NFS-mounted home directory): `app_data` (chunks/embeddings), `app_db` (`library.db`), `app_logs`
+  (`backend.log`), plus `hf_cache` for downloaded HuggingFace models.
+- Code changes require a rebuild to take effect: `docker compose build && docker compose up -d`
+  (volumes/data are untouched by rebuilds).
+- Logs: `docker compose logs -f` or `logs/backend.log` inside the `app_logs` volume.
+- Stop: `docker compose down` (add `-v` only if you intentionally want to wipe the volumes).
+
 
 ---
 
@@ -159,9 +182,13 @@ python script/run_search.py
 
 ### Web API
 
+For local development (auto-reload on code changes):
+
 ```bash
 uvicorn backend.main:app --reload
 ```
+
+For a persistent deployment, use the Docker setup described above instead.
 
 Books (`/api/books`):
 - `GET /` — List all books
@@ -171,7 +198,9 @@ Books (`/api/books`):
 - `POST /{book_id}/index` — Index another chunk preset for a book (SSE progress)
 - `GET /{book_id}/text` — Raw text of a book
 - `GET`/`POST /{book_id}/cover` — Fetch/upload a cover image
-- `DELETE /{book_id}` — Delete a book including its chunks/embeddings
+- `DELETE /{book_id}` — Delete a book including its chunks/embeddings (the 5 core books —
+  `erdbeben`, `judenbuche`, `krambambuli`, `verwandlung`, `harrypotter` — are protected and
+  always return `403`)
 
 Search (`/api/search`):
 - `POST /stream` — Search with progress updates (SSE)
