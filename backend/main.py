@@ -66,7 +66,8 @@ if os.path.isdir(_dist):
             try:
                 with open(index_path, "rb"):
                     pass
-                return FileResponse(index_path)
+                # Ohne no-cache zeigen Browser nach einem Rebuild weiter das alte Bundle
+                return FileResponse(index_path, headers={"Cache-Control": "no-cache"})
             except OSError:
                 if attempt == 2:
                     raise

@@ -293,7 +293,7 @@ export function SearchView({ book, onBack }: { book: Book; onBack: () => void })
                         </select>
                       </div>
                     )}
-                    {!readOnly && <div className="pt-1 border-t border-slate-700/60">
+                    {readOnly === false && <div className="pt-1 border-t border-slate-700/60">
                       <button
                         onClick={() => { setShowSettings(false); setShowAddPreset(true) }}
                         className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-slate-100 hover:bg-slate-700/60 transition-colors"

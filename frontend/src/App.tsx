@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BookPicker, type Book } from './components/BookPicker'
 import { SearchView } from './components/SearchView'
 import { UploadView } from './components/UploadView'
+import { useReadOnly } from './useReadOnly'
 
 type View = { kind: 'list' } | { kind: 'search'; book: Book } | { kind: 'upload' }
 
@@ -44,6 +45,7 @@ function AboutModal({ onClose }: { onClose: () => void }) {
 function App() {
   const [view, setView] = useState<View>({ kind: 'list' })
   const [showAbout, setShowAbout] = useState(false)
+  const readOnly = useReadOnly()
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
@@ -72,6 +74,13 @@ function App() {
       </footer>
 
       {showAbout && <AboutModal onClose={() => setShowAbout(false)} />}
+
+      {readOnly && (
+        <div className="fixed bottom-5 right-5 z-40 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/60 text-xs text-slate-400">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Read-Only-Mode
+        </div>
+      )}
     </div>
   )
 }
