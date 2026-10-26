@@ -1,13 +1,18 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Response
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Response
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import json, os, queue, re, sys, threading
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from config import EMBEDDING_MODEL
+from config import EMBEDDING_MODEL, READ_ONLY
 from db.database import get_connection, get_all_books, get_valid_presets, vector_to_blob
 
 router = APIRouter(prefix="/api/books", tags=["books"])
+
+
+def require_writable() -> None:
+    if READ_ONLY:
+        raise HTTPException(status_code=403, detail="Die Anwendung läuft im Nur-Lesen-Modus")
 
 # Kernbücher der Thesis, dürfen über die Web-UI nicht gelöscht werden
 PROTECTED_BOOK_NAMES = {"erdbeben", "judenbuche", "krambambuli", "verwandlung", "harrypotter"}
@@ -30,7 +35,7 @@ def list_presets(book_id: int):
     return {"book_id": book_id, "book_name": book["name"], "presets": presets}
 
 
-@router.post("/")
+@router.post("/", dependencies=[Depends(require_writable)])
 async def create_book(
     title: str = Form(...),
     name: str = Form(None),
@@ -76,7 +81,7 @@ class CreateAndIndexRequest(BaseModel):
     overlap: int = 2
 
 
-@router.post("/create-and-index")
+@router.post("/create-and-index", dependencies=[Depends(require_writable)])
 def create_and_index(req: CreateAndIndexRequest):
     """Erstellt ein Buch und indexiert dessen erstes Preset atomar. Macht bei Fehlern alles rückgängig."""
     with get_connection() as conn:
@@ -169,7 +174,7 @@ def get_cover(book_id: int):
     return Response(content=row["cover_image"], media_type=row["cover_mime"] or "image/jpeg")
 
 
-@router.post("/{book_id}/cover")
+@router.post("/{book_id}/cover", dependencies=[Depends(require_writable)])
 async def upload_cover(book_id: int, file: UploadFile = File(...)):
     data = await file.read()
     mime = file.content_type or "image/jpeg"
@@ -190,7 +195,7 @@ def get_book_text(book_id: int):
     return {"raw_text": book["raw_text"]}
 
 
-@router.delete("/{book_id}")
+@router.delete("/{book_id}", dependencies=[Depends(require_writable)])
 def delete_book(book_id: int):
     with get_connection() as conn:
         book = conn.execute("SELECT id, name, title FROM books WHERE id = ?", (book_id,)).fetchone()
@@ -208,7 +213,7 @@ def delete_book(book_id: int):
     return {"deleted": book_id, "name": book["name"]}
 
 
-@router.post("/{book_id}/index")
+@router.post("/{book_id}/index", dependencies=[Depends(require_writable)])
 def index_preset(book_id: int, req: IndexRequest):
     with get_connection() as conn:
         book = conn.execute("SELECT id, name, raw_text FROM books WHERE id = ?", (book_id,)).fetchone()

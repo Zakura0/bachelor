@@ -6,6 +6,8 @@ from typing import Any, List, Optional, Sequence
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
+from src.retrieval.model_cache import get_shared_model
+
 
 @dataclass
 class NLIResult:
@@ -34,9 +36,15 @@ class NLIVerifier:
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.max_length = max_length
 
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=False)
-        self.model = AutoModelForSequenceClassification.from_pretrained(model_name).to(self.device)
-        self.model.eval()
+        def load():
+            tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=False)
+            model = AutoModelForSequenceClassification.from_pretrained(model_name).to(self.device)
+            model.eval()
+            return tokenizer, model
+
+        (self.tokenizer, self.model), self._infer_lock = get_shared_model(
+            ("nli", model_name, self.device), load
+        )
 
         # Modellspezifische Label-IDs
         self.entailment_id = 2
@@ -75,20 +83,21 @@ class NLIVerifier:
         for start in range(0, len(premises), batch_size):
             batch = premises[start:start + batch_size]
 
-            enc = self.tokenizer(
-                list(batch),
-                [hyp] * len(batch),
-                padding=True,
-                truncation=True,
-                max_length=self.max_length,
-                return_tensors="pt",
-            ).to(self.device)
+            with self._infer_lock:
+                enc = self.tokenizer(
+                    list(batch),
+                    [hyp] * len(batch),
+                    padding=True,
+                    truncation=True,
+                    max_length=self.max_length,
+                    return_tensors="pt",
+                ).to(self.device)
 
-            logits = self.model(**enc).logits
-            probs = torch.softmax(logits, dim=-1)
+                logits = self.model(**enc).logits
+                probs = torch.softmax(logits, dim=-1)
 
-            entail_probs = probs[:, self.entailment_id].detach().cpu().tolist()
-            pred_ids = torch.argmax(probs, dim=-1).detach().cpu().tolist()
+                entail_probs = probs[:, self.entailment_id].detach().cpu().tolist()
+                pred_ids = torch.argmax(probs, dim=-1).detach().cpu().tolist()
 
             for j, (p_text, eprob, pid) in enumerate(zip(batch, entail_probs, pred_ids)):
                 i = start + j

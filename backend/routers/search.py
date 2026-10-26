@@ -4,6 +4,7 @@ import os
 import queue
 import sys
 import threading
+from collections import OrderedDict
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
@@ -19,7 +20,11 @@ from src.retrieval.llm_reranker import PROMPT_RANK_ALL, PROMPT_RANK_ALL_NORMAL
 router = APIRouter(prefix="/api/search", tags=["search"])
 log = logging.getLogger(__name__)
 
-_pipeline_cache: dict[tuple, SearchPipeline] = {}
+# Modelle sind prozessweit geteilt, ein Eintrag hält nur Chunks, TF-IDF-Index und Embedding-Matrix
+_PIPELINE_CACHE_MAX = 32
+_pipeline_cache: OrderedDict[tuple, SearchPipeline] = OrderedDict()
+_cache_lock = threading.Lock()
+_build_locks: dict[tuple, threading.Lock] = {}
 
 
 class SearchRequest(BaseModel):
@@ -45,23 +50,44 @@ class SearchResultItem(BaseModel):
     end_index: int
 
 
+def _build_pipeline(book_id: int, book_name: str, preset_name: str, pipeline_preset: int, llm_prompt: str) -> SearchPipeline:
+    prompt_template = _PROMPT_MAP.get(llm_prompt, PROMPT_RANK_ALL)
+    # DB-first: Chunks + Embeddings aus der Datenbank laden
+    with get_connection() as conn:
+        chunks, emb = get_chunks_with_embeddings(conn, book_id, preset_name, EMBEDDING_MODEL)
+    if chunks is not None:
+        return SearchPipeline.from_data(chunks, emb, pipeline_preset, llm_prompt=prompt_template)
+    # Fallback: aus Dateien laden (Legacy-Bücher)
+    chunks_path = os.path.join(DIR_CHUNKS, book_name, f"{preset_name}.json")
+    emb_path = os.path.join(DIR_EMBEDDINGS, book_name, f"{preset_name}.npy")
+    if not os.path.exists(chunks_path) or not os.path.exists(emb_path):
+        raise FileNotFoundError(f"Keine Daten für {book_name}/{preset_name}")
+    return SearchPipeline(chunks_path, emb_path, pipeline_preset, llm_prompt=prompt_template)
+
+
 def _get_pipeline(book_id: int, book_name: str, preset_name: str, pipeline_preset: int, llm_prompt: str = 'expert') -> SearchPipeline:
     cache_key = (book_id, preset_name, pipeline_preset, llm_prompt)
-    if cache_key not in _pipeline_cache:
-        prompt_template = _PROMPT_MAP.get(llm_prompt, PROMPT_RANK_ALL)
-        # DB-first: Chunks + Embeddings aus der Datenbank laden
-        with get_connection() as conn:
-            chunks, emb = get_chunks_with_embeddings(conn, book_id, preset_name, EMBEDDING_MODEL)
-        if chunks is not None:
-            _pipeline_cache[cache_key] = SearchPipeline.from_data(chunks, emb, pipeline_preset, llm_prompt=prompt_template)
-        else:
-            # Fallback: aus Dateien laden (Legacy-Bücher)
-            chunks_path = os.path.join(DIR_CHUNKS, book_name, f"{preset_name}.json")
-            emb_path = os.path.join(DIR_EMBEDDINGS, book_name, f"{preset_name}.npy")
-            if not os.path.exists(chunks_path) or not os.path.exists(emb_path):
-                raise FileNotFoundError(f"Keine Daten für {book_name}/{preset_name}")
-            _pipeline_cache[cache_key] = SearchPipeline(chunks_path, emb_path, pipeline_preset, llm_prompt=prompt_template)
-    return _pipeline_cache[cache_key]
+    with _cache_lock:
+        if cache_key in _pipeline_cache:
+            _pipeline_cache.move_to_end(cache_key)
+            return _pipeline_cache[cache_key]
+        build_lock = _build_locks.setdefault(cache_key, threading.Lock())
+
+    # Pro Key nur ein Aufbau gleichzeitig, andere Keys werden nicht blockiert
+    with build_lock:
+        with _cache_lock:
+            if cache_key in _pipeline_cache:
+                return _pipeline_cache[cache_key]
+        try:
+            pipeline = _build_pipeline(book_id, book_name, preset_name, pipeline_preset, llm_prompt)
+        finally:
+            with _cache_lock:
+                _build_locks.pop(cache_key, None)
+        with _cache_lock:
+            _pipeline_cache[cache_key] = pipeline
+            while len(_pipeline_cache) > _PIPELINE_CACHE_MAX:
+                _pipeline_cache.popitem(last=False)
+    return pipeline
 
 
 def _sse(data: dict) -> str:

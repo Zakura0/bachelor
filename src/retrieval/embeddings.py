@@ -7,6 +7,8 @@ import numpy as np
 import torch
 from sentence_transformers import SentenceTransformer
 
+from src.retrieval.model_cache import get_shared_model
+
 
 @dataclass
 class SearchResult:
@@ -35,7 +37,10 @@ class EmbeddingRetriever:
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.normalize = normalize
 
-        self.model = SentenceTransformer(model_name, device=self.device)
+        self.model, self._infer_lock = get_shared_model(
+            ("sentence_transformer", model_name, self.device),
+            lambda: SentenceTransformer(model_name, device=self.device),
+        )
 
         self._emb: Optional[np.ndarray] = None
         self._texts: List[str] = []
@@ -75,13 +80,14 @@ class EmbeddingRetriever:
         # E5 Modell erwartet diesen Prefix
         passages = [f"passage: {t}" for t in texts]
 
-        emb = self.model.encode(
-            passages,
-            batch_size=batch_size,
-            convert_to_numpy=True,
-            normalize_embeddings=self.normalize,
-            show_progress_bar=show_progress_bar,
-        )
+        with self._infer_lock:
+            emb = self.model.encode(
+                passages,
+                batch_size=batch_size,
+                convert_to_numpy=True,
+                normalize_embeddings=self.normalize,
+                show_progress_bar=show_progress_bar,
+            )
         self._emb = emb.astype(np.float32, copy=False)
         self._fitted = True
 
@@ -118,12 +124,13 @@ class EmbeddingRetriever:
         if not q:
             return []
 
-        q_emb = self.model.encode(
-            [f"query: {q}"],
-            convert_to_numpy=True,
-            normalize_embeddings=self.normalize,
-            show_progress_bar=False,
-        ).astype(np.float32, copy=False)
+        with self._infer_lock:
+            q_emb = self.model.encode(
+                [f"query: {q}"],
+                convert_to_numpy=True,
+                normalize_embeddings=self.normalize,
+                show_progress_bar=False,
+            ).astype(np.float32, copy=False)
 
         scores = (self._emb @ q_emb[0]).astype(np.float32)
         top_idx = np.argsort(scores)[::-1][:top_k]

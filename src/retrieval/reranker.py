@@ -6,6 +6,8 @@ from typing import Any, List, Optional, Sequence
 import torch
 from sentence_transformers import CrossEncoder
 
+from src.retrieval.model_cache import get_shared_model
+
 
 @dataclass
 class RerankResult:
@@ -30,7 +32,10 @@ class CrossEncoderReranker:
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.model_name = model_name
         # trust_remote_code wird von Jina-Modellen benötigt, schadet anderen nicht
-        self.model = CrossEncoder(model_name, device=self.device, trust_remote_code=True)
+        self.model, self._infer_lock = get_shared_model(
+            ("cross_encoder", model_name, self.device),
+            lambda: CrossEncoder(model_name, device=self.device, trust_remote_code=True),
+        )
 
     def rerank(
         self,
@@ -62,7 +67,8 @@ class CrossEncoderReranker:
             raise ValueError("candidate_indices muss die gleiche Länge haben wie candidate_texts.")
 
         pairs = [(q, t) for t in candidate_texts]
-        scores = self.model.predict(pairs, batch_size=batch_size)
+        with self._infer_lock:
+            scores = self.model.predict(pairs, batch_size=batch_size)
 
         results: List[RerankResult] = []
         for i, (text, score) in enumerate(zip(candidate_texts, scores)):

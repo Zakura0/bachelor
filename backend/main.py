@@ -25,6 +25,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
+from config import READ_ONLY
 from db.database import init_db, migrate_add_title, migrate_add_cover
 from backend.routers import books, search
 
@@ -46,6 +47,11 @@ def startup():
 
 app.include_router(books.router)
 app.include_router(search.router)
+
+
+@app.get("/api/config")
+def app_config():
+    return {"read_only": READ_ONLY}
 
 # Gebautes Frontend ausliefern — nur aktiv wenn dist/ existiert
 _dist = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")

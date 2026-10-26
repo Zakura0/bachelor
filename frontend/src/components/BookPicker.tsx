@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useReadOnly } from '../useReadOnly'
 
 type Book = { id: number; name: string; title: string; has_cover: boolean }
 
@@ -74,6 +75,7 @@ export function BookPicker({ onSelect, onUpload }: { onSelect: (book: Book) => v
   const [showMenu, setShowMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const queryClient = useQueryClient()
+  const readOnly = useReadOnly()
   const { data: books, isLoading } = useQuery<Book[]>({
     queryKey: ['books'],
     queryFn: () => fetch('/api/books/').then(r => r.json()),
@@ -102,7 +104,7 @@ export function BookPicker({ onSelect, onUpload }: { onSelect: (book: Book) => v
           <h1 className="text-4xl font-bold text-slate-100 tracking-tight">Summary-Source Alignment</h1>
           <p className="mt-3 text-slate-400 text-lg">Wähle ein Buch um die Suche zu starten.</p>
         </div>
-        <div className="relative mt-1" ref={menuRef}>
+        {!readOnly && <div className="relative mt-1" ref={menuRef}>
           <button
             onClick={() => setShowMenu(s => !s)}
             className={`p-2 rounded-xl border transition-all ${showMenu ? 'bg-slate-700 border-slate-600 text-slate-200' : 'bg-slate-800/60 border-slate-700/60 text-slate-500 hover:text-slate-300 hover:border-slate-600'}`}
@@ -129,7 +131,7 @@ export function BookPicker({ onSelect, onUpload }: { onSelect: (book: Book) => v
               </button>
             </div>
           )}
-        </div>
+        </div>}
       </div>
 
       {isLoading ? (

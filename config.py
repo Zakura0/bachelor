@@ -34,6 +34,9 @@ HIT_TOLERANCE_CHARS = 500   # Toleranz (Zeichen) nach oben/unten für Hit-Berech
 
 # Suche
 
+# Web-App: READ_ONLY=1 sperrt Upload, Löschen und Indexieren (z.B. für öffentliche Demos)
+READ_ONLY = os.getenv("READ_ONLY", "0") == "1"
+
 # Verfügbare Presets
 # 1 = TF-IDF only                    
 # 2 = Embeddings only                
